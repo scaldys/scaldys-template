@@ -1,0 +1,8 @@
+.idea/
+.venv/
+.vscode/
+build/
+dist/
+docs/build/
+list/
+src/scaldys.egg-info/

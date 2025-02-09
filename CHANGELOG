@@ -1,0 +1,41 @@
+.. this is a comment
+    https://keepachangelog.com/en/1.0.0/
+    Added      for new features.
+    Changed    for changes in existing functionality.
+    Deprecated for soon-to-be removed features.
+    Removed    for now removed features.
+    Fixed      for any bug fixes.
+    Security   in case of vulnerabilities.
+    Docs       for any documentation changes
+    !
+    [0.2.0]
+    -------
+    !
+    **Added**:
+        - Feature 1
+        - Documentation
+    !
+    **Changed**:
+        - Describe the changes to feature X
+    !
+    **Removed**:
+        - Describe features that have been removed
+    !
+    !
+    !
+    [ Unreleased ]
+    !
+    [0.1.0] - yyyy-mm-dd
+
+
+
+[0.1.0] - Not Released
+======================
+
+**Added**
+
+  - Put in place the Python development project: structure, source code and test framework,...
+
+**Docs**
+
+  -  Initial documentation structure
