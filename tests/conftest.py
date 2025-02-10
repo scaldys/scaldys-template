@@ -2,15 +2,15 @@ import pytest
 import datetime
 
 
-def pytest_cmdline_preparse(args):
-    """Change the default base temporary directory by dynamically adding a command line parameter
-
-    See:
-        http://doc.pytest.org/en/latest/example/simple.html
-        http://doc.pytest.org/en/latest/tmpdir.html
-    """
-    basetemp = "_test_runs"
-    args[:] = ["--basetemp={0}".format(basetemp)] + args
+# def pytest_cmdline_preparse(args):
+#     """Change the default base temporary directory by dynamically adding a command line parameter
+#
+#     See:
+#         http://doc.pytest.org/en/latest/example/simple.html
+#         http://doc.pytest.org/en/latest/tmpdir.html
+#     """
+#     basetemp = "_test_runs"
+#     args[:] = ["--basetemp={0}".format(basetemp)] + args
 
 
 @pytest.fixture(scope="session")
