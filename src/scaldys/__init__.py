@@ -1,4 +1,8 @@
-def hello(n: int) -> str:
-    """Greet the sum from 0 to n (exclusive end)."""
-    sum_n = sum(range(n))
-    return f"Hello {sum_n}!"
+# -*- coding: utf-8 -*-
+# cython: language_level=3
+
+from scaldys.common import *
+from scaldys.__main__ import *
+
+
+

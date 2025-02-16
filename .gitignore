@@ -1,8 +1,11 @@
 .idea/
 .venv/
 .vscode/
+app_data/
 build/
 dist/
 docs/build/
 list/
+src/scaldys/logs/*.jsonl
 src/scaldys.egg-info/
+ideas.md
