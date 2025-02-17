@@ -16,6 +16,7 @@ permissions:
   contents: read
 
 jobs:
+  if: false
   release-build:
     runs-on: ubuntu-latest
 
