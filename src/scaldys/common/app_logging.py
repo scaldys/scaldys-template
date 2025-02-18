@@ -22,8 +22,7 @@ LOG_FILE_NAME = "scaldys.log"
 
 
 def setup_logging() -> None:
-    """Configure the logging for the application.
-    """
+    """Configure the logging for the application."""
     log_path = AppLocation.get_directory(AppLocation.LogDir)
     if not log_path.exists():
         log_path.mkdir(parents=True)
@@ -46,7 +45,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
             "formatters": {
                 "console": {
                     "format": "%(asctime)s [%(levelname)-8s|%(module)s|L%(lineno)d] %(message)s",
-                    "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+                    "datefmt": "%Y-%m-%dT%H:%M:%S%z",
                 },
                 "json": {
                     "()": "common.app_logging.MyJSONFormatter",
@@ -58,16 +57,16 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                         "module": "module",
                         "function": "funcName",
                         "line": "lineno",
-                        "thread_name": "threadName"
-                    }
-                }
+                        "thread_name": "threadName",
+                    },
+                },
             },
             "handlers": {
                 "stderr": {
                     "class": "logging.StreamHandler",
                     "level": "WARNING",
                     "formatter": "console",
-                    "stream": "ext://sys.stderr"
+                    "stream": "ext://sys.stderr",
                 },
                 "file_json": {
                     "class": "logging.handlers.RotatingFileHandler",
@@ -75,27 +74,18 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                     "formatter": "json",
                     "filename": log_file_path,
                     "maxBytes": 10000,
-                    "backupCount": 3
+                    "backupCount": 3,
                 },
                 "queue_handler": {
                     "class": "logging.handlers.QueueHandler",
-                    "handlers": [
-                        "stderr",
-                        "file_json"
-                    ],
-                    "respect_handler_level": True
-                }
+                    "handlers": ["stderr", "file_json"],
+                    "respect_handler_level": True,
+                },
             },
-            "loggers": {
-                "root": {
-                    "level": "DEBUG",
-                    "handlers": [
-                        "queue_handler"
-                    ]
-                }
-            }
+            "loggers": {"root": {"level": "DEBUG", "handlers": ["queue_handler"]}},
         }
     )
+
 
 # Custom Logger producing logs in JSON format
 
@@ -170,8 +160,9 @@ class MyJSONFormatter(logging.Formatter):
 
 class NonErrorFilter(logging.Filter):
     """
-        A logging filter to exclude log records containing error-level messages.
+    A logging filter to exclude log records containing error-level messages.
     """
+
     @override
     def filter(self, record: logging.LogRecord) -> bool | logging.LogRecord:
         return record.levelno <= logging.INFO

@@ -26,4 +26,3 @@ def temporary_test_directory(tmpdir_factory) -> str:
 def setup_test_data_if_not_exist():
     # Code to run before all tests
     print("\n Setting up before all tests\n")
-    
