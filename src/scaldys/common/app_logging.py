@@ -6,7 +6,6 @@ import datetime as dt
 import json
 import logging
 import pathlib
-
 from logging.config import dictConfig
 from typing import override
 

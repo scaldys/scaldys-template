@@ -3,13 +3,13 @@
 
 import logging
 import os
-import platformdirs
 import sys
-
 from pathlib import Path
 
-from scaldys.common.sys_os import is_macosx, is_win
+import platformdirs
+
 from scaldys.__about__ import APP_NAME, ORGANIZATION_NAME
+from scaldys.common.sys_os import is_macosx, is_win
 
 logger = logging.getLogger("scaldys")
 

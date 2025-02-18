@@ -5,7 +5,6 @@ import logging.handlers
 
 from scaldys.common.app_logging import setup_logging
 
-
 # https://github.com/mCodingLLC/VideosSampleCode/tree/master/videos/135_modern_logging
 # use <application_name> in all files for the logger
 # __name__ is another common choice, but would create multiple equivalent instances in memory
