@@ -6,6 +6,10 @@ build/
 dist/
 docs/build/
 list/
+node_modules/
 src/scaldys/logs/*.jsonl
 src/scaldys.egg-info/
+.prettierrc
 ideas.md
+package.json
+package-lock.json
