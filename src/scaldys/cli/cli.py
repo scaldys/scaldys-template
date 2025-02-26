@@ -12,9 +12,7 @@ def version_callback(value: bool):
     Return version information.
     """
     if value:
-        typer.echo(
-            f"{APP_NAME} version {VERSION}"
-        )
+        typer.echo(f"{APP_NAME} version {VERSION}")
         raise typer.Exit()
 
 

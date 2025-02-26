@@ -80,7 +80,7 @@ def is_frozen() -> bool:
         True if frozen, False otherwise.
 
     """
-    return getattr(sys, 'frozen', False)
+    return getattr(sys, "frozen", False)
 
 
 def get_os_app_data_path() -> Path:

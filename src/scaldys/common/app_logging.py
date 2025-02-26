@@ -7,7 +7,6 @@ import json
 import logging
 import pathlib
 
-from logging import Logger
 from logging.config import dictConfig
 from logging.handlers import QueueHandler
 from typing import override
@@ -31,7 +30,9 @@ LOG_FILE_NAME = f"{PACKAGE_NAME}.log"
 def setup_logging(level: str = "info", verbose: bool = False) -> None:
     """Configure the logging for the application."""
     assert level is not None
-    assert level.lower() in ["debug", "info", "warning", "error", "critical"], f"Invalid log level ({level})."
+    assert level.lower() in ["debug", "info", "warning", "error", "critical"], (
+        f"Invalid log level ({level})."
+    )
 
     log_path = AppLocation.get_directory(AppLocation.LogDir)
     if not log_path.exists():
@@ -63,7 +64,6 @@ def setup_logging(level: str = "info", verbose: bool = False) -> None:
 
 
 def _configure_logging(log_file_path: pathlib.Path) -> None:
-
     # Only the json formatter and the queue_handler are used, leave the others as example
     # QueueHandler: only the file_json handler is used.
     # For user info/progress on the command line, use the verbose flag when invoking this CLI app.
@@ -126,7 +126,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                     "respect_handler_level": True,
                 },
             },
-            "loggers": {"root": {"level": "DEBUG", "handlers": ["queue_handler","stdout"]}},
+            "loggers": {"root": {"level": "DEBUG", "handlers": ["queue_handler", "stdout"]}},
         }
     )
 
@@ -177,9 +177,7 @@ class JsonFormatter(logging.Formatter):
     def _prepare_log_dict(self, record: logging.LogRecord) -> dict[str, str | None]:
         always_fields = {
             "message": record.getMessage(),
-            "timestamp": dt.datetime.fromtimestamp(
-                record.created, tz=dt.timezone.utc
-            ).isoformat(),
+            "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).isoformat(),
         }
         if record.exc_info is not None:
             always_fields["exc_info"] = self.formatException(record.exc_info)

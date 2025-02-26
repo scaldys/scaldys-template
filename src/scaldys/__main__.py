@@ -2,10 +2,7 @@
 # cython: language_level=3
 
 import logging
-import os
-from pathlib import Path
-import platformdirs
-from scaldys.__about__ import APP_NAME, PACKAGE_NAME
+from scaldys.__about__ import PACKAGE_NAME
 
 from scaldys.common.app_logging import setup_logging
 

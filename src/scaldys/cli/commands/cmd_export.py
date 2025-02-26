@@ -5,12 +5,11 @@ import logging
 import os
 from datetime import datetime, timedelta, date, time
 from pathlib import Path
-from typing import Optional
 
 import typer
 from typing_extensions import Annotated
 
-from scaldys.__about__ import  APP_NAME, PACKAGE_NAME, VERSION
+from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
 from scaldys.core.export import export_data
 from scaldys.common.app_location import AppLocation
 from scaldys.cli.commands.arg_types import ARG_TYPE_VERBOSE, ARG_TYPE_LOG_LEVEL
@@ -24,27 +23,25 @@ __all__ = ["export"]
 next_day = datetime.combine(date.today() + timedelta(days=1), time(0))
 
 # Type definitions for fixed and optional arguments, specific to this command
-ARG_TYPE_CONFIG_PATH = Annotated[
-        Path, typer.Argument()
-    ]
+ARG_TYPE_CONFIG_PATH = Annotated[Path, typer.Argument()]
 
-ARG_TYPE_OUTPUT_PATH = Annotated[
-        Path, typer.Argument()
-    ]
+ARG_TYPE_OUTPUT_PATH = Annotated[Path, typer.Argument()]
 
 ARG_TYPE_NUM_VALUES = Annotated[
-        int,
-        typer.Option("--num_values", "-n",
-            help="Only export the first 'num_values' items (if num_values > 0)."
-        ),
-    ]
+    int,
+    typer.Option(
+        "--num_values", "-n", help="Only export the first 'num_values' items (if num_values > 0)."
+    ),
+]
 
 ARG_TYPE_FORCE = Annotated[
-        bool,
-        typer.Option("--force", "-f",
-            help="Overwrite the output file if it already exists.",
-        ),
-    ]
+    bool,
+    typer.Option(
+        "--force",
+        "-f",
+        help="Overwrite the output file if it already exists.",
+    ),
+]
 
 
 def first_last_callback(value: str):
@@ -55,7 +52,9 @@ def first_last_callback(value: str):
 def export(
     ctx: typer.Context,
     config_file: ARG_TYPE_CONFIG_PATH = Path("config.yml"),
-    output_dir: ARG_TYPE_OUTPUT_PATH = AppLocation.get_directory(AppLocation.AppDataDir).joinpath("data_export"),
+    output_dir: ARG_TYPE_OUTPUT_PATH = AppLocation.get_directory(AppLocation.AppDataDir).joinpath(
+        "data_export"
+    ),
     num_values: ARG_TYPE_NUM_VALUES = 0,
     force: ARG_TYPE_FORCE = False,
     verbose: ARG_TYPE_VERBOSE = False,
@@ -67,8 +66,6 @@ def export(
     logger.info(f"Starting {APP_NAME} version {VERSION}")
     logger.debug(f"Current working directory : {os.getcwd()}")
     logger.debug(f"Current log level : {logger.getEffectiveLevel()}")
-
-
 
     if output_dir.exists():
         message = f"The output directory already exists ({output_dir})"

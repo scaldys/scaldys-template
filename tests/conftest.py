@@ -16,9 +16,7 @@ import datetime
 @pytest.fixture(scope="session")
 def temporary_test_directory(tmpdir_factory) -> str:
     timestamp = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
-    test_run_dir = str(
-        tmpdir_factory.mktemp("testrun-{0}".format(timestamp), numbered=False)
-    )
+    test_run_dir = str(tmpdir_factory.mktemp("testrun-{0}".format(timestamp), numbered=False))
     return test_run_dir
 
 

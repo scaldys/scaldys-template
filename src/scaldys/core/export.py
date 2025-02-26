@@ -24,7 +24,7 @@ def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) 
         file_path = output_dir_path / "data.json"
         logger.debug(f"Output file: {file_path}")
 
-        data = {f"key_{n}":n*2 for n in range(num_values)}
+        data = {f"key_{n}": n * 2 for n in range(num_values)}
 
         # Write dictionary to file in JSON format
         with file_path.open("w", encoding="utf-8") as fp:
@@ -34,4 +34,3 @@ def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) 
     except Exception as e:
         logger.error(f"Failed to export data to {file_path}: {e}")
         raise
-
