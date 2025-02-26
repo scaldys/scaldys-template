@@ -1,29 +1,38 @@
-# Basic CI setup: Lint with ruff, run tests with pytest
-name: Test
+# CI setup
+# Lint, format code and documentation, check type consistency, run tests with coverage and build
+name: Python Code Quality
 
 on:
   pull_request:
   push:
-    branches:
-      - master
 
 jobs:
-  lint:
-    name: Lint
+  code_quality:
+    name: Lint, format and type consistency
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+
+      - name: UV verify lock file
+        run: uv lock --locked
+
       - name: Ruff lint
         run: uv run ruff check .
+
       - name: Ruff format
         run: uv run ruff format --diff .
+
       # This isn't a general Python lint, this style is just used in this repository
       - name: Prettier format
         run: npx prettier --prose-wrap always --check "**/*.md"
 
+      - name: PyRight type consistency
+        run: uv run pyright ./src
+
   test:
     name: Run tests
+    needs: [code_quality]
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -31,4 +40,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
-      - run: uv run pytest
+
+      - run: uv run pytest -v --durations=0 --cov --cov-report=xml
+
+  build:
+    name: Build the project
+    needs: [code_quality, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+
+      - run: uv build
