@@ -60,7 +60,8 @@ def setup_logging(level: str = "info", verbose: bool = False) -> None:
     # otherwise turn off the logging messages to standard output by specifying a log level above critical
     if not verbose:
         stdout_handler = logging.getHandlerByName("stdout")
-        stdout_handler.setLevel(logging.CRITICAL + 1)
+        if stdout_handler is not None:
+            stdout_handler.setLevel(logging.CRITICAL + 1)
 
 
 def _configure_logging(log_file_path: pathlib.Path) -> None:

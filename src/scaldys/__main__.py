@@ -31,7 +31,8 @@ def main():
     logger.critical("critical message")
 
     try:
-        1 / 0
+        division_by_zero = 1 / 0
+        print(division_by_zero)
     except ZeroDivisionError:
         logger.exception("exception message")
 
