@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 # cython: language_level=3
-import logging.config
-import logging.handlers
+
+import logging
+import os
+from pathlib import Path
+import platformdirs
+from scaldys.__about__ import APP_NAME, PACKAGE_NAME
 
 from scaldys.common.app_logging import setup_logging
 
 # https://github.com/mCodingLLC/VideosSampleCode/tree/master/videos/135_modern_logging
 # use <application_name> in all files for the logger
 # __name__ is another common choice, but would create multiple equivalent instances in memory
-logger = logging.getLogger("scaldys")
+logger = logging.getLogger(PACKAGE_NAME)
 
 
 __all__ = ["hello"]
@@ -21,13 +25,14 @@ def hello(n: int) -> str:
 
 
 def main():
-    setup_logging()
+    setup_logging(level="debug", verbose=True)
     logging.basicConfig(level="INFO")
     logger.debug("debug message", extra={"x": "hello"})
     logger.info("info message")
     logger.warning("warning message")
     logger.error("error message")
     logger.critical("critical message")
+
     try:
         1 / 0
     except ZeroDivisionError:

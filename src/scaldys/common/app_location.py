@@ -4,14 +4,16 @@
 import logging
 import os
 import sys
+import platform
+
 from pathlib import Path
 
 import platformdirs
 
-from scaldys.__about__ import APP_NAME, ORGANIZATION_NAME
-from scaldys.common.sys_os import is_macosx, is_win
+from scaldys.__about__ import APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME
 
-logger = logging.getLogger("scaldys")
+logger = logging.getLogger(PACKAGE_NAME)
+
 
 __all__ = ["AppLocation"]
 
@@ -29,7 +31,7 @@ class AppLocation:
 
     @staticmethod
     def get_directory(dir_type: int = AppDir) -> Path:
-        """Return the directory path directory for the specified application directory type.
+        """Return the directory path for the specified application directory type.
 
         Parameters
         ----------
@@ -68,12 +70,6 @@ class AppLocation:
 
         return path.resolve()
 
-        # # resolve() does not work on windows
-        # if is_win():
-        #     return Path.cwd() / path
-        # else:
-        #     return path.resolve()
-
 
 def is_frozen() -> bool:
     """Test whether the application is frozen or not.
@@ -84,9 +80,7 @@ def is_frozen() -> bool:
         True if frozen, False otherwise.
 
     """
-    if hasattr(sys, "frozen") and sys.frozen == 1:
-        return True
-    return False
+    return getattr(sys, 'frozen', False)
 
 
 def get_os_app_data_path() -> Path:
@@ -98,12 +92,19 @@ def get_os_app_data_path() -> Path:
         The requested path.
     """
     dirs = platformdirs.AppDirs(APP_NAME, multipath=True)
-    if is_win():
-        app_data_path = Path(os.getenv("LOCALAPPDATA"), ORGANIZATION_NAME, APP_NAME)
-    elif is_macosx():
+
+    if platform.system() == "Windows":
+        app_data_dir = os.getenv("LOCALAPPDATA")
+        # os.getenv() can return None; LOCALAPPDATA is a Windows system variable and shall exist (so PyRight is happy).
+        assert app_data_dir is not None
+        app_data_path = Path(app_data_dir, ORGANIZATION_NAME, APP_NAME)
+    elif platform.system() == "Darwin":
         app_data_path = Path(dirs.user_data_dir)
     else:
-        app_data_path = Path(os.getenv("HOME"), f".{APP_NAME}")
+        app_data_dir = os.getenv("HOME")
+        # os.getenv() can return None; HOME is a system variable and shall exist (so PyRight is happy).
+        assert app_data_dir is not None
+        app_data_path = Path(app_data_dir, f".{APP_NAME}")
 
     return app_data_path
 
@@ -121,4 +122,4 @@ def is_running_from_source(app_path: Path) -> bool:
     bool
         True if the program is running from the source tree, False otherwise.
     """
-    return f"src\\{APP_NAME}" in str(app_path.resolve())
+    return f"src\\{PACKAGE_NAME}" in str(app_path.resolve())
