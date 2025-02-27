@@ -136,7 +136,11 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
             },
             "loggers": {
                 "root": {"level": "INFO", "handlers": ["stderr"], "propagate": True},
-                f"{PACKAGE_NAME}": {"level": "DEBUG", "handlers": ["queue_handler", "stdout"], "propagate": False},
+                f"{PACKAGE_NAME}": {
+                    "level": "DEBUG",
+                    "handlers": ["queue_handler", "stdout"],
+                    "propagate": False,
+                },
             },
         }
     )
