@@ -14,7 +14,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Utilities",
 ]
-license = {file = "LICENSE"}
+#license = {file = "LICENSE"}
 dependencies = [
     "platformdirs>=4.3.6",
     "typer>=0.15.1",
@@ -38,7 +38,7 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py312"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
