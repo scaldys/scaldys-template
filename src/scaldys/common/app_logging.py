@@ -16,6 +16,7 @@ from scaldys.common.app_location import AppLocation
 
 __all__ = ["setup_logging"]
 
+
 LOG_FILE_NAME = f"{PACKAGE_NAME}.log"
 
 # Largely inspired from :
@@ -133,7 +134,10 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                     "respect_handler_level": True,
                 },
             },
-            "loggers": {"root": {"level": "DEBUG", "handlers": ["queue_handler", "stdout"]}},
+            "loggers": {
+                "root": {"level": "INFO", "handlers": ["stderr"], "propagate": True},
+                f"{PACKAGE_NAME}": {"level": "DEBUG", "handlers": ["queue_handler", "stdout"], "propagate": False},
+            },
         }
     )
 
