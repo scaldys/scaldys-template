@@ -14,8 +14,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Utilities",
 ]
-license = "MIT"
-#license = {file = "LICENSE"}
+license = {file = "LICENSE"}
 dependencies = [
     "platformdirs>=4.3.6",
     "typer>=0.15.1",
