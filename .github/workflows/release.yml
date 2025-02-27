@@ -21,7 +21,7 @@ jobs:
       - uses: astral-sh/setup-uv@v3
 
       - name: Build the project
-        run: uv build
+        run: uv build --index-strategy unsafe-best-match
 
       # Check that basic features work and we didn't miss to include crucial files
       - name: Smoke test (wheel)
