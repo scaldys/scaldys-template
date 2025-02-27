@@ -16,10 +16,10 @@ from scaldys.cli.commands.arg_types import ARG_TYPE_VERBOSE, ARG_TYPE_LOG_LEVEL
 from scaldys.cli.settings import AppSettings
 from scaldys.common.app_logging import setup_logging
 
-logger = logging.getLogger(PACKAGE_NAME)
-
-
 __all__ = ["export"]
+
+
+logger = logging.getLogger(PACKAGE_NAME)
 
 next_day = datetime.combine(date.today() + timedelta(days=1), time(0))
 

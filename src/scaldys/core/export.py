@@ -7,9 +7,10 @@ from pathlib import Path
 
 from scaldys.__about__ import PACKAGE_NAME
 
-logger = logging.getLogger(f"{PACKAGE_NAME}")
-
 __all__ = ["export_data"]
+
+
+logger = logging.getLogger(f"{PACKAGE_NAME}")
 
 
 def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) -> None:

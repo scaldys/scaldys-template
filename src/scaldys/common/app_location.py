@@ -12,11 +12,10 @@ import platformdirs
 
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME
 
-logger = logging.getLogger(PACKAGE_NAME)
-
-
 __all__ = ["AppLocation"]
 
+
+logger = logging.getLogger(PACKAGE_NAME)
 
 APP_PATH = Path(__file__).parent.parent
 FROZEN_APP_PATH = Path(sys.argv[0]).parent

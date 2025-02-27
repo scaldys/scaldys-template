@@ -15,7 +15,7 @@ ARG_TYPE_VERBOSE = Annotated[
     typer.Option(
         "--verbose",
         "-v",
-        help="Enable verbose mode.",
+        help="Enable verbose mode: show logging output on standard output.",
     ),
 ]
 

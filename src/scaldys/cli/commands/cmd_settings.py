@@ -9,11 +9,12 @@ from typing_extensions import Annotated
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME
 from scaldys.cli.settings import AppSettings
 
+__all__ = ["log"]
+
+
 logger = logging.getLogger(PACKAGE_NAME)
 
 app = typer.Typer()
-
-__all__ = ["log"]
 
 # Type definitions for fixed and optional arguments, specific to this command
 ARG_TYPE_LOG_LEVEL = Annotated[

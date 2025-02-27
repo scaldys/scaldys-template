@@ -6,13 +6,13 @@ from scaldys.__about__ import PACKAGE_NAME
 
 from scaldys.common.app_logging import setup_logging
 
+__all__ = ["hello"]
+
+
 # https://github.com/mCodingLLC/VideosSampleCode/tree/master/videos/135_modern_logging
 # use <application_name> in all files for the logger
 # __name__ is another common choice, but would create multiple equivalent instances in memory
 logger = logging.getLogger(PACKAGE_NAME)
-
-
-__all__ = ["hello"]
 
 
 def hello(n: int) -> str:

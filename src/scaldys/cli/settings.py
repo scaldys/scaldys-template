@@ -10,7 +10,8 @@ from scaldys.common.app_location import AppLocation
 
 __all__ = ["AppSettings"]
 
-logger = logging.getLogger(f"{PACKAGE_NAME}")
+
+logger = logging.getLogger(PACKAGE_NAME)
 
 
 class AppSettings:
