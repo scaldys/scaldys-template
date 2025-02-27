@@ -13,6 +13,7 @@ from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
 from scaldys.core.export import export_data
 from scaldys.common.app_location import AppLocation
 from scaldys.cli.commands.arg_types import ARG_TYPE_VERBOSE, ARG_TYPE_LOG_LEVEL
+from scaldys.cli.settings import AppSettings
 from scaldys.common.app_logging import setup_logging
 
 logger = logging.getLogger(PACKAGE_NAME)
@@ -58,9 +59,13 @@ def export(
     num_values: ARG_TYPE_NUM_VALUES = 0,
     force: ARG_TYPE_FORCE = False,
     verbose: ARG_TYPE_VERBOSE = False,
-    log_level: ARG_TYPE_LOG_LEVEL = "info",
+    log_level: ARG_TYPE_LOG_LEVEL = None,
 ) -> None:
-    """Export the data."""
+    """An example command to export some data."""
+    app_settings = AppSettings()
+    if log_level is None:
+        log_level = app_settings.log_level
+
     setup_logging(log_level, verbose)
 
     logger.info(f"Starting {APP_NAME} version {VERSION}")
@@ -68,7 +73,7 @@ def export(
     logger.debug(f"Current log level : {logger.getEffectiveLevel()}")
 
     if output_dir.exists():
-        message = f"The output directory already exists ({output_dir})"
+        message = "The output directory already exists"
         if not force:
             logger.error(
                 f"{message}, use the '--force' option to overwrite : {str(output_dir.resolve())}."
@@ -79,7 +84,7 @@ def export(
                 f"{message}. Files with the same name will be overwritten (option '--force' used) : {str(output_dir.resolve())}."
             )
 
-    num_values = 10
+    num_values += 10
 
     logger.info(f"Configuration file: {config_file}")
     logger.info(f"Output directory: {output_dir}")

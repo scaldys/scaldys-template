@@ -14,11 +14,7 @@ from typing import override
 from scaldys.__about__ import PACKAGE_NAME
 from scaldys.common.app_location import AppLocation
 
-# logger = logging.getLogger(PACKAGE_NAME)
-
-
 __all__ = ["setup_logging"]
-
 
 LOG_FILE_NAME = f"{PACKAGE_NAME}.log"
 
@@ -27,10 +23,12 @@ LOG_FILE_NAME = f"{PACKAGE_NAME}.log"
 # logging configuration not read from a configuration file, but directly embedded here.
 
 
-def setup_logging(level: str = "info", verbose: bool = False) -> None:
+def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
     """Configure the logging for the application."""
-    assert level is not None
-    assert level.lower() in ["debug", "info", "warning", "error", "critical"], (
+    if level is None:
+        level = "info"
+
+    assert level.lower() in ["off", "debug", "info", "warning", "error", "critical"], (
         f"Invalid log level ({level})."
     )
 
@@ -54,10 +52,18 @@ def setup_logging(level: str = "info", verbose: bool = False) -> None:
 
     logger = logging.getLogger(PACKAGE_NAME)
     # getattr() transforms log_level string to the corresponding integer value
-    logger.setLevel(getattr(logging, level.upper()))
+    if level == "off":
+        if verbose:
+            numeric_level = getattr(logging, "INFO")
+        else:
+            # turn off the logging messages to standard output by specifying a log level above critical
+            numeric_level = getattr(logging, "CRITICAL") + 1
+    else:
+        numeric_level = getattr(logging, level.upper())
+
+    logger.setLevel(numeric_level)
 
     # if verbose, use the log level given by the function parameter,
-    # otherwise turn off the logging messages to standard output by specifying a log level above critical
     if not verbose:
         stdout_handler = logging.getHandlerByName("stdout")
         if stdout_handler is not None:

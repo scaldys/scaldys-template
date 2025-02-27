@@ -4,6 +4,7 @@
 import typer
 
 from typing_extensions import Annotated
+from typing import Optional
 
 __all__ = ["ARG_TYPE_VERBOSE", "ARG_TYPE_LOG_LEVEL"]
 
@@ -20,6 +21,6 @@ ARG_TYPE_VERBOSE = Annotated[
 
 
 ARG_TYPE_LOG_LEVEL = Annotated[
-    str,
-    typer.Option("--log", "-l", help="Set the log level."),
+    Optional[str],
+    typer.Option("--log", "-l", help="Set the log level (off, debug, info, warn, error, critical)"),
 ]

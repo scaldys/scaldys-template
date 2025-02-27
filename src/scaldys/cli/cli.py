@@ -4,6 +4,7 @@
 import typer
 
 import scaldys.cli.commands.cmd_export as cmd_export
+import scaldys.cli.commands.cmd_settings as cmd_settings
 from scaldys.__about__ import APP_NAME, VERSION
 
 
@@ -27,7 +28,7 @@ app = typer.Typer(
 )
 
 app.command()(cmd_export.export)
-# app.add_typer(cmd_source.app, name="source")
+app.add_typer(cmd_settings.app, name="settings")
 
 
 @app.callback()
