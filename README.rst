@@ -90,11 +90,13 @@ Execute the Application
 Execute the application with the following command:
 
 .. code-block:: bash
+
    uv run ./src/scaldys.py
 
 or from within the source directory :
 
 .. code-block:: bash
+
    # using uv
    uv run scaldys.py
 
