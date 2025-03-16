@@ -17,6 +17,7 @@ Features
 ========
 
 * Modern Python development with Python 3.12+
+* Command-line interface (CLI) built with Typer for intuitive and feature-rich applications
 * Fast dependency management with ``uv``
 * Comprehensive testing with ``pytest`` and coverage reporting
 * Code quality verification with ``ruff`` (linting & formatting) and ``pyright`` (type checking)
