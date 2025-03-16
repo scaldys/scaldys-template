@@ -84,6 +84,103 @@ While the environment is synced automatically, it may also be explicitly synced 
 For comprehensive documentation on using ``uv``, visit the official documentation: https://docs.astral.sh/uv/guides/ .
 
 
+Execute the Application
+-----------------------
+
+Execute the application with the following command:
+
+.. code-block:: bash
+   uv run ./src/scaldys.py
+
+or from within the source directory :
+
+.. code-block:: bash
+   # using uv
+   uv run scaldys.py
+
+   # using Python directly
+   python scaldys.py
+
+
+Building the Application
+-----------------------
+
+You can build distribution packages for your application to share or deploy it.
+The build process creates both source distributions (sdist) and binary wheel distributions.
+
+Basic Build
+~~~~~~~~~~~
+
+To build the application using ``uv``:
+
+.. code-block:: bash
+
+   # Build source distribution and wheel
+   uv build
+
+This creates distribution files in the ``dist/`` directory:
+- ``scaldys-x.y.z.tar.gz`` (source distribution)
+- ``scaldys-x.y.z-py3-none-any.whl`` (wheel distribution)
+
+
+Build Options
+~~~~~~~~~~~~~
+
+For more control over the build process:
+
+.. code-block:: bash
+
+   # Build only the wheel
+   uv build --wheel
+
+   # Build only the source distribution
+   uv build --sdist
+
+   # Clean previous builds first
+   rm -rf dist/ build/
+   uv build
+
+   # Include development extras in the build
+   uv build --config-setting="--extras=dev"
+
+Verify the Build
+~~~~~~~~~~~~~~~~
+
+You can verify your build artifacts before distribution:
+
+.. code-block:: bash
+
+   # List contents of the wheel
+   python -m zipfile -l dist/scaldys-*.whl
+
+   # Install from the local wheel to test
+   pip install --force-reinstall dist/scaldys-*.whl
+
+   # Run a smoke test after installation
+   scaldys --version
+
+
+Build for Different Environments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For specific target environments:
+
+.. code-block:: bash
+
+   # For a specific Python version
+   uv build --python-tag py312
+
+   # For specific platforms (when using C extensions)
+   uv build --config-setting="--plat-name=manylinux2014_x86_64"
+
+
+Automated Builds
+~~~~~~~~~~~~~~~~
+
+The project includes GitHub Actions workflows that automatically build packages when you create a new release.
+See the workflow file at ``.github/workflows/release.yml`` for details.
+
+
 Code Quality Verification
 -------------------------
 
@@ -134,6 +231,7 @@ This template supports trusted publishing to PyPI using GitHub Actions:
      * Repository: Your repository name
      * Workflow name: ``release.yml``
      * Environment name: ``release`` (configure this in your GitHub repository settings)
+
 
 License
 =======
