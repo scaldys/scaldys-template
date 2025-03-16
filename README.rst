@@ -145,6 +145,7 @@ For more control over the build process:
    # Include development extras in the build
    uv build --config-setting="--extras=dev"
 
+
 Verify the Build
 ~~~~~~~~~~~~~~~~
 
@@ -195,6 +196,12 @@ These checks are defined in ``.github/workflows/release.yml`` and include:
 You can also run quality checks locally before committing:
 
 .. code-block:: bash
+
+   # Sync dependencies with lock file
+   uv sync
+
+   # Run tests
+   uv run pytest
 
    # Run tests
    uv run pytest
