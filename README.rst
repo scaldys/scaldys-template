@@ -105,7 +105,7 @@ or from within the source directory :
 
 
 Building the Application
------------------------
+------------------------
 
 You can build distribution packages for your application to share or deploy it.
 The build process creates both source distributions (sdist) and binary wheel distributions.
