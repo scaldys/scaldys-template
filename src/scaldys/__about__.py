@@ -17,4 +17,4 @@ PACKAGE_NAME = "scaldys"  # lower case
 ORGANIZATION_NAME = "Scaldys"
 
 # version information
-VERSION = "0.1.1"
+VERSION = "0.1.2"
