@@ -27,11 +27,11 @@ ARG_TYPE_LOG_LEVEL = Annotated[
 
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context):
-    """Entry point for managing application settings.
+    """
+    Entry point for managing application settings.
 
     This command allows users to view or interact with application settings.
     When invoked without a subcommand, it displays the current logging level of the application.
-
     """
     if ctx.invoked_subcommand is None:
         settings = AppSettings()

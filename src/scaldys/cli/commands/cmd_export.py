@@ -61,7 +61,12 @@ def export(
     verbose: ARG_TYPE_VERBOSE = False,
     log_level: ARG_TYPE_LOG_LEVEL = None,
 ) -> None:
-    """An example command to export some data."""
+    """
+    Export data according to specifications in a configuration file.
+
+    This command reads a configuration file and exports data to a specified directory.
+    It can limit the number of values exported and overwrite existing files if required.
+    """
     app_settings = AppSettings()
     if log_level is None:
         log_level = app_settings.log_level

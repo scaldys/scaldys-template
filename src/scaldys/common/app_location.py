@@ -22,7 +22,9 @@ FROZEN_APP_PATH = Path(sys.argv[0]).parent
 
 
 class AppLocation:
-    """AppLocation is a static class which retrieves a directory based on the directory type."""
+    """
+    AppLocation is a static class which retrieves a directory based on the directory type.
+    """
 
     AppDir = 1
     AppDataDir = 2
@@ -30,7 +32,8 @@ class AppLocation:
 
     @staticmethod
     def get_directory(dir_type: int = AppDir) -> Path:
-        """Return the directory path for the specified application directory type.
+        """
+        Return the directory path for the specified application directory type.
 
         Parameters
         ----------
@@ -71,7 +74,8 @@ class AppLocation:
 
 
 def is_frozen() -> bool:
-    """Test whether the application is frozen or not.
+    """
+    Test whether the application is frozen or not.
 
     Returns
     -------
@@ -83,7 +87,8 @@ def is_frozen() -> bool:
 
 
 def get_os_app_data_path() -> Path:
-    """Return an application specific path for the operating system.
+    """
+    Return an application specific path for the operating system.
 
     Returns
     -------
@@ -109,7 +114,8 @@ def get_os_app_data_path() -> Path:
 
 
 def is_running_from_source(app_path: Path) -> bool:
-    """Test whether the program running from the source tree, based on the path of the script file.
+    """
+    Test whether the program running from the source tree, based on the path of the script file.
 
     Parameters
     ----------

@@ -10,11 +10,30 @@ from scaldys.__about__ import PACKAGE_NAME
 __all__ = ["export_data"]
 
 
-logger = logging.getLogger(f"{PACKAGE_NAME}")
+logger = logging.getLogger(PACKAGE_NAME)
 
 
 def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) -> None:
-    """Implementation of the exportation of data."""
+    """
+    Exports generated data to a JSON file.
+
+    Parameters
+    ----------
+    config_file_path : Path
+        The path to the configuration file (currently unused, reserved for future use).
+    output_dir_path : Path
+        The directory where the JSON file will be saved.
+        The directory will be created if it does not exist.
+    num_values : int
+        The number of key-value pairs to generate in the dictionary.
+
+    Raises
+    ------
+    Exception
+        If an error occurs during directory creation or file writing, the exception is logged and re-raised.
+
+
+    """
 
     # implement data export logic here
     file_name = "data.json"

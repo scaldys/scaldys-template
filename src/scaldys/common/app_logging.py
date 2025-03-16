@@ -25,7 +25,32 @@ LOG_FILE_NAME = f"{PACKAGE_NAME}.log"
 
 
 def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
-    """Configure the logging for the application."""
+    """
+    Configure and initialize logging for the application.
+
+    This function sets up the logging system with both file and console handlers.
+    Log files are stored in JSON Lines format in the application's log directory.
+    The logging level can be configured, and console output can be controlled
+    via the verbose parameter.
+
+    Parameters
+    ----------
+    level : str or None, default="info"
+        The logging level to set. Valid values are: "off", "debug", "info", "warning", "error", "critical".
+        If "off" is specified, logging is disabled. If None is provided, it defaults to "info".
+    verbose : bool, default=False
+        If True, log messages are output to console according to the specified level.
+        If False, console output is limited to CRITICAL level messages and above.
+
+    Raises
+    ------
+    AssertionError
+        If an invalid log level is provided.
+    Exception
+        If there are issues creating log directories or configuring handlers.
+
+    """
+
     if level is None:
         level = "info"
 

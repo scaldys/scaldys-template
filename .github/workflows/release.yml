@@ -30,4 +30,6 @@ jobs:
 #        run: uv run --isolated --no-project -p 3.12 --with dist/*.tar.gz tests/smoke_test.py
 
       - name: Publish
-        run: uv publish --index testpypi --trusted-publishing always
+        run: uv publish --trusted-publishing always
+        # To publish to TestPyPI instead of PyPI, specify --index as shown below.
+        # run: uv publish --index testpypi --trusted-publishing always
