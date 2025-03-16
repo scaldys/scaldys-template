@@ -80,7 +80,7 @@ While the environment is synced automatically, it may also be explicitly synced 
 
    uv sync
 
-Please refer to the ``uv`` documentation : https://docs.astral.sh/uv/guides/
+For comprehensive documentation on using ``uv``, visit the official documentation: https://docs.astral.sh/uv/guides/ .
 
 
 Code Quality Verification
