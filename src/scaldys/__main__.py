@@ -4,7 +4,7 @@
 import logging
 from scaldys.__about__ import PACKAGE_NAME
 
-from scaldys.common.app_logging import setup_logging
+from scaldys.common.logging import setup_logging
 
 __all__ = ["hello"]
 

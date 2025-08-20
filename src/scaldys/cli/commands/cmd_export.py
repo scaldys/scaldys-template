@@ -14,7 +14,7 @@ from scaldys.core.export import export_data
 from scaldys.common.app_location import AppLocation
 from scaldys.cli.commands.arg_types import ARG_TYPE_VERBOSE, ARG_TYPE_LOG_LEVEL
 from scaldys.cli.settings import AppSettings
-from scaldys.common.app_logging import setup_logging
+from scaldys.common.logging import setup_logging
 
 __all__ = ["export"]
 
@@ -45,11 +45,6 @@ ARG_TYPE_FORCE = Annotated[
 ]
 
 
-def first_last_callback(value: str):
-    if value in ["10sec", "1min", "1hour", "1day"]:
-        return value
-
-
 def export(
     ctx: typer.Context,
     config_file: ARG_TYPE_CONFIG_PATH = Path("config.yml"),
@@ -74,7 +69,7 @@ def export(
     setup_logging(log_level, verbose)
 
     logger.info(f"Starting {APP_NAME} version {VERSION}")
-    logger.debug(f"Current working directory : {os.getcwd()}")
+    logger.debug(f"Current working directory : {Path.cwd()}")
     logger.debug(f"Current log level : {logger.getEffectiveLevel()}")
 
     if output_dir.exists():

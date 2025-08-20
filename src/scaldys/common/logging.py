@@ -106,7 +106,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
             "disable_existing_loggers": False,
             "filters": {
                 "verbose_true": {
-                    "()": f"{PACKAGE_NAME}.common.app_logging.NonErrorFilter",
+                    "()": f"{PACKAGE_NAME}.common.logging.NonErrorFilter",
                 }
             },
             "formatters": {
@@ -119,7 +119,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                     "datefmt": "%Y-%m-%dT%H:%M:%S%z",
                 },
                 "json": {
-                    "()": f"{PACKAGE_NAME}.common.app_logging.JsonFormatter",
+                    "()": f"{PACKAGE_NAME}.common.logging.JsonFormatter",
                     "fmt_keys": {
                         "level": "levelname",
                         "message": "message",
