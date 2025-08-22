@@ -1,4 +1,5 @@
 .idea/
+.ropeproject/
 .venv/
 .vscode/
 app_data/
@@ -13,3 +14,4 @@ src/scaldys.egg-info/
 ideas.md
 package.json
 package-lock.json
+

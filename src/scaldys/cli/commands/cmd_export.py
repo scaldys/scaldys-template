@@ -2,7 +2,6 @@
 # cython: language_level=3
 
 import logging
-import os
 from datetime import datetime, timedelta, date, time
 from pathlib import Path
 
