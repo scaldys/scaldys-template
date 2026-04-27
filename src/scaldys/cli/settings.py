@@ -40,7 +40,6 @@ class AppSettings:
         config.read(str(self._settings_file_path))
 
         try:
-            # pass
             self.log_level = config["DEFAULT"]["log_level"]
 
         except KeyError:
@@ -49,7 +48,7 @@ class AppSettings:
             )
 
     def save(self):
-        logger.info("Saving application settings")
+        logger.debug("Saving application settings")
 
         if self._settings_file_path is None:
             logger.debug("The settings file is not defined (None). Settings not persisted...")

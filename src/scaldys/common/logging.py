@@ -51,7 +51,7 @@ def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
 
     """
 
-    if level is None:
+    if not level:
         level = "info"
 
     assert level.lower() in ["off", "debug", "info", "warning", "error", "critical"], (
@@ -105,9 +105,13 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
             "version": 1,
             "disable_existing_loggers": False,
             "filters": {
-                "verbose_true": {
+                "is_error": {
+                    "()": "logging.Filter",
+                    "name": "",
+                },
+                "non_error": {
                     "()": f"{PACKAGE_NAME}.common.logging.NonErrorFilter",
-                }
+                },
             },
             "formatters": {
                 "verbose": {
@@ -135,7 +139,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
             "handlers": {
                 "stderr": {
                     "class": "logging.StreamHandler",
-                    "level": "DEBUG",
+                    "level": "ERROR",
                     "formatter": "console",
                     "stream": "ext://sys.stderr",
                 },
@@ -144,6 +148,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                     "level": "DEBUG",
                     "formatter": "verbose",
                     "stream": "ext://sys.stdout",
+                    "filters": ["non_error"],
                 },
                 "file_json": {
                     "class": "logging.handlers.RotatingFileHandler",
@@ -160,10 +165,10 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                 },
             },
             "loggers": {
-                "root": {"level": "INFO", "handlers": ["stderr"], "propagate": True},
+                "root": {"level": "WARNING", "handlers": ["stderr"], "propagate": True},
                 f"{PACKAGE_NAME}": {
                     "level": "DEBUG",
-                    "handlers": ["queue_handler", "stdout"],
+                    "handlers": ["queue_handler", "stdout", "stderr"],
                     "propagate": False,
                 },
             },
