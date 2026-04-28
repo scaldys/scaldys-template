@@ -5,6 +5,8 @@
 app_data/
 build/
 dist/
+dist_exe/
+dist_setup/
 docs/build/
 list/
 node_modules/

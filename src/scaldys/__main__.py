@@ -5,20 +5,13 @@ import logging
 from scaldys.__about__ import PACKAGE_NAME
 
 from scaldys.common.logging import setup_logging
-
-__all__ = ["hello"]
+from scaldys.cli.cli import app
 
 
 # https://github.com/mCodingLLC/VideosSampleCode/tree/master/videos/135_modern_logging
 # use <application_name> in all files for the logger
 # __name__ is another common choice, but would create multiple equivalent instances in memory
 logger = logging.getLogger(PACKAGE_NAME)
-
-
-def hello(n: int) -> str:
-    """Greet the sum from 0 to n (exclusive end)."""
-    sum_n = sum(range(n))
-    return f"Hello {sum_n}!"
 
 
 def main():
@@ -30,11 +23,7 @@ def main():
     logger.error("error message")
     logger.critical("critical message")
 
-    try:
-        division_by_zero = 1 / 0
-        print(division_by_zero)
-    except ZeroDivisionError:
-        logger.exception("exception message")
+    app()
 
 
 if __name__ == "__main__":
