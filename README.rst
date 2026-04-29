@@ -253,7 +253,7 @@ You can also run quality checks locally before committing:
    uv run pyright ./src
 
    # Build documentation
-   uv run sphinx-build docs/manual/ docs/_build
+   uv run sphinx-build docs/manual/source docs/_build
 
 
 Publishing to PyPI
