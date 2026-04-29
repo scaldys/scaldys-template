@@ -78,7 +78,9 @@ def safe_rmtree(path: Path):
 
                 if i == 4:
                     # If rename fails after retries, we'll still try to delete the original path
-                    logger.debug(f"Failed to rename {path} for deletion, proceeding with original path.")
+                    logger.debug(
+                        f"Failed to rename {path} for deletion, proceeding with original path."
+                    )
                     break
                 time.sleep(0.1 * (2**i))
 
@@ -165,7 +167,9 @@ def safe_empty_dir(path: Path):
         safe_rmtree(temp_path)
     except (PermissionError, OSError) as e:
         # Fallback to item-by-item if we can't rename the root (e.g. if it's the CWD)
-        logger.debug(f"Could not rename root {path} for cleaning: {e}. Falling back to item-by-item.")
+        logger.debug(
+            f"Could not rename root {path} for cleaning: {e}. Falling back to item-by-item."
+        )
         for item in path.iterdir():
             try:
                 if item.is_dir():
@@ -408,7 +412,8 @@ class Compiler:
             str(self.env.python_exe_path),
             "compile.py",
             "build_ext",
-            "--build-lib", str(compiled_path),
+            "--build-lib",
+            str(compiled_path),
             "--compiler=msvc",
         ]
         self.env.run_command(cmd, "Error running Cython build", cwd=self.env.project_path)
@@ -419,7 +424,7 @@ class Compiler:
         for pyd in compiled_path.rglob("*.pyd"):
             rel_pyd = pyd.relative_to(compiled_path)
             # Extract module name (handles Windows .cp313-win_amd64.pyd suffixes)
-            name = rel_pyd.name.split('.')[0]
+            name = rel_pyd.name.split(".")[0]
             py_rel_path = rel_pyd.with_name(f"{name}.py")
             compiled_py_files.add(str(py_rel_path))
 
@@ -436,7 +441,9 @@ class Compiler:
             for name in contents:
                 full_rel_path = rel_dir.joinpath(name)
                 # Ignore common junk and build artifacts
-                if name == "__pycache__" or name.endswith((".pyc", ".pyo", ".c", ".html", ".obj", ".lib", ".exp")):
+                if name == "__pycache__" or name.endswith(
+                    (".pyc", ".pyo", ".c", ".html", ".obj", ".lib", ".exp")
+                ):
                     ignored.append(name)
                 # Ignore .py files that are already present as .pyd
                 elif str(full_rel_path) in compiled_py_files:
@@ -482,7 +489,8 @@ class Compiler:
             str(self.env.build_dir_path.joinpath("pyinstaller")),
             "--specpath",
             str(self.env.build_dir_path),
-            "--collect-submodules", PACKAGE_NAME,
+            "--collect-submodules",
+            PACKAGE_NAME,
             "--noupx",
         ]
 
@@ -635,10 +643,13 @@ class WindowsBuilder:
     def main(self):
         """Run the end-to-end Windows build workflow."""
         steps = [
-            ("Pre-flight checks", lambda: self.pre_flight_checks(
-                require_sphinx=self.env.user_guide_dir_path.exists(),
-                require_pyinstaller=True,
-            )),
+            (
+                "Pre-flight checks",
+                lambda: self.pre_flight_checks(
+                    require_sphinx=self.env.user_guide_dir_path.exists(),
+                    require_pyinstaller=True,
+                ),
+            ),
             ("Cleaning build directories", self.clean),
             ("Building documentation", self.build_docs),
             ("Building executable", self.build_exe),
