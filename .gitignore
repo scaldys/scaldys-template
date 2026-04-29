@@ -6,6 +6,8 @@ app_data/
 build/
 dist/
 docs/build/
+docs/_build/
+docs/manual/_build/
 list/
 node_modules/
 src/scaldys/logs/*.jsonl
@@ -14,4 +16,6 @@ src/scaldys.egg-info/
 ideas.md
 package.json
 package-lock.json
+**/__pycache__/
+*.pyc
 
