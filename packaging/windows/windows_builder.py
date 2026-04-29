@@ -628,11 +628,12 @@ class WindowsBuilder:
         if self._is_in_onedrive() and any(p.exists() for p in target_dirs):
             logger.info(
                 "[yellow]OneDrive detected: active synchronization may cause the cleaning process to take several minutes. "
-                "If it becomes excessively slow, you can manually delete the 'build' and 'dist*' directories via File Explorer.[/yellow]"
+                "If it becomes excessively slow, you can manually delete the 'build' and 'dist' directories via File Explorer.[/yellow]"
             )
 
         logger.info("[bold]Cleaning build directories...[/bold]")
         for path in target_dirs:
+            logger.info(f"  Cleaning directory '{path}'")
             safe_empty_dir(path)
 
         # Clean up lingering .c files in src

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=3
 
 import logging
 from scaldys.__about__ import PACKAGE_NAME
