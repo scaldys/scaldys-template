@@ -16,6 +16,7 @@ classifiers = [
 ]
 license-files = ["LICEN[CS]E*"]
 dependencies = [
+    "art>=6.5",
     "platformdirs>=4.9.6",
     "typer>=0.25.0",
 ]
