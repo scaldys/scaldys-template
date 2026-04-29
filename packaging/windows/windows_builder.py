@@ -595,21 +595,40 @@ class WindowsBuilder:
         """Generate installer."""
         self.packager.build()
 
+    def _is_in_onedrive(self) -> bool:
+        """Check if the project is located within a OneDrive-synchronized folder."""
+        project_path = self.env.project_path.resolve()
+        # Iterate through environment variables to find OneDrive roots
+        for key, value in os.environ.items():
+            if "onedrive" in key.lower() and value:
+                try:
+                    onedrive_root = Path(value).resolve()
+                    # Check if project path is a subpath of this OneDrive root
+                    if project_path.is_relative_to(onedrive_root):
+                        return True
+                except (ValueError, TypeError, OSError):
+                    continue
+        return False
+
     def clean(self):
         """Clean build directories."""
-        if os.environ.get("OneDrive") or os.environ.get("OneDriveConsumer"):
-            logger.info(
-                "[yellow]OneDrive detected: active synchronization may cause the cleaning process to take several minutes. "
-                "If it becomes excessively slow, you can manually delete the 'build' and 'dist*' directories via File Explorer.[/yellow]"
-            )
-        logger.info("[bold]Cleaning build directories...[/bold]")
-        for path in [
+        target_dirs = [
             self.env.build_dir_path,
             self.env.dist_dir_path,
             self.env.dist_bin_dir_path,
             self.env.dist_exe_dir_path,
             self.env.dist_setup_dir_path,
-        ]:
+        ]
+
+        # Show OneDrive warning only if we are in OneDrive AND at least one directory exists to clean
+        if self._is_in_onedrive() and any(p.exists() for p in target_dirs):
+            logger.info(
+                "[yellow]OneDrive detected: active synchronization may cause the cleaning process to take several minutes. "
+                "If it becomes excessively slow, you can manually delete the 'build' and 'dist*' directories via File Explorer.[/yellow]"
+            )
+
+        logger.info("[bold]Cleaning build directories...[/bold]")
+        for path in target_dirs:
             safe_empty_dir(path)
 
         # Clean up lingering .c files in src
