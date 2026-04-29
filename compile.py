@@ -11,7 +11,7 @@ class BinaryDistribution(Distribution):
 
 # The modules that should be compiled via Cython
 COMPILED_MODULES = [
-    # "scaldys.core.export",
+    "scaldys.core.export",
 ]
 
 def get_extension_modules(source_root):

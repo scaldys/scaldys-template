@@ -456,8 +456,16 @@ class Compiler:
         """Run PyInstaller to build an executable."""
         logger.info("[bold]Running PyInstaller...[/bold]")
 
-        entry_point = self.env.src_compiled_dir_path.joinpath(f"{PACKAGE_NAME}", "__exe__.py")
+        entry_point = self.env.src_compiled_dir_path.joinpath(f"{PACKAGE_NAME}", "__main__.py")
         hooks_dir = self.env.src_compiled_dir_path.joinpath("extra_hooks")
+
+        # Ensure we have a hook file named correctly for PyInstaller to pick it up.
+        # We use a generic name in the source to make it reusable across projects.
+        if hooks_dir.exists():
+            generic_hook = hooks_dir / "hook_package.py"
+            if generic_hook.exists():
+                target_hook = hooks_dir / f"hook-{PACKAGE_NAME}.py"
+                safe_rename(generic_hook, target_hook)
 
         cmd = [
             str(self.env.pyinstaller_exe_path),
@@ -475,6 +483,7 @@ class Compiler:
             str(self.env.build_dir_path.joinpath("pyinstaller")),
             "--specpath",
             str(self.env.build_dir_path),
+            "--collect-submodules", PACKAGE_NAME,
             "--noupx",
         ]
 
@@ -521,7 +530,7 @@ class Packager:
         bin_dir = self.env.dist_exe_dir_path.joinpath("bin")
         bin_dir.mkdir(parents=True, exist_ok=True)
 
-        for script in ["scaldys_commandline.bat", "scaldys_powershell.ps1"]:
+        for script in [f"{PACKAGE_NAME}_commandline.bat", f"{PACKAGE_NAME}_powershell.ps1"]:
             safe_copy(self.env.script_dir_path.joinpath(script), bin_dir.joinpath(script))
 
         help_src = self.env.user_guide_build_dir_path.joinpath("html")
