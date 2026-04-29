@@ -4,7 +4,7 @@
 import typer
 from typer.core import TyperGroup
 from click import Context
-from art import text2art, tprint
+from art import text2art
 
 import scaldys.cli.commands.cmd_export as cmd_export
 import scaldys.cli.commands.cmd_settings as cmd_settings

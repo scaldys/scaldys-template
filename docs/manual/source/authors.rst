@@ -4,4 +4,4 @@
 Authors
 *******
 
-.. include:: ../../AUTHORS
+.. include:: /../../../AUTHORS

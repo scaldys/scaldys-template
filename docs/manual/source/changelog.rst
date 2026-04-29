@@ -4,4 +4,4 @@
 Changelog
 *********
 
-.. include:: ../../CHANGELOG
+.. include:: /../../../CHANGELOG

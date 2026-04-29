@@ -22,6 +22,7 @@ Features
 * Comprehensive testing with ``pytest`` and coverage reporting
 * Code quality verification with ``ruff`` (linting & formatting) and ``pyright`` (type checking)
 * Documentation with reStructuredText and ``sphinx`` using ReadTheDocs theme
+* Windows build infrastructure with ``Cython``, ``PyInstaller`` and ``Inno Setup``
 * GitHub Actions workflows for CI/CD and PyPI publishing
 
 
@@ -184,6 +185,42 @@ The project includes GitHub Actions workflows that automatically build packages 
 See the workflow file at ``.github/workflows/release.yml`` for details.
 
 
+Windows Packaging (Cython + PyInstaller + Inno Setup)
+-----------------------------------------------------
+
+This template includes a dedicated Windows build system to create compiled, standalone executables and a professional installer.
+
+**Key features:**
+* **Cythonization:** Critical core modules are compiled to C for performance and basic obfuscation.
+* **Stand-alone Executable:** Bundles the application and all dependencies into a single directory using PyInstaller.
+* **Professional Installer:** Creates a Windows setup (``.exe``) using Inno Setup, including desktop shortcuts and PATH integration.
+
+The Windows build system is managed by the ``packaging/windows/windows_builder.py`` script, which is exposed via the CLI.
+
+**Available Build Commands:**
+
+.. code-block:: bash
+
+   # Run the full end-to-end build (docs, exe, and installer)
+   uv run python packaging/windows/windows_builder.py build windows all
+
+   # Build only the standalone executable
+   uv run python packaging/windows/windows_builder.py build windows exe
+
+   # Build only the setup installer (requires Inno Setup installed)
+   uv run python packaging/windows/windows_builder.py build windows installer
+
+   # Build Windows-specific documentation
+   uv run python packaging/windows/windows_builder.py build windows docs
+
+   # Clean build and dist directories
+   uv run python packaging/windows/windows_builder.py build windows clean
+
+**Prerequisites for Windows Build:**
+* **Inno Setup:** Must be installed and available in your PATH to build the installer.
+* **Visual Studio Build Tools:** Required for Cython compilation.
+
+
 Code Quality Verification
 -------------------------
 
@@ -203,9 +240,6 @@ You can also run quality checks locally before committing:
    # Run tests
    uv run pytest
 
-   # Run tests
-   uv run pytest
-
    # Check test coverage
    uv run coverage run -m pytest
 
@@ -219,7 +253,7 @@ You can also run quality checks locally before committing:
    uv run pyright ./src
 
    # Build documentation
-   uv run sphinx-build docs docs/_build
+   uv run sphinx-build docs/manual/ docs/_build
 
 
 Publishing to PyPI
