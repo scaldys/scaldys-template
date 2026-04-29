@@ -4,15 +4,19 @@ from setuptools.dist import Distribution
 from Cython.Build import cythonize
 from Cython.Distutils import build_ext
 
+
 class BinaryDistribution(Distribution):
     """Distribution which always forces a binary package with platform name"""
+
     def has_ext_modules(foo):
         return True
+
 
 # The modules that should be compiled via Cython
 COMPILED_MODULES = [
     "scaldys.core.export",
 ]
+
 
 def get_extension_modules(source_root):
     extensions = []
@@ -20,6 +24,7 @@ def get_extension_modules(source_root):
         source_file = os.path.join(source_root, *module.split(".")) + ".py"
         extensions.append(Extension(module, sources=[source_file]))
     return extensions
+
 
 cmdclass = {"build_ext": build_ext}
 distclass = BinaryDistribution
@@ -33,11 +38,7 @@ package_dir = {"": source_root}
 setup(
     name="scaldys",
     cmdclass=cmdclass,
-    ext_modules=cythonize(
-        get_extension_modules(source_root),
-        annotate=False,
-        language_level="3"
-    ),
+    ext_modules=cythonize(get_extension_modules(source_root), annotate=False, language_level="3"),
     package_dir=package_dir,
     packages=packages,
     distclass=distclass,
