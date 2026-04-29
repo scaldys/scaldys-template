@@ -261,9 +261,8 @@ class BuildEnvironment:
         self.developer_guide_dir_path = self.docs_dir_path.joinpath("developer_guide")
         self.developer_guide_build_dir_path = self.build_dir_path.joinpath("developer_guide")
         self.dist_dir_path = self.project_path.joinpath("dist")
-        self.dist_bin_dir_path = self.project_path.joinpath("dist_bin")
-        self.dist_exe_dir_path = self.project_path.joinpath("dist_exe")
-        self.dist_setup_dir_path = self.project_path.joinpath("dist_setup")
+        self.dist_exe_dir_path = self.dist_dir_path.joinpath("pyinstaller")
+        self.dist_setup_dir_path = self.dist_dir_path.joinpath("setup")
 
     def _find_tool(self, name: str, fallback_path: Path) -> Path:
         """Find a tool in PATH or in a fallback location."""
@@ -615,9 +614,6 @@ class WindowsBuilder:
         target_dirs = [
             self.env.build_dir_path,
             self.env.dist_dir_path,
-            self.env.dist_bin_dir_path,
-            self.env.dist_exe_dir_path,
-            self.env.dist_setup_dir_path,
         ]
 
         # Show OneDrive warning only if we are in OneDrive AND at least one directory exists to clean

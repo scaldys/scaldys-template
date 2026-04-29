@@ -10,7 +10,7 @@
 #define MyAppPs1Name "scaldys_powershell.ps1"
 
 #ifndef SourceDir
-  #define SourceDir "..\..\dist_exe"
+  #define SourceDir "..\..\dist\pyinstaller"
 #endif
 
 [Setup]
@@ -28,7 +28,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\Scaldys
 DefaultGroupName=Scaldys
 UsePreviousGroup=no
-OutputDir=..\..\dist_setup
+OutputDir=..\..\dist\setup
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
