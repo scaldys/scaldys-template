@@ -8,7 +8,7 @@ import time
 import uuid
 from pathlib import Path
 from subprocess import PIPE, run, CalledProcessError
-from typing import Optional
+from typing import Any, Callable, Iterable, Optional, Union, Tuple
 
 import typer
 from rich.console import Console
@@ -35,7 +35,19 @@ logger = logging.getLogger(__name__)
 
 
 def get_safe_temp_dir(path: Path) -> Path:
-    """Find a temporary directory on the same drive as the path to allow atomic rename."""
+    """
+    Find a temporary directory on the same drive as the path to allow atomic rename.
+
+    Parameters
+    ----------
+    path : Path
+        The path to find a temporary directory for.
+
+    Returns
+    -------
+    Path
+        The temporary directory path.
+    """
     system_temp = Path(tempfile.gettempdir())
     try:
         # Use case-insensitive comparison for drive letters (e.g., 'C:' == 'c:')
@@ -46,8 +58,20 @@ def get_safe_temp_dir(path: Path) -> Path:
     return path.parent
 
 
-def safe_rmtree(path: Path):
-    """Safely remove a directory tree, handling read-only files and locks on Windows."""
+def safe_rmtree(path: Path) -> None:
+    """
+    Safely remove a directory tree, handling read-only files and locks on Windows.
+
+    Parameters
+    ----------
+    path : Path
+        The directory tree to remove.
+
+    Raises
+    ------
+    OSError
+        If the directory cannot be removed after retries.
+    """
     if not path.exists():
         return
 
@@ -84,7 +108,7 @@ def safe_rmtree(path: Path):
                     break
                 time.sleep(0.1 * (2**i))
 
-    def handle_error(func, path_item, exc):
+    def handle_error(func: Callable[[Any, Any, Any], None], path_item: Any, exc: Any) -> None:
         """Error handler for shutil.rmtree that retries with backoff."""
         for i in range(10):  # More retries for OneDrive
             try:
@@ -123,8 +147,15 @@ def safe_rmtree(path: Path):
                 raise
 
 
-def safe_unlink(path: Path):
-    """Safely unlink a file, handling read-only files and locks on Windows."""
+def safe_unlink(path: Path) -> None:
+    """
+    Safely unlink a file, handling read-only files and locks on Windows.
+
+    Parameters
+    ----------
+    path : Path
+        The file to unlink.
+    """
     if not path.exists():
         return
     for i in range(10):  # More retries for OneDrive
@@ -140,8 +171,15 @@ def safe_unlink(path: Path):
                 time.sleep(0.1 * (2**i))
 
 
-def safe_empty_dir(path: Path):
-    """Safely empty a directory without deleting the directory itself."""
+def safe_empty_dir(path: Path) -> None:
+    """
+    Safely empty a directory without deleting the directory itself.
+
+    Parameters
+    ----------
+    path : Path
+        The directory to empty.
+    """
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
         return
@@ -180,8 +218,17 @@ def safe_empty_dir(path: Path):
                 logger.warning(f"Could not remove {item} while emptying {path}: {ex}")
 
 
-def safe_copy(src: Path, dst: Path):
-    """Safely copy a file with retries for Windows/OneDrive."""
+def safe_copy(src: Path, dst: Path) -> None:
+    """
+    Safely copy a file with retries for Windows/OneDrive.
+
+    Parameters
+    ----------
+    src : Path
+        The source file path.
+    dst : Path
+        The destination file path.
+    """
     for i in range(10):
         try:
             shutil.copy(src, dst)
@@ -193,8 +240,19 @@ def safe_copy(src: Path, dst: Path):
             time.sleep(0.1 * (2**i))
 
 
-def safe_copytree(src: Path, dst: Path, **kwargs):
-    """Safely copy a directory tree with retries for Windows/OneDrive."""
+def safe_copytree(src: Path, dst: Path, **kwargs: Any) -> None:
+    """
+    Safely copy a directory tree with retries for Windows/OneDrive.
+
+    Parameters
+    ----------
+    src : Path
+        The source directory path.
+    dst : Path
+        The destination directory path.
+    **kwargs : Any
+        Additional arguments passed to shutil.copytree.
+    """
     for i in range(10):
         try:
             shutil.copytree(src, dst, **kwargs)
@@ -206,8 +264,17 @@ def safe_copytree(src: Path, dst: Path, **kwargs):
             time.sleep(0.1 * (2**i))
 
 
-def safe_rename(src: Path, dst: Path):
-    """Safely rename a file or directory with retries for Windows/OneDrive."""
+def safe_rename(src: Path, dst: Path) -> None:
+    """
+    Safely rename a file or directory with retries for Windows/OneDrive.
+
+    Parameters
+    ----------
+    src : Path
+        The source path.
+    dst : Path
+        The destination path.
+    """
     for i in range(10):
         try:
             os.rename(src, dst)
@@ -222,7 +289,15 @@ def safe_rename(src: Path, dst: Path):
 class BuildEnvironment:
     """Handle path discovery, tool location, and command execution."""
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False) -> None:
+        """
+        Initialize the build environment.
+
+        Parameters
+        ----------
+        verbose : bool, default False
+            If True, set logging level to DEBUG.
+        """
         if verbose:
             logger.setLevel(logging.DEBUG)
 
@@ -269,14 +344,53 @@ class BuildEnvironment:
         self.dist_setup_dir_path = self.dist_dir_path.joinpath("setup")
 
     def _find_tool(self, name: str, fallback_path: Path) -> Path:
-        """Find a tool in PATH or in a fallback location."""
+        """
+        Find a tool in PATH or in a fallback location.
+
+        Parameters
+        ----------
+        name : str
+            The name of the tool executable.
+        fallback_path : Path
+            The directory to look in if the tool is not in PATH.
+
+        Returns
+        -------
+        Path
+            The path to the tool.
+        """
         tool_path = shutil.which(name)
         if tool_path:
             return Path(tool_path)
         return fallback_path.joinpath(name)
 
-    def run_command(self, cmd: list[str], err_msg: str, cwd: Optional[Path] = None):
-        """Run command in subprocess and raise on unexpected exit status."""
+    def run_command(
+        self, cmd: list[str], err_msg: str, cwd: Optional[Path] = None
+    ) -> Tuple[str, str]:
+        """
+        Run command in subprocess and raise on unexpected exit status.
+
+        Parameters
+        ----------
+        cmd : list of str
+            The command to run.
+        err_msg : str
+            The error message to display if the command fails.
+        cwd : Path, optional
+            The working directory to run the command in.
+
+        Returns
+        -------
+        stdout : str
+            The standard output of the command.
+        stderr : str
+            The standard error of the command.
+
+        Raises
+        ------
+        RuntimeError
+            If the command returns a non-zero exit status.
+        """
         try:
             proc = run(
                 cmd,
@@ -300,8 +414,24 @@ class BuildEnvironment:
         require_sphinx: bool = False,
         require_pyinstaller: bool = False,
         require_innosetup: bool = False,
-    ):
-        """Check if required tools are available."""
+    ) -> None:
+        """
+        Check if required tools are available.
+
+        Parameters
+        ----------
+        require_sphinx : bool, default False
+            Whether Sphinx is required.
+        require_pyinstaller : bool, default False
+            Whether PyInstaller is required.
+        require_innosetup : bool, default False
+            Whether Inno Setup is required.
+
+        Raises
+        ------
+        RuntimeError
+            If a required tool is missing.
+        """
         logger.info("[bold blue]Running pre-flight checks...[/bold blue]")
 
         missing = []
@@ -327,11 +457,26 @@ class BuildEnvironment:
 class DocumentationBuilder:
     """Handles Sphinx documentation generation."""
 
-    def __init__(self, env: BuildEnvironment):
+    def __init__(self, env: BuildEnvironment) -> None:
+        """
+        Initialize the documentation builder.
+
+        Parameters
+        ----------
+        env : BuildEnvironment
+            The build environment configuration.
+        """
         self.env = env
 
-    def build_developer_guide(self):
-        """Generate and build developer documentation with Sphinx."""
+    def build_developer_guide(self) -> None:
+        """
+        Generate and build developer documentation with Sphinx.
+
+        Raises
+        ------
+        RuntimeError
+            If a Sphinx command fails.
+        """
         logger.info("[bold]Running Sphinx to generate developer documentation...[/bold]")
         source_dir = str(self.env.src_dir_path)
         output_dir = str(self.env.developer_guide_dir_path.joinpath("source"))
@@ -358,8 +503,15 @@ class DocumentationBuilder:
             "Error running Sphinx - make singlehtml (developer guide)",
         )
 
-    def build_user_guide(self):
-        """Build user guide HTML and single-file HTML outputs."""
+    def build_user_guide(self) -> None:
+        """
+        Build user guide HTML and single-file HTML outputs.
+
+        Raises
+        ------
+        RuntimeError
+            If a Sphinx command fails.
+        """
         logger.info("[bold]Running Sphinx to generate user documentation...[/bold]")
         safe_empty_dir(self.env.user_guide_build_dir_path)
 
@@ -380,8 +532,12 @@ class DocumentationBuilder:
             cwd=self.env.user_guide_dir_path,
         )
 
-    def build(self):
-        """Orchestrate documentation generation."""
+    def build(self) -> None:
+        """
+        Orchestrate documentation generation for both user and developer guides.
+
+        Checks for Sphinx availability before proceeding.
+        """
         if self.env.sphinx_exe_path.exists():
             if self.env.user_guide_dir_path.exists():
                 self.build_user_guide()
@@ -394,11 +550,26 @@ class DocumentationBuilder:
 class Compiler:
     """Handles Cython compilation and PyInstaller bundling."""
 
-    def __init__(self, env: BuildEnvironment):
+    def __init__(self, env: BuildEnvironment) -> None:
+        """
+        Initialize the compiler.
+
+        Parameters
+        ----------
+        env : BuildEnvironment
+            The build environment configuration.
+        """
         self.env = env
 
-    def run_cython(self):
-        """Compile Python modules using Cython with a clean staging area."""
+    def run_cython(self) -> None:
+        """
+        Compile Python modules using Cython with a clean staging area.
+
+        Raises
+        ------
+        RuntimeError
+            If the Cython build command fails.
+        """
         logger.info("[bold]Running Cython...[/bold]")
         src_path = self.env.src_dir_path
         compiled_path = self.env.src_compiled_dir_path
@@ -430,7 +601,7 @@ class Compiler:
 
         # 4. Copy remaining source files from src to compiled
         # We ignore junk, temp build files, and the .py files of compiled modules.
-        def ignore_logic(directory, contents):
+        def ignore_logic(directory: Union[str, Path], contents: list[str]) -> Iterable[str]:
             ignored = []
             dir_path = Path(directory)
             try:
@@ -458,8 +629,15 @@ class Compiler:
         for c_file in src_path.rglob("*.c"):
             safe_unlink(c_file)
 
-    def run_pyinstaller(self):
-        """Run PyInstaller to build an executable."""
+    def run_pyinstaller(self) -> None:
+        """
+        Run PyInstaller to build an executable.
+
+        Raises
+        ------
+        RuntimeError
+            If the PyInstaller command fails.
+        """
         logger.info("[bold]Running PyInstaller...[/bold]")
 
         entry_point = self.env.src_compiled_dir_path.joinpath(f"{PACKAGE_NAME}", "__main__.py")
@@ -510,8 +688,12 @@ class Compiler:
             safe_rmtree(bin_dir)
             safe_rename(pkg_dir, bin_dir)
 
-    def build(self):
-        """Orchestrate executable build."""
+    def build(self) -> None:
+        """
+        Orchestrate the executable build process.
+
+        Includes running Cython compilation and PyInstaller bundling.
+        """
         self.run_cython()
         self.run_pyinstaller()
 
@@ -519,19 +701,37 @@ class Compiler:
 class Packager:
     """Handles distribution preparation and Inno Setup installer creation."""
 
-    def __init__(self, env: BuildEnvironment):
+    def __init__(self, env: BuildEnvironment) -> None:
+        """
+        Initialize the packager.
+
+        Parameters
+        ----------
+        env : BuildEnvironment
+            The build environment configuration.
+        """
         self.env = env
 
-    def prepare_examples(self):
-        """Copy examples to distribution."""
+    def prepare_examples(self) -> None:
+        """
+        Copy examples to distribution.
+
+        Notes
+        -----
+        Expects `examples` directory to exist in the project root.
+        """
         if self.env.examples_dir_path.is_dir():
             logger.info("[bold]Copying example files...[/bold]")
             dist_examples = self.env.dist_exe_dir_path.joinpath("examples")
             safe_empty_dir(dist_examples)
             safe_copytree(self.env.examples_dir_path, dist_examples, dirs_exist_ok=True)
 
-    def prepare_windows_files(self):
-        """Copy Windows helpers and docs."""
+    def prepare_windows_files(self) -> None:
+        """
+        Copy Windows helpers and docs.
+
+        Includes batch scripts, PowerShell scripts, and help files.
+        """
         logger.info("[bold]Copying extra files for Windows...[/bold]")
         self.env.dist_exe_dir_path.joinpath("logs").mkdir(parents=True, exist_ok=True)
         bin_dir = self.env.dist_exe_dir_path.joinpath("bin")
@@ -552,8 +752,19 @@ class Packager:
                 elif p.exists():
                     safe_unlink(p)
 
-    def run_innosetup(self):
-        """Create the installer using Inno Setup."""
+    def run_innosetup(self) -> None:
+        """
+        Create the installer using Inno Setup.
+
+        Notes
+        -----
+        Requires `ISCC.exe` to be available.
+
+        Raises
+        ------
+        RuntimeError
+            If the Inno Setup command fails.
+        """
         if not self.env.innosetup_exe_path.exists():
             logger.warning("Inno Setup not found. Skipping installer.")
             return
@@ -570,8 +781,12 @@ class Packager:
         ]
         self.env.run_command(cmd, "Error running Inno Setup", cwd=self.env.project_path)
 
-    def build(self):
-        """Orchestrate final packaging."""
+    def build(self) -> None:
+        """
+        Orchestrate the final packaging process.
+
+        Includes preparing examples, copying Windows-specific files, and running Inno Setup.
+        """
         self.prepare_examples()
         self.prepare_windows_files()
         self.run_innosetup()
@@ -580,26 +795,41 @@ class Packager:
 class WindowsBuilder:
     """Orchestrates the Windows build pipeline."""
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False) -> None:
+        """
+        Initialize the Windows builder pipeline.
+
+        Parameters
+        ----------
+        verbose : bool, default False
+            If True, enables verbose output for all build components.
+        """
         self.env = BuildEnvironment(verbose=verbose)
         self.doc_builder = DocumentationBuilder(self.env)
         self.compiler = Compiler(self.env)
         self.packager = Packager(self.env)
 
-    def pre_flight_checks(self, **kwargs):
-        """Delegate pre-flight checks to the environment."""
+    def pre_flight_checks(self, **kwargs: Any) -> None:
+        """
+        Delegate pre-flight checks to the environment.
+
+        Parameters
+        ----------
+        **kwargs : Any
+            Arguments passed to `BuildEnvironment.pre_flight_checks`.
+        """
         self.env.pre_flight_checks(**kwargs)
 
-    def build_docs(self):
-        """Generate documentation."""
+    def build_docs(self) -> None:
+        """Generate all documentation using the documentation builder."""
         self.doc_builder.build()
 
-    def build_exe(self):
-        """Generate executable."""
+    def build_exe(self) -> None:
+        """Generate the standalone executable using the compiler."""
         self.compiler.build()
 
-    def build_installer(self):
-        """Generate installer."""
+    def build_installer(self) -> None:
+        """Generate the setup installer using the packager."""
         self.packager.build()
 
     def _is_in_onedrive(self) -> bool:
@@ -617,8 +847,12 @@ class WindowsBuilder:
                     continue
         return False
 
-    def clean(self):
-        """Clean build directories."""
+    def clean(self) -> None:
+        """
+        Clean build and distribution directories.
+
+        Handles OneDrive-specific delays and cleans up lingering Cython artifacts.
+        """
         target_dirs = [
             self.env.build_dir_path,
             self.env.dist_dir_path,
@@ -641,8 +875,13 @@ class WindowsBuilder:
         for c_file in src_path.rglob("*.c"):
             safe_unlink(c_file)
 
-    def main(self):
-        """Run the end-to-end Windows build workflow."""
+    def main(self) -> None:
+        """
+        Run the complete end-to-end Windows build workflow.
+
+        Executes pre-flight checks, cleaning, documentation generation,
+        executable compilation, and installer creation with progress tracking.
+        """
         steps = [
             (
                 "Pre-flight checks",
@@ -685,8 +924,15 @@ build_app.add_typer(windows_app, name="windows")
 @windows_app.command("docs")
 def windows_docs(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output."),
-):
-    """Build Windows documentation."""
+) -> None:
+    """
+    Build Windows documentation.
+
+    Parameters
+    ----------
+    verbose : bool, default False
+        Enable verbose output.
+    """
     builder = WindowsBuilder(verbose=verbose)
     builder.pre_flight_checks(require_sphinx=True)
     builder.build_docs()
@@ -695,8 +941,15 @@ def windows_docs(
 @windows_app.command("exe")
 def windows_exe(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output."),
-):
-    """Build Windows executables (Cython + PyInstaller)."""
+) -> None:
+    """
+    Build Windows executables (Cython + PyInstaller).
+
+    Parameters
+    ----------
+    verbose : bool, default False
+        Enable verbose output.
+    """
     builder = WindowsBuilder(verbose=verbose)
     builder.pre_flight_checks(require_pyinstaller=True)
     builder.build_exe()
@@ -705,8 +958,15 @@ def windows_exe(
 @windows_app.command("installer")
 def windows_installer(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output."),
-):
-    """Build Windows setup installer."""
+) -> None:
+    """
+    Build Windows setup installer using Inno Setup.
+
+    Parameters
+    ----------
+    verbose : bool, default False
+        Enable verbose output.
+    """
     builder = WindowsBuilder(verbose=verbose)
     builder.pre_flight_checks(require_innosetup=True)
     builder.build_installer()
@@ -715,8 +975,15 @@ def windows_installer(
 @windows_app.command("all")
 def windows_all(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output."),
-):
-    """Run the end-to-end Windows build workflow."""
+) -> None:
+    """
+    Run the complete end-to-end Windows build workflow.
+
+    Parameters
+    ----------
+    verbose : bool, default False
+        Enable verbose output.
+    """
     builder = WindowsBuilder(verbose=verbose)
     builder.main()
 
@@ -724,8 +991,15 @@ def windows_all(
 @windows_app.command("clean")
 def windows_clean(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output."),
-):
-    """Clean out files generated by previous build."""
+) -> None:
+    """
+    Clean out files generated by previous build.
+
+    Parameters
+    ----------
+    verbose : bool, default False
+        Enable verbose output.
+    """
     builder = WindowsBuilder(verbose=verbose)
     builder.clean()
 
