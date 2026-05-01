@@ -7,13 +7,13 @@ __all__ = [
     "VERSION",
 ]
 
+from importlib.metadata import version, PackageNotFoundError
 
-# application information
 APP_NAME = "Scaldys"
-
-# packaging information
-PACKAGE_NAME = "scaldys"  # lower case
+PACKAGE_NAME = "scaldys"
 ORGANIZATION_NAME = "Scaldys"
 
-# version information
-VERSION = "0.2.1"
+try:
+    VERSION = version(PACKAGE_NAME)
+except PackageNotFoundError:
+    VERSION = "0.0.0"

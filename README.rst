@@ -195,26 +195,27 @@ This template includes a dedicated Windows build system to create compiled, stan
 * **Stand-alone Executable:** Bundles the application and all dependencies into a single directory using PyInstaller.
 * **Professional Installer:** Creates a Windows setup (``.exe``) using Inno Setup, including desktop shortcuts and PATH integration.
 
-The Windows build system is managed by the ``packaging/windows/windows_builder.py`` script, which is exposed via the CLI.
+The Windows build system is managed by the ``scaldys_builder`` package, exposed as the ``scaldys-build``
+CLI command installed by ``uv sync``.
 
 **Available Build Commands:**
 
 .. code-block:: bash
 
    # Run the full end-to-end build (docs, exe, and installer)
-   uv run python packaging/windows/windows_builder.py build windows all
+   scaldys-build build windows all
 
    # Build only the standalone executable
-   uv run python packaging/windows/windows_builder.py build windows exe
+   scaldys-build build windows exe
 
    # Build only the setup installer (requires Inno Setup installed)
-   uv run python packaging/windows/windows_builder.py build windows installer
+   scaldys-build build windows installer
 
    # Build Windows-specific documentation
-   uv run python packaging/windows/windows_builder.py build windows docs
+   scaldys-build build windows docs
 
    # Clean build and dist directories
-   uv run python packaging/windows/windows_builder.py build windows clean
+   scaldys-build build windows clean
 
 **Prerequisites for Windows Build:**
 * **Inno Setup:** Must be installed and available in your PATH to build the installer.
