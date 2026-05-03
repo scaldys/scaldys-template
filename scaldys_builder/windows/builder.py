@@ -455,6 +455,7 @@ class WindowsBuilder(BaseBuilder):
                 lambda: self.env.pre_flight_checks(
                     require_sphinx=self.env.docs_dir_path.joinpath("manual").exists(),
                     require_pyinstaller=True,
+                    require_innosetup=True,
                 ),
             ),
             ("Cleaning build directories", self.clean),
