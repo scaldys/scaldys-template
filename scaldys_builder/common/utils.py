@@ -143,7 +143,7 @@ def safe_unlink(path: Path) -> None:
             return
         except (PermissionError, OSError) as e:
             if i == 9:
-                logger.warning(f"Failed to remove {path} after retries: {e}")
+                raise RuntimeError(f"Failed to remove {path} after retries: {e}") from e
             else:
                 time.sleep(0.1 * (2**i))
 
