@@ -412,14 +412,7 @@ class WindowsBuilder(BaseBuilder):
                 "If it becomes excessively slow, you can manually delete the 'build' and 'dist' directories via File Explorer.[/yellow]"
             )
 
-        logger.info("[bold]Cleaning build directories...[/bold]")
-        for path in target_dirs:
-            logger.info(f"  Cleaning directory '{path}'")
-            safe_empty_dir(path)
-
-        # Clean up lingering .c files in src
-        for c_file in self.env.src_dir_path.rglob("*.c"):
-            safe_unlink(c_file)
+        super().clean()
 
     def build_docs(self) -> None:
         """Generate all documentation using the documentation builder."""
