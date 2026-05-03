@@ -44,6 +44,7 @@ def windows_docs(
 ) -> None:
     """Build Windows documentation."""
     builder = WindowsBuilder(PROJECT_ROOT, verbose=verbose)
+    builder.env.pre_flight_checks(require_sphinx=True)
     builder.build_docs()
 
 

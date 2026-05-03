@@ -92,15 +92,13 @@ class DocumentationBuilder:
         """
         Orchestrate the documentation build process.
 
-        Checks for tool availability and directory existence before proceeding.
+        Assumes required tools are available (verified by pre-flight checks).
+        Skips a guide silently only if its source directory does not exist.
         """
-        if self.env.sphinx_exe_path.exists():
-            if self.env.user_guide_dir_path.exists():
-                self.build_user_guide()
-            else:
-                logger.warning("User guide not found.")
-
-            if self.env.developer_guide_dir_path.exists():
-                self.build_developer_guide()
+        if self.env.user_guide_dir_path.exists():
+            self.build_user_guide()
         else:
-            logger.warning("Sphinx not found. Documentation skipped.")
+            logger.warning("User guide not found.")
+
+        if self.env.developer_guide_dir_path.exists():
+            self.build_developer_guide()
