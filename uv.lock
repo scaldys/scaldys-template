@@ -684,15 +684,12 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "cython" },
     { name = "pre-commit" },
-    { name = "pyinstaller" },
     { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-cov" },
-    { name = "rich" },
     { name = "ruff" },
-    { name = "setuptools" },
+    { name = "scaldys-builder", extra = ["cython", "docs", "windows"] },
     { name = "sphinx" },
     { name = "sphinx-rtd-theme" },
 ]
@@ -706,13 +703,58 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "pre-commit", specifier = ">=4.5.0" },
+    { name = "pyright", specifier = ">=1.1.409" },
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "scaldys-builder", extras = ["cython", "windows", "docs"], editable = "../scaldys-builder" },
+    { name = "sphinx", specifier = ">=9.1.0" },
+    { name = "sphinx-rtd-theme", specifier = ">=3.1.0" },
+]
+
+[[package]]
+name = "scaldys-builder"
+version = "0.1.0"
+source = { editable = "../scaldys-builder" }
+dependencies = [
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.optional-dependencies]
+cython = [
+    { name = "cython" },
+    { name = "setuptools" },
+]
+docs = [
+    { name = "sphinx" },
+    { name = "sphinx-rtd-theme" },
+]
+windows = [
+    { name = "pyinstaller" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cython", marker = "extra == 'cython'", specifier = ">=3.2.4" },
+    { name = "pyinstaller", marker = "extra == 'windows'", specifier = ">=6.20.0" },
+    { name = "rich", specifier = ">=15.0.0" },
+    { name = "setuptools", marker = "extra == 'cython'", specifier = ">=82.0.1" },
+    { name = "sphinx", marker = "extra == 'docs'", specifier = ">=9.1.0" },
+    { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = ">=3.1.0" },
+    { name = "typer", specifier = ">=0.25.0" },
+]
+provides-extras = ["cython", "windows", "docs"]
+
+[package.metadata.requires-dev]
+dev = [
     { name = "cython", specifier = ">=3.2.4" },
     { name = "pre-commit", specifier = ">=4.5.0" },
     { name = "pyinstaller", specifier = ">=6.20.0" },
     { name = "pyright", specifier = ">=1.1.409" },
     { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-cov", specifier = ">=7.1.0" },
-    { name = "rich", specifier = ">=15.0.0" },
     { name = "ruff", specifier = ">=0.15.12" },
     { name = "setuptools", specifier = ">=82.0.1" },
     { name = "sphinx", specifier = ">=9.1.0" },

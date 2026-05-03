@@ -23,30 +23,29 @@ dependencies = [
 
 [project.scripts]
 scaldys = "scaldys.cli.cli:app"
-scaldys-build = "scaldys_builder.builder:app"
 
 [build-system]
-requires = ["setuptools", "cython"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = [".", "src"]
-include = ["scaldys*", "scaldys_builder*"]
+where = ["src"]
+include = ["scaldys*"]
 
 [dependency-groups]
 dev = [
-    "cython>=3.2.4",
+    "scaldys-builder[cython,windows,docs]",
     "pre-commit>=4.5.0",
     "pyright>=1.1.409",
-    "pyinstaller>=6.20.0",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.12",
-    "setuptools>=82.0.1",
     "sphinx>=9.1.0",
     "sphinx-rtd-theme>=3.1.0",
-    "rich>=15.0.0",
 ]
+
+[tool.uv.sources]
+scaldys-builder = { path = "../scaldys-builder", editable = true }
 
 [tool.ruff]
 line-length = 100

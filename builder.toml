@@ -1,0 +1,7 @@
+[cython]
+compiled_modules = [
+    "scaldys.core.export",
+]
+
+[windows]
+script_dir = "packaging/windows"
