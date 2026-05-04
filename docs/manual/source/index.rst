@@ -25,3 +25,4 @@ documentation for details.
    authors
    changelog
    license
+   help
