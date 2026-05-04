@@ -1,6 +1,4 @@
----
-Licenses
----
+# Licenses
 
 This directory holds license and credit information for works `scaldys` is
 derived from or distributes.
@@ -8,22 +6,73 @@ derived from or distributes.
 The license file for the `scaldys` package itself is placed in the root
 directory of this repository as LICENSE.
 
-pytest
+## art
+
+- MIT license
+- https://github.com/sepandhaghighi/art
+- License file: [art.md](art.md)
+
+## platformdirs
+
+- MIT license
+- https://github.com/platformdirs/platformdirs
+- License file: [platformdirs.md](platformdirs.md)
+
+## pre-commit
+
+- MIT license
+- https://github.com/pre-commit/pre-commit
+- License file: [pre_commit.md](pre_commit.md)
+
+## prettier
+
+- MIT license
+- https://github.com/prettier/prettier
+- License file: [prettier.md](prettier.md)
+
+## pyright
+
+- MIT license
+- https://github.com/microsoft/pyright
+- License file: [pyright.md](pyright.md)
+
+## pytest
 
 - MIT license
 - https://github.com/pytest-dev/pytest
+- License file: [pytest.md](pytest.md)
 
-Python
+## pytest-cov
+
+- MIT license
+- https://github.com/pytest-dev/pytest-cov
+- License file: [pytest_cov.md](pytest_cov.md)
+
+## Python
 
 - PSF License Agreement
 - https://github.com/python/cpython/blob/main/LICENSE
 
-sphinx
+## ruff
 
 - MIT license
-- https://github.com/sphinx-toolbox/sphinx-licenseinfo/blob/master/LICENSE
+- https://github.com/astral-sh/ruff
+- License file: [ruff.md](ruff.md)
 
-sphinx_rtd_theme
+## sphinx
+
+- BSD 2-Clause license
+- https://github.com/sphinx-doc/sphinx
+- License file: [sphinx.md](sphinx.md)
+
+## sphinx-rtd-theme
 
 - MIT license
-- https://github.com/readthedocs/sphinx_rtd_theme/blob/master/LICENSE
+- https://github.com/readthedocs/sphinx_rtd_theme
+- License file: [sphinx_rtd_theme.md](sphinx_rtd_theme.md)
+
+## typer
+
+- MIT license
+- https://github.com/fastapi/typer
+- License file: [typer.md](typer.md)
