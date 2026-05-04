@@ -1,22 +1,68 @@
-.idea/
-.ropeproject/
-.venv/
-.vscode/
-app_data/
-build/
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.so
+*.egg
+*.egg-info/
 dist/
+build/
+.eggs/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Distribution / packaging
+*.tar.gz
+*.whl
+MANIFEST
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Type checkers
+.mypy_cache/
+.pyright/
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Sphinx
+docs/manual/build/
+docs/manual/_build/
 docs/build/
 docs/_build/
-docs/manual/_build/
-list/
+
+# AI assistants
+.claude
+.junie
+
+# uv
+# uv.lock
+
+# This project
+.ropeproject/
+app_data/
 node_modules/
 src/scaldys/logs/*.jsonl
-src/scaldys.egg-info/
 .prettierrc
 ideas.md
 package.json
 package-lock.json
-**/__pycache__/
-*.pyc
 *.spec
 
