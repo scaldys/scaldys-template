@@ -29,7 +29,7 @@ def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) 
 
     Raises
     ------
-    Exception
+    OSError
         If an error occurs during directory creation or file writing, the exception is logged and re-raised.
 
 
@@ -52,6 +52,6 @@ def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) 
             json.dump(data, fp, indent=4, ensure_ascii=False)
 
         logger.info(f"Data successfully exported to {file_path}")
-    except Exception as e:
+    except OSError as e:
         logger.error(f"Failed to export data to {file_name}: {e}")
         raise
