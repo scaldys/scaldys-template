@@ -126,4 +126,5 @@ def is_running_from_source(app_path: Path) -> bool:
     bool
         True if the program is running from the source tree, False otherwise.
     """
-    return f"src\\{PACKAGE_NAME}" in str(app_path.resolve())
+    parts = app_path.resolve().parts
+    return "src" in parts and PACKAGE_NAME in parts

@@ -82,8 +82,6 @@ def export(
                 f"{message}. Files with the same name will be overwritten (option '--force' used) : {str(output_dir.resolve())}."
             )
 
-    num_values += 10
-
     logger.info(f"Configuration file: {config_file}")
     logger.info(f"Output directory: {output_dir}")
     logger.info(f"Number of values: {num_values}")

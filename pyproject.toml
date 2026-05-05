@@ -18,6 +18,7 @@ license-files = ["LICEN[CS]E*"]
 dependencies = [
     "art>=6.5",
     "platformdirs>=4.9.6",
+    "pydantic-settings>=2.0",
     "typer>=0.25.0",
 ]
 
@@ -49,14 +50,14 @@ scaldys-builder = { path = "../scaldys-builder", editable = true }
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py313"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
 
 [tool.pyright]
 exclude = [".venv"]
-pythonVersion = "3.12"
+pythonVersion = "3.13"
 venvPath = "."
 venv = ".venv"
 
