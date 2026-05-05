@@ -33,6 +33,9 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 include = ["scaldys*"]
 
+[tool.setuptools.package-data]
+scaldys = ["py.typed"]
+
 [dependency-groups]
 dev = [
     "scaldys-builder[cython,windows,docs]",
