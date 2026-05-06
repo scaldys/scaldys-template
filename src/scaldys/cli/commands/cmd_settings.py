@@ -4,6 +4,8 @@ import logging
 
 import typer
 from pydantic import ValidationError
+from rich.console import Console
+from rich.panel import Panel
 from typing_extensions import Annotated
 
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME
@@ -13,6 +15,8 @@ __all__ = ["log"]
 
 
 logger = logging.getLogger(PACKAGE_NAME)
+console = Console()
+err_console = Console(stderr=True)
 
 app = typer.Typer()
 
@@ -35,7 +39,13 @@ def main(ctx: typer.Context):
     """
     if ctx.invoked_subcommand is None:
         settings = AppSettings()
-        typer.echo(f"{APP_NAME} log level: '{settings.log_level}'")
+        console.print(
+            Panel(
+                f"Log level: [cyan]{settings.log_level}[/cyan]",
+                title=f"[bold]{APP_NAME} Settings[/bold]",
+                expand=False,
+            )
+        )
 
 
 @app.command()
@@ -52,10 +62,12 @@ def log(level: ARG_TYPE_LOG_LEVEL) -> None:
         settings.log_level = level
     except ValidationError:
         valid = "off, debug, info, warning, error, critical"
-        typer.echo(
-            f"Error: '{level}' is not a valid log level. Valid choices are: {valid}", err=True
+        err_console.print(
+            f"[bold red]Error:[/bold red] '[cyan]{level}[/cyan]' is not a valid log level.\n"
+            f"Valid choices are: [cyan]{valid}[/cyan]"
         )
         raise typer.Exit(code=1)
     settings.save()
+    console.print(f"Log level set to [cyan]{level}[/cyan]")
 
     return None

@@ -5,6 +5,7 @@ import typer
 from typer.core import TyperGroup
 from click import Context
 from art import text2art
+from rich.console import Console
 
 import scaldys.cli.commands.cmd_export as cmd_export
 import scaldys.cli.commands.cmd_process as cmd_process
@@ -14,20 +15,26 @@ from scaldys.cli.commands.arg_types import ARG_TYPE_LOG_LEVEL, ARG_TYPE_VERBOSE
 from scaldys.cli.settings import AppSettings
 from scaldys.common.logging import setup_logging
 
+console = Console()
+
 
 def version_callback(value: bool) -> None:
     """
     Return version information.
     """
     if value:
-        typer.echo(f"{APP_NAME} version {VERSION}")
+        console.print(f"[bold]{APP_NAME}[/bold] version [cyan]{VERSION}[/cyan]")
         raise typer.Exit()
 
 
 class HeaderGroup(TyperGroup):
-    def get_help(self, ctx: Context) -> str:
-        # Override get_help to prepend the ASCII art
-        return text2art(APP_NAME) + "\n" + super().get_help(ctx)
+    def format_help(self, ctx: Context, formatter) -> None:
+        # With rich_markup_mode="rich", Typer bypasses the formatter and renders
+        # options/commands via Rich directly, so formatter.write() ends up after the
+        # panels. Instead, print the art straight to the console before the parent
+        # renders its Rich content.
+        console.print(text2art(APP_NAME))
+        super().format_help(ctx, formatter)
 
 
 def main(
@@ -71,7 +78,7 @@ app = typer.Typer(
     callback=main,
     no_args_is_help=True,
     add_completion=False,
-    rich_markup_mode=None,
+    rich_markup_mode="rich",
     context_settings={
         "max_content_width": 180,
     },

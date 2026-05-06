@@ -10,7 +10,7 @@ Demonstrates how a CLI command orchestrates several advanced core patterns:
     (via core.async_processor.process_items)
   - Opening a database connection for the lifetime of the command
     (via core.database.DatabaseConnection + transaction)
-  - Progress reporting via a callback (no third-party progress library needed)
+  - Progress reporting via a callback with Rich progress bar
   - Graceful handling of partial results on KeyboardInterrupt
   - Structured logging of per-command metrics
   - Appropriate exit code (1) when any items fail
@@ -29,6 +29,18 @@ import logging
 from typing import Annotated
 
 import typer
+from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
+from rich.table import Table
 
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
 from scaldys.core.async_processor import ProcessingResult, process_items
@@ -37,6 +49,8 @@ from scaldys.core.database import DatabaseConfig, DatabaseConnection, transactio
 __all__ = ["process"]
 
 logger = logging.getLogger(PACKAGE_NAME)
+console = Console()
+err_console = Console(stderr=True)
 
 # ---------------------------------------------------------------------------
 # Command-local argument type definitions
@@ -92,31 +106,13 @@ def process(
     item_ids = list(range(1, num_tasks + 1))
 
     # ------------------------------------------------------------------
-    # Progress tracking
-    # ------------------------------------------------------------------
-    # A simple mutable counter is enough for a callback-based progress report.
-    # In a richer application you could pass a typer.progressbar context manager
-    # or a rich.progress.Progress instance into the callback instead.
-    completed: list[ProcessingResult] = []
-
-    def _on_progress(result: ProcessingResult) -> None:
-        completed.append(result)
-        status = "OK" if result.success else f"FAIL ({result.error})"
-        typer.echo(
-            f"  [{len(completed):>{len(str(num_tasks))}}/{num_tasks}] "
-            f"item {result.item_id:>5}  {result.elapsed_ms:6.1f} ms  {status}"
-        )
-
-    # ------------------------------------------------------------------
     # Database connection (stub)
     # ------------------------------------------------------------------
-    # Opens a connection for the entire lifetime of the command and uses a
-    # transaction to record the run in a stub log table.  Replace DatabaseConfig
-    # with values loaded from AppSettings or environment variables.
     db_config = DatabaseConfig(host="localhost", name="appdb", user="appuser")
 
-    typer.echo(
-        f"\nConnecting to database '{db_config.name}' on {db_config.host}:{db_config.port}..."
+    console.print(
+        f"\nConnecting to database [bold cyan]{db_config.name}[/bold cyan]"
+        f" on [cyan]{db_config.host}:{db_config.port}[/cyan]..."
     )
     logger.debug("Opening database connection for process command", extra={"db": db_config.name})
 
@@ -135,28 +131,54 @@ def process(
             )
 
         # ------------------------------------------------------------------
-        # Async processing pipeline
+        # Async processing pipeline with Rich progress bar
         # ------------------------------------------------------------------
-        typer.echo(f"\nProcessing {num_tasks} item(s) with timeout={timeout}s per item...\n")
+        console.print(
+            f"\nProcessing [bold]{num_tasks}[/bold] item(s)"
+            f" with timeout=[cyan]{timeout}[/cyan]s per item...\n"
+        )
 
-        try:
-            results = process_items(
-                item_ids,
-                on_progress=_on_progress,
-                timeout_per_item=timeout,
-            )
-        except KeyboardInterrupt:
-            # process_items handles KeyboardInterrupt internally and returns
-            # whatever completed, but in case it propagates upward we handle
-            # it here too so the summary is still printed.
-            typer.echo("\nInterrupted by user.")
-            results = completed
+        completed: list[ProcessingResult] = []
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+            TimeElapsedColumn(),
+            console=console,
+        ) as progress:
+            task_id = progress.add_task("Processing items...", total=num_tasks)
+
+            def _on_progress(result: ProcessingResult) -> None:
+                completed.append(result)
+                if result.success:
+                    status = "[green]OK[/green]"
+                else:
+                    status = f"[red]FAIL ({result.error})[/red]"
+                progress.console.print(
+                    f"  [{len(completed):>{len(str(num_tasks))}}/{num_tasks}]"
+                    f"  item {result.item_id:>5}  {result.elapsed_ms:6.1f} ms  {status}"
+                )
+                progress.advance(task_id)
+
+            try:
+                results = process_items(
+                    item_ids,
+                    on_progress=_on_progress,
+                    timeout_per_item=timeout,
+                )
+            except KeyboardInterrupt:
+                # process_items handles KeyboardInterrupt internally and returns
+                # whatever completed, but in case it propagates upward we handle
+                # it here too so the summary is still printed.
+                console.print("\n[yellow]Interrupted by user.[/yellow]")
+                results = completed
 
         # ------------------------------------------------------------------
         # Persist results (stub)
         # ------------------------------------------------------------------
-        # In a real application you would bulk-insert results into the database.
-        # Shown here as a single stubbed call inside a transaction.
         successes = [r for r in results if r.success]
         failures = [r for r in results if not r.success]
         with transaction(conn):
@@ -181,24 +203,31 @@ def process(
 
 
 def _print_summary(results: list[ProcessingResult], num_tasks: int) -> None:
-    """Print a concise result summary to stdout."""
+    """Print a concise result summary using a Rich panel and table."""
     if not results:
-        typer.echo("\nNo items were processed.")
+        console.print("\n[yellow]No items were processed.[/yellow]")
         return
 
     successes = [r for r in results if r.success]
     failures = [r for r in results if not r.success]
     avg_ms = sum(r.elapsed_ms for r in results) / len(results)
 
-    typer.echo("\n" + "-" * 50)
-    typer.echo(f"  Processed : {len(results)}/{num_tasks}")
-    typer.echo(f"  Succeeded : {len(successes)}")
-    typer.echo(f"  Failed    : {len(failures)}")
-    typer.echo(f"  Avg time  : {avg_ms:.1f} ms/item")
+    table = Table(box=box.SIMPLE, show_header=False, padding=(0, 1))
+    table.add_column("Label", style="bold")
+    table.add_column("Value")
+
+    table.add_row("Processed", f"{len(results)}/{num_tasks}")
+    table.add_row("Succeeded", f"[green]{len(successes)}[/green]")
+    table.add_row(
+        "Failed",
+        f"[red]{len(failures)}[/red]" if failures else f"[green]{len(failures)}[/green]",
+    )
+    table.add_row("Avg time", f"{avg_ms:.1f} ms/item")
+
+    border_style = "red" if failures else "green"
+    console.print(Panel(table, title="[bold]Summary[/bold]", border_style=border_style))
 
     if failures:
-        typer.echo("\n  Failed items:")
+        err_console.print("\n[bold red]Failed items:[/bold red]")
         for r in failures:
-            typer.echo(f"    item {r.item_id}: {r.error}", err=True)
-
-    typer.echo("-" * 50 + "\n")
+            err_console.print(f"  item {r.item_id}: [red]{r.error}[/red]")

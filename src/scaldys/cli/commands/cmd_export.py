@@ -5,6 +5,8 @@ import logging
 from pathlib import Path
 
 import typer
+from rich.console import Console
+from rich.panel import Panel
 from typing_extensions import Annotated
 
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
@@ -15,6 +17,8 @@ __all__ = ["export"]
 
 
 logger = logging.getLogger(PACKAGE_NAME)
+console = Console()
+err_console = Console(stderr=True)
 
 # Type definitions for fixed and optional arguments, specific to this command
 ARG_TYPE_CONFIG_PATH = Annotated[Path, typer.Argument()]
@@ -62,20 +66,41 @@ def export(
     logger.debug(f"Current log level : {logger.getEffectiveLevel()}")
 
     if output_dir.exists():
-        message = "The output directory already exists"
         if not force:
             logger.error(
-                f"{message}, use the '--force' option to overwrite : {str(output_dir.resolve())}."
+                f"The output directory already exists, use the '--force' option to overwrite"
+                f" : {str(output_dir.resolve())}."
+            )
+            err_console.print(
+                Panel(
+                    f"Output directory already exists:\n[cyan]{output_dir.resolve()}[/cyan]\n\n"
+                    f"Use [bold]--force[/bold] to overwrite.",
+                    title="[bold red]Error[/bold red]",
+                    border_style="red",
+                    expand=False,
+                )
             )
             return
         else:
             logger.info(
-                f"{message}. Files with the same name will be overwritten (option '--force' used) : {str(output_dir.resolve())}."
+                f"The output directory already exists. Files with the same name will be"
+                f" overwritten (option '--force' used) : {str(output_dir.resolve())}."
+            )
+            console.print(
+                f"[yellow]Output directory exists — overwriting (--force)[/yellow]:"
+                f" [cyan]{output_dir.resolve()}[/cyan]"
             )
 
     logger.info(f"Configuration file: {config_file}")
     logger.info(f"Output directory: {output_dir}")
     logger.info(f"Number of values: {num_values}")
+
+    console.print(
+        f"Exporting data from [cyan]{config_file}[/cyan]"
+        f" to [cyan]{output_dir}[/cyan]"
+        + (f" ([bold]{num_values}[/bold] values)" if num_values > 0 else "")
+        + "..."
+    )
 
     export_data(
         config_file,
@@ -83,4 +108,5 @@ def export(
         num_values,
     )
 
+    console.print(f"[green]Export complete.[/green]")
     logger.info(f"{APP_NAME} stopped")
