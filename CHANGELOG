@@ -28,6 +28,31 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.3.0] - 2026-05-07
+====================
+
+**Added**
+
+  - `core/async_processor.py`: async pipeline reference implementation (`asyncio.gather`, `asyncio.wait_for`, cooperative shutdown, sync wrapper via `asyncio.run()`).
+  - `core/database.py`: database abstraction scaffold (`DatabaseConfig`, `DatabaseConnection` context manager, `transaction()` helper, `ConnectionPool` with `threading.Semaphore`).
+  - `cli/commands/cmd_process.py`: `process` command demonstrating both async processor and database patterns.
+  - `__main__.py` rewritten as a proper lifecycle entry point: pre-init logging, crash hook, signal handlers, asyncio policy, environment validation.
+  - Comprehensive test suite: `tests/unit/` mirrors source tree; `tests/integration/` groups by CLI scenario.
+  - `pytest-asyncio` (`asyncio_mode = auto`) and `pytest-mock` added as dev dependencies.
+  - Test markers registered: `unit`, `integration`, `slow`.
+
+**Changed**
+
+  - `--log` / `--verbose` flags moved from individual commands to the app-level Typer callback in `cli.py`; `setup_logging()` is now called exactly once per invocation.
+  - Entry point changed from `scaldys.cli.cli:app` to `scaldys.__main__:main`.
+  - `cmd_export.py` simplified: removed per-command logging setup.
+
+**Fixed**
+
+  - `cmd_export.py`: `ARG_TYPE_OUTPUT_PATH` now typed as `Path | None` so the `None` default is type-safe (pyright `reportArgumentType`).
+  - `cli/settings.py`: `cast(_LogLevel, ...)` used in `log_level` setter to satisfy pyright's Literal assignability check.
+
+
 [0.2.0] - 2026-04-29
 ====================
 
