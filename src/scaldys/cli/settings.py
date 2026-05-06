@@ -84,7 +84,5 @@ class AppSettings:
         try:
             self._model = _SettingsModel(**raw)
         except ValidationError as exc:
-            logger.warning(
-                f"Invalid settings in {self.SETTINGS_FILE_NAME}: {exc}. Using defaults."
-            )
+            logger.warning(f"Invalid settings in {self.SETTINGS_FILE_NAME}: {exc}. Using defaults.")
             self._model = _SettingsModel()

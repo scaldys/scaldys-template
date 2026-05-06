@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from datetime import datetime, timedelta, date, time
 from pathlib import Path
 
 import typer
@@ -18,8 +17,6 @@ __all__ = ["export"]
 
 
 logger = logging.getLogger(PACKAGE_NAME)
-
-next_day = datetime.combine(date.today() + timedelta(days=1), time(0))
 
 # Type definitions for fixed and optional arguments, specific to this command
 ARG_TYPE_CONFIG_PATH = Annotated[Path, typer.Argument()]
