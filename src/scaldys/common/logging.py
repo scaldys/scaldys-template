@@ -43,7 +43,7 @@ def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
 
     Raises
     ------
-    AssertionError
+    ValueError
         If an invalid log level is provided.
     Exception
         If there are issues creating log directories or configuring handlers.
@@ -53,9 +53,8 @@ def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
     if not level:
         level = "info"
 
-    assert level.lower() in ["off", "debug", "info", "warning", "error", "critical"], (
-        f"Invalid log level ({level})."
-    )
+    if level.lower() not in ["off", "debug", "info", "warning", "error", "critical"]:
+        raise ValueError(f"Invalid log level ({level}).")
 
     log_path = AppLocation.get_directory(AppLocation.LogDir)
     if not log_path.exists():
