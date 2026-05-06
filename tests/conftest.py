@@ -1,26 +1,123 @@
+# -*- coding: utf-8 -*-
+
+"""
+Root-level pytest configuration and shared fixtures.
+
+Fixtures defined here are available to *all* tests (unit, integration, e2e).
+Keep this file lean: only put fixtures here that are genuinely needed across
+multiple test directories.  Directory-specific fixtures belong in the
+corresponding subdirectory's conftest.py.
+
+Fixture scopes used in this project
+-------------------------------------
+function (default) — new instance per test; safest, use unless cost is high.
+module              — one instance shared within a single test file.
+session             — one instance for the entire test run; use for expensive
+                      setup (e.g. a real DB connection, a compiled binary).
+
+Pytest marks registered here
+------------------------------
+Run selectively with:
+    pytest -m unit            # fast unit tests only
+    pytest -m integration     # integration tests only
+    pytest -m "not slow"      # everything except slow tests
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
 import pytest
+
+from scaldys.common.app_location import AppLocation
+
+
+# ---------------------------------------------------------------------------
+# Mark registration
+# ---------------------------------------------------------------------------
+# Marks are declared in [tool.pytest.ini_options] in pyproject.toml.
+# This hook adds them to the --co output and suppresses "unknown mark" warnings.
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    config.addinivalue_line("markers", "unit: Fast, isolated tests with no external I/O")
+    config.addinivalue_line(
+        "markers", "integration: Tests that use the filesystem or invoke the CLI"
+    )
+    config.addinivalue_line("markers", "slow: Tests that take significant time")
+
+
+# ---------------------------------------------------------------------------
+# Keystone fixture: isolated_app_location
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def isolated_app_location(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[int, Path]:
+    """
+    Redirect all AppLocation paths to temporary directories for the duration
+    of one test.
+
+    WHY this fixture exists
+    -----------------------
+    `AppLocation.get_directory` returns OS-specific paths (e.g.
+    %LOCALAPPDATA%\\Scaldys\\Scaldys on Windows).  Without redirection,
+    tests that instantiate AppSettings, call setup_logging, or run CLI commands
+    would write real files to the developer's or CI machine's app-data folder.
+    This fixture ensures every test is hermetic: all file I/O goes to a
+    per-test tmp directory that pytest cleans up automatically.
+
+    Usage
+    -----
+        def test_something(isolated_app_location):
+            # AppLocation now returns tmp paths for this test only.
+            settings = AppSettings()   # reads/writes to tmp dir
+            setup_logging("info")      # log file goes to tmp dir
+
+    Returns
+    -------
+    dict mapping AppLocation constants → Path
+        {AppLocation.AppDir: <tmp>/app,
+         AppLocation.AppDataDir: <tmp>/app_data,
+         AppLocation.LogDir: <tmp>/logs}
+    """
+    dirs: dict[int, Path] = {
+        AppLocation.AppDir: tmp_path / "app",
+        AppLocation.AppDataDir: tmp_path / "app_data",
+        AppLocation.LogDir: tmp_path / "logs",
+    }
+    for d in dirs.values():
+        d.mkdir(parents=True, exist_ok=True)
+
+    def _mock_get_directory(dir_type: int) -> Path:
+        if dir_type not in dirs:
+            raise ValueError(f"Unknown directory type: {dir_type}")
+        return dirs[dir_type]
+
+    monkeypatch.setattr(AppLocation, "get_directory", staticmethod(_mock_get_directory))
+    return dirs
+
+
+# ---------------------------------------------------------------------------
+# Legacy fixtures — kept for backwards compatibility
+# ---------------------------------------------------------------------------
+# These were present in the original conftest.py.  New tests should use
+# pytest's built-in `tmp_path` fixture instead of `temporary_test_directory`.
+
 import datetime
-
-
-# def pytest_cmdline_preparse(args):
-#     """Change the default base temporary directory by dynamically adding a command line parameter
-#
-#     See:
-#         http://doc.pytest.org/en/latest/example/simple.html
-#         http://doc.pytest.org/en/latest/tmpdir.html
-#     """
-#     basetemp = "_test_runs"
-#     args[:] = ["--basetemp={0}".format(basetemp)] + args
 
 
 @pytest.fixture(scope="session")
 def temporary_test_directory(tmpdir_factory) -> str:
+    """Session-scoped temporary directory (legacy; prefer pytest's tmp_path)."""
     timestamp = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
-    test_run_dir = str(tmpdir_factory.mktemp("testrun-{0}".format(timestamp), numbered=False))
-    return test_run_dir
+    return str(tmpdir_factory.mktemp("testrun-{0}".format(timestamp), numbered=False))
 
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_test_data_if_not_exist():
-    # Code to run before all tests
-    print("\n Setting up before all tests\n")
+def setup_test_data_if_not_exist() -> None:
+    """
+    Session-level setup hook.  Add global test-data preparation here if needed.
+    Stub: currently a no-op.  Kept as a template for projects that need
+    database seeding, fixture-file generation, etc. before any test runs.
+    """
