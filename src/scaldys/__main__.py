@@ -6,6 +6,7 @@ from scaldys.__about__ import PACKAGE_NAME
 from scaldys.common.logging import setup_logging
 from scaldys.cli.cli import app
 
+__all__ = []
 
 # https://github.com/mCodingLLC/VideosSampleCode/tree/master/videos/135_modern_logging
 # use <application_name> in all files for the logger

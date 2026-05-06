@@ -39,6 +39,9 @@ def export_data(config_file_path: Path, output_dir_path: Path, num_values: int) 
     file_name = "data.json"
 
     try:
+        config_file_path = config_file_path.resolve()
+        logger.debug(f"Configuration file: {config_file_path}")
+
         # Ensure the parent directory exists
         output_dir_path = output_dir_path.resolve()
         output_dir_path.mkdir(parents=True, exist_ok=True)
