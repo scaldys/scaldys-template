@@ -245,7 +245,7 @@ class JsonFormatter(logging.Formatter):
 
 class NonErrorFilter(logging.Filter):
     """
-    A logging filter to exclude log records containing error-level messages.
+    A logging filter that passes only DEBUG and INFO records, suppressing WARNING and above.
     """
 
     @override
