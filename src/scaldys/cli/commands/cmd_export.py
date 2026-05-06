@@ -43,9 +43,7 @@ ARG_TYPE_FORCE = Annotated[
 def export(
     ctx: typer.Context,
     config_file: ARG_TYPE_CONFIG_PATH = Path("config.yml"),
-    output_dir: ARG_TYPE_OUTPUT_PATH = AppLocation.get_directory(AppLocation.AppDataDir).joinpath(
-        "data_export"
-    ),
+    output_dir: ARG_TYPE_OUTPUT_PATH = None,
     num_values: ARG_TYPE_NUM_VALUES = 0,
     force: ARG_TYPE_FORCE = False,
     verbose: ARG_TYPE_VERBOSE = False,
@@ -57,6 +55,12 @@ def export(
     This command reads a configuration file and exports data to a specified directory.
     It can limit the number of values exported and overwrite existing files if required.
     """
+    # Resolved here rather than in the default argument to avoid a module-import-time
+    # side effect: default expressions are evaluated once at definition time, which would
+    # call AppLocation.get_directory() (and its logger.debug()) before logging is configured.
+    if output_dir is None:
+        output_dir = AppLocation.get_directory(AppLocation.AppDataDir).joinpath("data_export")
+
     app_settings = AppSettings()
     if log_level is None:
         log_level = app_settings.log_level
