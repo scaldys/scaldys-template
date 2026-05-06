@@ -3,6 +3,7 @@
 import logging
 
 import typer
+from pydantic import ValidationError
 from typing_extensions import Annotated
 
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME
@@ -47,7 +48,12 @@ def log(level: ARG_TYPE_LOG_LEVEL) -> None:
     """
 
     settings = AppSettings()
-    settings.log_level = level
+    try:
+        settings.log_level = level
+    except ValidationError:
+        valid = "off, debug, info, warning, error, critical"
+        typer.echo(f"Error: '{level}' is not a valid log level. Valid choices are: {valid}", err=True)
+        raise typer.Exit(code=1)
     settings.save()
 
     return None
