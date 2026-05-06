@@ -52,7 +52,9 @@ def log(level: ARG_TYPE_LOG_LEVEL) -> None:
         settings.log_level = level
     except ValidationError:
         valid = "off, debug, info, warning, error, critical"
-        typer.echo(f"Error: '{level}' is not a valid log level. Valid choices are: {valid}", err=True)
+        typer.echo(
+            f"Error: '{level}' is not a valid log level. Valid choices are: {valid}", err=True
+        )
         raise typer.Exit(code=1)
     settings.save()
 

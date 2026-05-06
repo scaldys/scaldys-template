@@ -11,21 +11,57 @@ fork on GitHub: https://github.com/scaldys/scaldys-template
 
 ## Features
 
-* Modern Python development with Python 3.12+
-* Command-line interface (CLI) built with Typer for intuitive and feature-rich applications
+* Modern Python development with Python 3.13+
+* Command-line interface (CLI) built with Typer — global flags (`--log`, `--verbose`) resolved once before any subcommand runs
+* Application lifecycle entry point (`__main__.py`) covering freeze support, crash hooks, signal handlers, asyncio policy, and environment validation
+* Reference implementations in `core/` for async processing pipelines (`async_processor.py`) and database abstraction (`database.py`)
 * Fast dependency management with `uv`
-* Comprehensive testing with `pytest` and coverage reporting
+* Comprehensive testing with `pytest`, `pytest-asyncio`, `pytest-mock`, and coverage reporting — structured with unit / integration / slow markers
 * Code quality verification with `ruff` (linting & formatting) and `pyright` (type checking)
 * Documentation with reStructuredText and `sphinx` using ReadTheDocs theme
 * Windows build infrastructure with `Cython`, `PyInstaller` and `Inno Setup`
 * GitHub Actions workflows for CI/CD and PyPI publishing
 
 
+## Project Structure
+
+```
+src/scaldys/
+├── __main__.py          ← lifecycle entry point (freeze_support, crash hook,
+│                           signal handlers, asyncio policy, env validation)
+├── cli/
+│   ├── cli.py           ← Typer app; owns the single setup_logging() call
+│   ├── settings.py      ← AppSettings: persisted log level (INI + Pydantic)
+│   └── commands/
+│       ├── arg_types.py ← shared Annotated type definitions
+│       ├── cmd_export.py
+│       ├── cmd_process.py  ← demonstrates async pipeline + DB connection
+│       └── cmd_settings.py
+├── common/
+│   ├── app_location.py  ← OS-aware path resolution (Windows/macOS/Linux,
+│   │                       source vs installed vs frozen)
+│   └── logging.py       ← QueueHandler-based JSON logging setup
+└── core/
+    ├── export.py
+    ├── async_processor.py  ← async pipeline pattern + sync wrapper
+    └── database.py         ← connection, transaction, pool scaffold
+
+tests/
+├── conftest.py              ← isolated_app_location keystone fixture
+├── unit/
+│   ├── conftest.py          ← reset_scaldys_logger autouse fixture
+│   ├── common/              ← mirrors src/scaldys/common/
+│   ├── cli/                 ← mirrors src/scaldys/cli/
+│   └── core/                ← mirrors src/scaldys/core/
+└── integration/             ← full CLI invocations via CliRunner
+```
+
+
 ## Getting Started
 
 ### Prerequisites
 
-* Python 3.12 or later
+* Python 3.13 or later
 * Git
 
 ### Setup
@@ -45,7 +81,7 @@ fork on GitHub: https://github.com/scaldys/scaldys-template
 
 2. **Customize the template:**
 
-   * Replace all occurrences of `scaldys` (case-sensitive) with your project name
+   * Replace all occurrences of `scaldys` / `Scaldys` (case-sensitive) with your project name
    * Update file and directory names containing "scaldys"
    * Modify package metadata in `pyproject.toml`
 
@@ -60,7 +96,7 @@ fork on GitHub: https://github.com/scaldys/scaldys-template
 
 ### Installation
 
-`uv` will automatically install development dependencies when running a command, for instance run the tests.
+`uv` will automatically install development dependencies when running a command, for instance run the tests:
 
 ```bash
 uv run pytest ./tests
@@ -69,28 +105,47 @@ uv run pytest ./tests
 While the environment is synced automatically, it may also be explicitly synced using `uv sync`:
 
 ```bash
-uv sync
+uv sync --group dev
 ```
 
-For comprehensive documentation on using `uv`, visit the official documentation: https://docs.astral.sh/uv/guides/ .
+For comprehensive documentation on using `uv`, visit the official documentation: https://docs.astral.sh/uv/guides/
 
 
 ### Execute the Application
 
-Execute the application with the following command:
+The CLI entry point is `scaldys.__main__:main`, which runs lifecycle setup before
+handing off to the Typer app.  Global options (`--log`, `--verbose`) must appear
+**before** the subcommand name:
 
 ```bash
-uv run ./src/scaldys.py
+# Show help
+uv run scaldys --help
+
+# Show available commands
+uv run scaldys --help
+
+# Run the export command with debug logging
+uv run scaldys --log debug export config.yml
+
+# Run the process command with verbose output
+uv run scaldys --verbose process --num-tasks 20
+
+# Run via python -m (same lifecycle path)
+uv run python -m scaldys --log info export config.yml
+
+# Manage the persisted log level
+uv run scaldys settings log warning
+uv run scaldys settings          # show current level
 ```
 
-or from within the source directory:
+You can also run directly from the source directory:
 
 ```bash
 # using uv
 uv run scaldys.py
 
 # using Python directly
-python scaldys.py
+python src/scaldys.py
 ```
 
 
@@ -155,7 +210,7 @@ For specific target environments:
 
 ```bash
 # For a specific Python version
-uv build --python-tag py312
+uv build --python-tag py313
 
 # For specific platforms (when using C extensions)
 uv build --config-setting="--plat-name=manylinux2014_x86_64"
@@ -216,13 +271,22 @@ You can also run quality checks locally before committing:
 
 ```bash
 # Sync dependencies with lock file
-uv sync
+uv sync --group dev
 
-# Run tests
+# Run the full test suite
 uv run pytest
 
-# Check test coverage
-uv run coverage run -m pytest
+# Run only fast unit tests (no filesystem or CLI I/O)
+uv run pytest -m unit
+
+# Run only integration tests
+uv run pytest -m integration
+
+# Exclude slow tests (async pipeline tests with real latency)
+uv run pytest -m "not slow"
+
+# Run tests with coverage report
+uv run pytest --cov=src/scaldys --cov-report=term-missing
 
 # Lint and check formatting
 uv run ruff check ./src
@@ -236,6 +300,14 @@ uv run pyright ./src
 # Build documentation
 uv run sphinx-build docs/manual/source docs/_build
 ```
+
+#### Test markers
+
+| Marker | What it covers | Typical run time |
+|--------|---------------|-----------------|
+| `unit` | Isolated tests — no real filesystem writes, CLI mocked | < 1 s |
+| `integration` | Full CLI invocations via `CliRunner`, real file I/O in `tmp_path` | ~10 s |
+| `slow` | Tests that run the real async pipeline with simulated latency | included in `integration` |
 
 
 ### Publishing to PyPI

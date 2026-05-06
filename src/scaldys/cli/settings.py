@@ -3,7 +3,7 @@
 import configparser
 import logging
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ValidationError
 
@@ -44,7 +44,7 @@ class AppSettings:
 
     @log_level.setter
     def log_level(self, value: str | None) -> None:
-        self._model = _SettingsModel(log_level=value or "")
+        self._model = _SettingsModel(log_level=cast(_LogLevel, value or ""))
 
     def save(self) -> None:
         logger.debug("Saving application settings")

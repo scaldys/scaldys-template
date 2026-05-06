@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-scaldys = "scaldys.cli.cli:app"
+scaldys = "scaldys.__main__:main"
 
 [build-system]
 requires = ["setuptools"]
@@ -42,10 +42,21 @@ dev = [
     "pre-commit>=4.5.0",
     "pyright>=1.1.409",
     "pytest>=9.0.3",
+    "pytest-asyncio>=0.25.0",
     "pytest-cov>=7.1.0",
+    "pytest-mock>=3.14.0",
     "ruff>=0.15.12",
     "sphinx>=9.1.0",
     "sphinx-rtd-theme>=3.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "unit: Fast, isolated tests with no external I/O",
+    "integration: Tests that touch the filesystem or invoke the full CLI",
+    "slow: Tests that take significant time (excluded from fast CI runs)",
 ]
 
 [tool.uv.sources]

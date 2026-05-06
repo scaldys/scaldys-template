@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# cython: language_level=3
 
 import logging
 from pathlib import Path
@@ -9,9 +10,6 @@ from typing_extensions import Annotated
 from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
 from scaldys.core.export import export_data
 from scaldys.common.app_location import AppLocation
-from scaldys.cli.commands.arg_types import ARG_TYPE_VERBOSE, ARG_TYPE_LOG_LEVEL
-from scaldys.cli.settings import AppSettings
-from scaldys.common.logging import setup_logging
 
 __all__ = ["export"]
 
@@ -21,7 +19,7 @@ logger = logging.getLogger(PACKAGE_NAME)
 # Type definitions for fixed and optional arguments, specific to this command
 ARG_TYPE_CONFIG_PATH = Annotated[Path, typer.Argument()]
 
-ARG_TYPE_OUTPUT_PATH = Annotated[Path, typer.Argument()]
+ARG_TYPE_OUTPUT_PATH = Annotated[Path | None, typer.Argument()]
 
 ARG_TYPE_NUM_VALUES = Annotated[
     int,
@@ -46,8 +44,6 @@ def export(
     output_dir: ARG_TYPE_OUTPUT_PATH = None,
     num_values: ARG_TYPE_NUM_VALUES = 0,
     force: ARG_TYPE_FORCE = False,
-    verbose: ARG_TYPE_VERBOSE = False,
-    log_level: ARG_TYPE_LOG_LEVEL = None,
 ) -> None:
     """
     Export data according to specifications in a configuration file.
@@ -60,12 +56,6 @@ def export(
     # call AppLocation.get_directory() (and its logger.debug()) before logging is configured.
     if output_dir is None:
         output_dir = AppLocation.get_directory(AppLocation.AppDataDir).joinpath("data_export")
-
-    app_settings = AppSettings()
-    if log_level is None:
-        log_level = app_settings.log_level
-
-    setup_logging(log_level, verbose)
 
     logger.info(f"Starting {APP_NAME} version {VERSION}")
     logger.debug(f"Current working directory : {Path.cwd()}")

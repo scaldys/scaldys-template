@@ -2,3 +2,4 @@
 
 from scaldys.cli.commands.arg_types import *
 from scaldys.cli.commands.cmd_export import *
+from scaldys.cli.commands.cmd_process import *
