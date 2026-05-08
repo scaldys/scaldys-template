@@ -3,5 +3,9 @@ compiled_modules = [
     "scaldys.core.export",
 ]
 
+[docs]
+dist_dirs = ["manual"]
+apidoc_dirs = ["developer_guide"]
+
 [windows]
 script_dir = "packaging/windows"

@@ -8,6 +8,7 @@
 #define MyAppExeName "scaldys.exe"
 #define MyAppBatName "scaldys_commandline.bat"
 #define MyAppPs1Name "scaldys_powershell.ps1"
+#define MyAppHelpName "manual"
 
 #ifndef SourceDir
   #define SourceDir "..\..\dist\pyinstaller"
@@ -54,7 +55,7 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: createallsubdirs recursesubdi
 ; Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"
 Name: "{group}\{#MyAppName} CMD"; Filename: "{app}\bin\{#MyAppBatName}"
 Name: "{group}\{#MyAppName} PS"; Filename: "{code:GetLauncher}"; Parameters: "{code:GetLauncherParameters}"
-Name: "{group}\{#MyAppName} Help"; Filename: "{app}\documentation\help files\index.html"; Check: FileExists(ExpandConstant('{app}\documentation\help files\index.html'))
+Name: "{group}\{#MyAppName} Help"; Filename: "{app}\documentation\{#MyAppHelpName}\index.html"; Check: FileExists(ExpandConstant('{app}\documentation\{#MyAppHelpName}\index.html'))
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{code:GetLauncher}"; Parameters: "{code:GetLauncherParameters}"; Tasks: desktopicon
 
 [Code]
