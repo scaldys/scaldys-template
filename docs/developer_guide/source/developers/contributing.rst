@@ -148,7 +148,7 @@ Or via the convenience wrappers::
 
 Or using ``scaldys-builder``::
 
-    uv run scaldys-builder build windows docs
+    uv run scaldys-builder build docs
 
 
 Versioning, Building, and Publishing

@@ -63,7 +63,7 @@ try {
 
     $uvExe             = Join-Path $InstallDir "bin\uv.exe"
     $pythonVersionFile = Join-Path $InstallDir "bin\.python-version"
-    $wheelsDir         = Join-Path $InstallDir "bin\wheels"
+    $wheelsDir         = Join-Path $InstallDir "wheels"
     $targetDir         = Join-Path $InstallDir "PythonRuntime"
     $pythonExe         = Join-Path $targetDir  "Scripts\python.exe"
 

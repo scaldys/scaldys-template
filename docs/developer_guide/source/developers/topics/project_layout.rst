@@ -128,12 +128,16 @@ When ``scaldys-builder`` runs the Windows distribution pipeline, it writes:
 .. code-block:: text
 
     build/
-    ├── staging/        # Staged source tree (Cython pre-compilation)
-    ├── exe/            # PyInstaller output — standalone executable directory
-    └── dist/           # Final installer (.exe from Inno Setup)
+    ├── compiled/       # Staged source tree (Cython pre-compilation)
+    └── <docs-name>/    # Sphinx HTML output per documentation unit
+
+    dist/
+    ├── wheels/         # Binary distribution wheel (.whl)
+    ├── portable/       # Staged distribution tree (pyinstaller/pyruntime modes)
+    └── installer/      # Windows installer (pyinstaller/pyruntime modes)
 
 All build directories are excluded from git and cleaned by
-``scaldys-builder build windows clean``.
+``scaldys-builder build clean``.
 
 
 Configuration files

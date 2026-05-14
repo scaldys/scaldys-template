@@ -9,3 +9,18 @@ internal_doc_dirs = ["developer_guide"]
 
 [windows]
 script_dir = "packaging/windows"
+# Deployment mode controls how the application is packaged:
+#   "pyinstaller" (default) -- frozen standalone executable via PyInstaller + Inno Setup installer.
+#                             No Python runtime required on the end-user's machine.
+#   "pyruntime"             -- no PyInstaller; a managed Python venv (PythonRuntime) is deployed
+#                             alongside the app via Inno Setup. Use when the application must
+#                             coexist with Quarto, Jupyter, or another real Python interpreter.
+#                             Requires .python-version at the project root.
+#   "wheel_only"            -- binary wheel only, no installer. Use for packages distributed
+#                             via pip or uv. The .iss and launcher files are not required.
+deployment_mode = "pyinstaller"
+# bundle_pyruntime: only relevant when deployment_mode = "pyruntime".
+#   false (default) -- online installer: uv downloads Python at install time.
+#   true            -- offline installer: a pre-built venv is bundled inside setup.exe.
+#                     Requires .python-version at the project root.
+# bundle_pyruntime = false

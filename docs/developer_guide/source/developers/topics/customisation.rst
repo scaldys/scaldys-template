@@ -188,7 +188,7 @@ executable and installer:
 3. Verify the build pipeline::
 
        uv run scaldys-builder check
-       uv run scaldys-builder build windows all
+       uv run scaldys-builder build all
 
 
 Step 7 — Update CI/CD workflows

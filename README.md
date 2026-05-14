@@ -19,7 +19,7 @@ fork on GitHub: https://github.com/scaldys/scaldys-template
 * Comprehensive testing with `pytest`, `pytest-asyncio`, `pytest-mock`, and coverage reporting — structured with unit / integration / slow markers
 * Code quality verification with `ruff` (linting & formatting) and `pyright` (type checking)
 * Documentation with reStructuredText and `sphinx` using ReadTheDocs theme
-* Windows build infrastructure with `Cython`, `PyInstaller` and `Inno Setup`
+* Windows build infrastructure with `Cython`, `scaldys-builder`, and — depending on the deployment mode — `PyInstaller`, `Inno Setup`, or wheel-only packaging
 * GitHub Actions workflows for CI/CD and PyPI publishing
 
 
@@ -223,40 +223,49 @@ The project includes GitHub Actions workflows that automatically build packages 
 See the workflow file at `.github/workflows/release.yml` for details.
 
 
-### Windows Packaging (Cython + PyInstaller + Inno Setup)
+### Windows Packaging (scaldys-builder)
 
-This template includes a dedicated Windows build system to create compiled, standalone executables and a professional installer.
+This template includes a dedicated Windows build system managed by the
+`scaldys-builder` CLI command installed by `uv sync`.
+
+**Deployment modes** — controlled by `deployment_mode` in `builder.toml`:
+
+| Mode | What it builds | When to use |
+|------|---------------|-------------|
+| `pyinstaller` (default) | PyInstaller exe + Inno Setup installer | Most applications |
+| `pyruntime` | Binary wheel + Inno Setup installer with a managed Python runtime | Apps that coexist with Quarto/Jupyter |
+| `wheel_only` | Binary wheel only, no installer | Apps distributed via pip/uv |
 
 **Key features:**
-* **Cythonization:** Critical core modules are compiled to C for performance and basic obfuscation.
-* **Stand-alone Executable:** Bundles the application and all dependencies into a single directory using PyInstaller.
-* **Professional Installer:** Creates a Windows setup (`.exe`) using Inno Setup, including desktop shortcuts and PATH integration.
+* **Cython compilation:** Critical modules are compiled to `.pyd` extensions for performance and basic obfuscation.
+* **Standalone executable:** (`pyinstaller` mode) Bundles the application into a self-contained directory via PyInstaller.
+* **Managed Python runtime:** (`pyruntime` mode) Deploys a `uv`-managed virtual environment alongside the app, supporting online and offline installer variants.
+* **Professional installer:** (`pyinstaller` / `pyruntime` modes) Creates a Windows setup `.exe` using Inno Setup with desktop shortcuts.
+* **Binary wheel:** (all modes) Built from compiled sources and placed in `dist/wheels/` for users with their own environment.
 
-The Windows build system is managed by the `scaldys_builder` package, exposed as the `scaldys-builder`
-CLI command installed by `uv sync`.
-
-**Available Build Commands:**
+**Build commands:**
 
 ```bash
-# Run the full end-to-end build (docs, exe, and installer)
-scaldys-builder build windows all
+# Full build: documentation + Windows distribution
+scaldys-builder build all
 
-# Build only the standalone executable
-scaldys-builder build windows exe
+# Documentation only
+scaldys-builder build docs
 
-# Build only the setup installer (requires Inno Setup installed)
-scaldys-builder build windows installer
+# Windows distribution only (mode-dependent)
+scaldys-builder build windows
 
-# Build Windows-specific documentation
-scaldys-builder build windows docs
+# Remove build/ and dist/
+scaldys-builder build clean
 
-# Clean build and dist directories
-scaldys-builder build windows clean
+# Verify project compliance
+scaldys-builder check
 ```
 
-**Prerequisites for Windows Build:**
-* **Inno Setup:** Must be installed and available in your PATH to build the installer.
-* **Visual Studio Build Tools:** Required for Cython compilation.
+**Prerequisites:**
+* **Visual Studio Build Tools:** Required for Cython compilation (all modes).
+* **PyInstaller:** Required for `pyinstaller` mode (`uv sync` installs it).
+* **Inno Setup:** Required for `pyinstaller` and `pyruntime` modes (must be installed separately).
 
 
 ### Code Quality Verification

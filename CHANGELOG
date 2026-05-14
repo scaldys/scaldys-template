@@ -28,6 +28,49 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.4.0] - 2026-05-14
+====================
+
+**Changed**
+
+  - ``builder.toml``: ``[windows]`` section extended with ``deployment_mode``
+    (default ``"pyinstaller"``) and commented-out ``bundle_pyruntime`` option.
+    All three modes documented inline: ``"pyinstaller"``, ``"pyruntime"``,
+    ``"wheel_only"``.
+
+  - ``packaging/windows/scaldys.iss``: updated to support all three
+    scaldys-builder deployment modes via preprocessor conditionals.
+    ``[Tasks]``, ``[Run]``, and ``[UninstallRun]`` sections are now
+    conditionally compiled based on ``PyruntimeMode`` and
+    ``PythonRuntimeDir`` defines.
+
+  - ``packaging/windows/scaldys_commandline.bat``: updated with mode
+    auto-detection — checks for ``scaldys.exe`` in ``bin\`` first
+    (pyinstaller mode); falls back to activating
+    ``PythonRuntime\Scripts\activate.bat`` (pyruntime mode).
+
+  - ``packaging/windows/scaldys_powershell.ps1``: same auto-detection logic
+    as the batch launcher.
+
+  - ``packaging/windows/setup_pyruntime.ps1``: wheel path corrected from
+    ``bin\wheels\`` to ``wheels\``, matching the scaldys-builder unified
+    wheel output path (``dist\portable\wheels\`` in pyruntime mode).
+
+**Docs**
+
+  - ``README.md``: *Windows Packaging* section rewritten with the deployment
+    mode table (pyinstaller / pyruntime / wheel_only), updated feature
+    bullets, new CLI commands (``build all``, ``build docs``,
+    ``build windows``, ``build clean``), and updated prerequisites.
+
+  - ``docs/developer_guide/``: three stale scaldys-builder command references
+    updated (``build windows docs`` → ``build docs``,
+    ``build windows all`` → ``build all``, ``build windows clean`` →
+    ``build clean``); build output tree in ``project_layout.rst`` updated to
+    reflect the current ``build/compiled/``, ``dist/wheels/``, and
+    ``dist/installer/`` layout.
+
+
 [0.3.0] - 2026-05-07
 ====================
 
