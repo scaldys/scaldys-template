@@ -63,7 +63,7 @@ ships with:
 
 * A ``builder.toml`` wiring the Windows build pipeline.
 * ``packaging/windows/`` scripts for Inno Setup.
-* Sphinx documentation trees (``docs/manual/``, ``docs/developer_guide/``).
+* Sphinx documentation trees (``docs/user_guide/``, ``docs/developer_guide/``).
 * GitHub Actions workflows for CI, PyPI publishing, and releases.
 
 The ``pyproject.toml`` ``[tool.uv.sources]`` section points ``scaldys-builder``

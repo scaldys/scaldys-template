@@ -11,7 +11,7 @@ application instead of the infrastructure around it.
 
 This guide is written for developers who maintain or evolve the template
 itself.  If you are building a *new project* on top of it, refer to the
-project's user manual (``docs/manual/``) instead.
+project's user guide (``docs/user_guide/``) instead.
 
 Start with :ref:`overview` for a high-level picture of what the template
 provides, then move to :ref:`architecture` to understand how the pieces fit

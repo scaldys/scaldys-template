@@ -4,8 +4,8 @@ compiled_modules = [
 ]
 
 [docs]
-dist_dirs = ["manual"]
-apidoc_dirs = ["developer_guide"]
+public_doc_dirs = ["user_guide"]
+internal_doc_dirs = ["developer_guide"]
 
 [windows]
 script_dir = "packaging/windows"

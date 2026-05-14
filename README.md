@@ -298,7 +298,7 @@ uv run ruff format ./src
 uv run pyright ./src
 
 # Build documentation
-uv run sphinx-build docs/manual/source docs/_build
+uv run sphinx-build docs/user_guide/source docs/_build
 ```
 
 #### Test markers

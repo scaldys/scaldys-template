@@ -137,14 +137,14 @@ Developer guide (this document)::
 
     uv run sphinx-build -b html docs/developer_guide/source docs/developer_guide/build/html
 
-User manual::
+User guide::
 
-    uv run sphinx-build -b html docs/manual/source docs/manual/build/html
+    uv run sphinx-build -b html docs/user_guide/source docs/user_guide/build/html
 
 Or via the convenience wrappers::
 
     cd docs/developer_guide && make html
-    cd docs/manual && make html
+    cd docs/user_guide && make html
 
 Or using ``scaldys-builder``::
 
@@ -213,7 +213,7 @@ changes to make it your own:
    ``src/<yourpackage>/cli/commands/`` and the stub implementations in
    ``src/<yourpackage>/core/`` with your actual application logic.
 
-4. **Update documentation**: fill in the user manual under ``docs/manual/``
+4. **Update documentation**: fill in the user guide under ``docs/user_guide/``
    and this developer guide under ``docs/developer_guide/``.
 
 5. **Update CI workflows**: change the package name references in

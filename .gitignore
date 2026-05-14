@@ -43,10 +43,8 @@ Thumbs.db
 desktop.ini
 
 # Sphinx
-docs/manual/build/
-docs/manual/_build/
-docs/build/
-docs/_build/
+docs/**/build/
+docs/**/_build/
 
 # AI assistants
 .claude

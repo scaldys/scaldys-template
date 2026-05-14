@@ -148,10 +148,10 @@ If you do not need a stub, delete its file and remove any import of it.
 Step 5 — Update the documentation
 ====================================
 
-Fill in the user manual at ``docs/manual/source/`` and this developer guide
+Fill in the user guide at ``docs/user_guide/source/`` and this developer guide
 at ``docs/developer_guide/source/``.  At minimum, update:
 
-* ``docs/manual/source/index.rst`` — the one-liner description.
+* ``docs/user_guide/source/index.rst`` — the one-liner description.
 * ``docs/developer_guide/source/index.rst`` — the one-liner description.
 * ``docs/*/source/authors.rst`` — your name and contact.
 * ``docs/*/source/changelog.rst`` — initial version entry.

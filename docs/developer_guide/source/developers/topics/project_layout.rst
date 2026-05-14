@@ -23,7 +23,7 @@ Repository root
     ├── .junie/                 # Junie AI assistant memory (not tracked in output)
     ├── docs/
     │   ├── developer_guide/    # This documentation (Sphinx)
-    │   └── manual/             # User-facing documentation (Sphinx)
+    │   └── user_guide/         # User-facing documentation (Sphinx)
     ├── examples/               # Usage examples (Markdown)
     ├── licenses/               # Third-party dependency licence files
     ├── packaging/windows/      # Inno Setup scripts for the Windows installer
