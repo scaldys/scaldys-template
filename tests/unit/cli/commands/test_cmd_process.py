@@ -17,9 +17,9 @@ from __future__ import annotations
 import pytest
 from typer.testing import CliRunner
 
-from scaldys.cli.cli import app
-from scaldys.core.async_processor import ProcessingResult
-from scaldys.cli.commands.cmd_process import _print_summary
+from scaldys_template.cli.cli import app
+from scaldys_template.core.async_processor import ProcessingResult
+from scaldys_template.cli.commands.cmd_process import _print_summary
 
 runner = CliRunner()
 

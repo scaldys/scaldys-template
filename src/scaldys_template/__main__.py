@@ -28,7 +28,7 @@ here only ensures that any crash *during* startup (steps 1-6) is visible.
 Long-running core components that need to honour an external stop signal should
 import and check `_shutdown_event`:
 
-    from scaldys.__main__ import _shutdown_event
+    from scaldys_template.__main__ import _shutdown_event
     while not _shutdown_event.is_set():
         ...
 """
@@ -44,8 +44,8 @@ import sys
 import threading
 import types
 
-from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
-from scaldys.cli.cli import app
+from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, VERSION
+from scaldys_template.cli.cli import app
 
 __all__: list[str] = []
 
@@ -203,7 +203,7 @@ def _validate_environment() -> None:
     #     )
 
     # --- Example: writable data directory ---
-    # from scaldys.common.app_location import AppLocation
+    # from scaldys_template.common.app_location import AppLocation
     # data_dir = AppLocation.get_directory(AppLocation.AppDataDir)
     # if data_dir.exists() and not os.access(data_dir, os.W_OK):
     #     raise RuntimeError(f"Data directory is not writable: {data_dir}")

@@ -54,13 +54,13 @@ Running the Application
 
 From the source tree::
 
-    uv run python src/scaldys.py --help
-    uv run python -m scaldys --help
+    uv run python src/scaldys_template.py --help
+    uv run python -m scaldys_template --help
 
 Or via the installed entry point (after ``uv sync``)::
 
-    uv run scaldys --help
-    uv run scaldys --verbose process --num-tasks 5
+    uv run scaldys-template --help
+    uv run scaldys-template --verbose process --num-tasks 5
 
 
 Running the Tests
@@ -76,7 +76,7 @@ Run only fast unit tests::
 
 Run with coverage::
 
-    uv run pytest --cov=scaldys --cov-report=term-missing
+    uv run pytest --cov=src/scaldys_template --cov-report=term-missing
 
 Run excluding slow tests::
 
@@ -155,7 +155,7 @@ Versioning, Building, and Publishing
 =====================================
 
 Version is declared once in ``pyproject.toml`` under ``[project] version`` and
-read at runtime via ``importlib.metadata`` in ``src/scaldys/__about__.py``.
+read at runtime via ``importlib.metadata`` in ``src/scaldys_template/__about__.py``.
 Update ``pyproject.toml`` before tagging a release.
 
 Build a wheel and source distribution::
@@ -193,7 +193,7 @@ Three GitHub Actions workflows are included:
     distribution as release assets.
 
 To adapt the workflows to a renamed project, update the ``name`` field in
-``pyproject.toml`` and the ``scaldys`` references in the workflow files.
+``pyproject.toml`` and the ``scaldys_template`` references in the workflow files.
 
 
 Adapting the Template for a New Project
@@ -202,10 +202,10 @@ Adapting the Template for a New Project
 The template is designed to be cloned and then renamed.  The minimum set of
 changes to make it your own:
 
-1. **Rename the package**: change ``scaldys`` to your package name in
-   ``pyproject.toml`` (``[project] name``), ``src/scaldys/__about__.py``
+1. **Rename the package**: change ``scaldys_template`` to your package name in
+   ``pyproject.toml`` (``[project] name``), ``src/scaldys_template/__about__.py``
    (``APP_NAME``, ``PACKAGE_NAME``, ``ORGANIZATION_NAME``), and rename the
-   ``src/scaldys/`` directory.
+   ``src/scaldys_template/`` directory.
 
 2. **Update version**: set the initial ``version`` in ``pyproject.toml``.
 

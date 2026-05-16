@@ -20,7 +20,7 @@ import threading
 
 import pytest
 
-from scaldys.core.database import (
+from scaldys_template.core.database import (
     ConnectionPool,
     DatabaseConfig,
     DatabaseConnection,
@@ -85,7 +85,7 @@ class TestDatabaseConnectionLifecycle:
     def test_connect_logs_connection(
         self, conn: DatabaseConnection, caplog: pytest.LogCaptureFixture
     ):
-        with caplog.at_level(logging.INFO, logger="scaldys"):
+        with caplog.at_level(logging.INFO, logger="scaldys_template"):
             conn.connect()
         conn.disconnect()
         assert any("connection established" in r.message.lower() for r in caplog.records)
@@ -154,7 +154,7 @@ class TestTransaction:
     def test_normal_flow_logs_commit(
         self, config: DatabaseConfig, caplog: pytest.LogCaptureFixture
     ):
-        with caplog.at_level(logging.DEBUG, logger="scaldys"):
+        with caplog.at_level(logging.DEBUG, logger="scaldys_template"):
             with DatabaseConnection(config) as c:
                 with transaction(c):
                     c.execute("SELECT 1")
@@ -164,7 +164,7 @@ class TestTransaction:
     def test_exception_logs_rollback(
         self, config: DatabaseConfig, caplog: pytest.LogCaptureFixture
     ):
-        with caplog.at_level(logging.WARNING, logger="scaldys"):
+        with caplog.at_level(logging.WARNING, logger="scaldys_template"):
             with pytest.raises(RuntimeError):
                 with DatabaseConnection(config) as c:
                     with transaction(c):

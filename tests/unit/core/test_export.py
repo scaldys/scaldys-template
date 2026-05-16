@@ -20,7 +20,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from scaldys.core.export import export_data
+from scaldys_template.core.export import export_data
 
 
 @pytest.fixture
@@ -92,7 +92,7 @@ class TestExportData:
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "data.json").mkdir()  # dir with the same name as the output file
 
-        with caplog.at_level(logging.ERROR, logger="scaldys"):
+        with caplog.at_level(logging.ERROR, logger="scaldys_template"):
             with pytest.raises(OSError):
                 export_data(config_file, output_dir, num_values=2)
 

@@ -19,12 +19,12 @@ import logging
 
 import pytest
 
-from scaldys.common.logging import (
+from scaldys_template.common.logging import (
     JsonFormatter,
     NonErrorFilter,
     setup_logging,
 )
-from scaldys.__about__ import PACKAGE_NAME
+from scaldys_template.__about__ import PACKAGE_NAME
 
 
 # ---------------------------------------------------------------------------

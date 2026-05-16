@@ -1,8 +1,8 @@
 [project]
-name = "scaldys"
-version = "0.4.0"
+name = "scaldys-template"
+version = "0.4.1"
 authors = [
-  { name="scaldys", email="scaldys@scaldys.net" },
+  { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
 description = "A skeleton for Python projects by Scaldys."
 readme = "README.rst"
@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.scripts]
-scaldys = "scaldys.__main__:main"
+scaldys-template = "scaldys_template.__main__:main"
 
 [build-system]
 requires = ["setuptools"]
@@ -32,10 +32,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["scaldys*"]
+include = ["scaldys_template*"]
 
 [tool.setuptools.package-data]
-scaldys = ["py.typed"]
+scaldys_template = ["py.typed"]
 
 [dependency-groups]
 dev = [

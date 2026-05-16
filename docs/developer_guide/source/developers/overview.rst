@@ -21,34 +21,34 @@ What the template provides
 The template is organised around six concerns that every serious CLI
 application needs to address:
 
-**1. Lifecycle management** (``src/scaldys/__main__.py``)
+**1. Lifecycle management** (``src/scaldys_template/__main__.py``)
     A numbered startup sequence — freeze support, pre-init logging, crash hook,
     signal handlers, asyncio policy, environment validation — that runs *before*
     the CLI argument parser touches ``sys.argv``.  The ordering is intentional
     and documented in the module docstring.
 
-**2. Structured, async logging** (``src/scaldys/common/logging.py``)
+**2. Structured, async logging** (``src/scaldys_template/common/logging.py``)
     JSON Lines log files written through a ``QueueHandler`` so disk I/O never
     blocks the main thread.  ``--log`` and ``--verbose`` flags control the log
     level and whether log output appears on the console.
 
-**3. Cross-platform path resolution** (``src/scaldys/common/app_location.py``)
+**3. Cross-platform path resolution** (``src/scaldys_template/common/app_location.py``)
     A single ``AppLocation`` class that returns the correct ``AppDataDir`` and
     ``LogDir`` on Windows, macOS, and Linux, and switches automatically between
     a source-tree layout and an installed / frozen executable layout.
 
-**4. Persisted settings** (``src/scaldys/cli/settings.py``)
+**4. Persisted settings** (``src/scaldys_template/cli/settings.py``)
     An INI file backed by Pydantic validation.  ``AppSettings`` reads, writes,
     and validates the settings file on construction; the CLI callback uses it
     to resolve the default log level when ``--log`` is not passed explicitly.
 
-**5. Async processing pipeline** (``src/scaldys/core/async_processor.py``)
+**5. Async processing pipeline** (``src/scaldys_template/core/async_processor.py``)
     A fully documented template for batched, concurrent async work callable
     from a synchronous Typer command.  Demonstrates per-item timeouts,
     ``return_exceptions=True`` gather, progress callbacks, cooperative shutdown
     via ``_shutdown_event``, and a clean ``asyncio.run()`` wrapper.
 
-**6. Database scaffold** (``src/scaldys/core/database.py``)
+**6. Database scaffold** (``src/scaldys_template/core/database.py``)
     Context-manager connection lifecycle, parameterised query stubs,
     ``@contextmanager`` transaction helper, and a thread-safe semaphore-based
     connection pool — all swappable with a real driver without changing the

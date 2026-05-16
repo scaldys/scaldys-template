@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from scaldys.cli.settings import AppSettings
+from scaldys_template.cli.settings import AppSettings
 
 
 # ---------------------------------------------------------------------------
@@ -122,7 +122,7 @@ class TestAppSettingsResilience:
 
         import logging
 
-        with caplog.at_level(logging.WARNING, logger="scaldys"):
+        with caplog.at_level(logging.WARNING, logger="scaldys_template"):
             settings = AppSettings()
 
         assert settings.log_level is None

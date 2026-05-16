@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from scaldys.__about__ import PACKAGE_NAME
+from scaldys_template.__about__ import PACKAGE_NAME
 
 
 # ---------------------------------------------------------------------------

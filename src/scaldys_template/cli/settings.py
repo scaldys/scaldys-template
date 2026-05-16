@@ -7,8 +7,8 @@ from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ValidationError
 
-from scaldys.__about__ import PACKAGE_NAME
-from scaldys.common.app_location import AppLocation
+from scaldys_template.__about__ import PACKAGE_NAME
+from scaldys_template.common.app_location import AppLocation
 
 __all__ = ["AppSettings"]
 

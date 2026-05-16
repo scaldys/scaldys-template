@@ -17,12 +17,12 @@ Step 1 — Rename the package
 ============================
 
 All project-wide identifiers live in one place:
-``src/scaldys/__about__.py``:
+``src/scaldys_template/__about__.py``:
 
 .. code-block:: python
 
-    APP_NAME = "Scaldys"         # Human-readable name (shown in ASCII art, help text)
-    PACKAGE_NAME = "scaldys"     # Python package name (import name, log file prefix)
+    APP_NAME = "Scaldys-Template"         # Human-readable name (shown in ASCII art, help text)
+    PACKAGE_NAME = "scaldys_template"     # Python package name (import name, log file prefix)
     ORGANIZATION_NAME = "Scaldys" # Used in Windows app data path
 
 Change these three strings first.  Everything else — log file name, settings
@@ -30,7 +30,7 @@ file name, Windows data path — derives from them at runtime.
 
 Then rename the package directory::
 
-    mv src/scaldys src/<yourpackage>
+    mv src/scaldys_template src/<yourpackage>
 
 Update ``pyproject.toml``:
 
@@ -47,8 +47,8 @@ Update any import paths throughout the source and tests:
 .. code-block:: text
 
     # Find all occurrences of the old package name:
-    grep -r "from scaldys" src/ tests/
-    grep -r "import scaldys" src/ tests/
+    grep -r "from scaldys_template" src/ tests/
+    grep -r "import scaldys_template" src/ tests/
 
 
 Step 2 — Set version and metadata

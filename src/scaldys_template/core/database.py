@@ -51,7 +51,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Generator
 
-from scaldys.__about__ import PACKAGE_NAME
+from scaldys_template.__about__ import PACKAGE_NAME
 
 __all__ = ["DatabaseConfig", "DatabaseConnection", "ConnectionPool", "transaction"]
 

@@ -42,9 +42,9 @@ from rich.progress import (
 )
 from rich.table import Table
 
-from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
-from scaldys.core.async_processor import ProcessingResult, process_items
-from scaldys.core.database import DatabaseConfig, DatabaseConnection, transaction
+from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, VERSION
+from scaldys_template.core.async_processor import ProcessingResult, process_items
+from scaldys_template.core.database import DatabaseConfig, DatabaseConnection, transaction
 
 __all__ = ["process"]
 

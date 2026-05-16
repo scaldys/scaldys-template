@@ -9,8 +9,8 @@ __all__ = [
 
 from importlib.metadata import version, PackageNotFoundError
 
-APP_NAME = "Scaldys"
-PACKAGE_NAME = "scaldys"
+APP_NAME = "Scaldys-Template"
+PACKAGE_NAME = "scaldys_template"
 ORGANIZATION_NAME = "Scaldys"
 
 try:

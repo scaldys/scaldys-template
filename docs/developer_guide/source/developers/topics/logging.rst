@@ -20,7 +20,7 @@ The full handler chain after ``setup_logging()`` is called:
 
 .. code-block:: text
 
-    scaldys (package logger)
+    scaldys_template (package logger)
     │
     ├── queue_handler  ──▶  QueueListener ──▶  file_json
     │                                           (RotatingFileHandler, JSON Lines)
@@ -35,7 +35,7 @@ The full handler chain after ``setup_logging()`` is called:
     └── stderr         ──▶  StreamHandler → sys.stderr
                             level: WARNING
 
-The ``scaldys`` logger has ``propagate=False`` so its records do not also
+The ``scaldys_template`` logger has ``propagate=False`` so its records do not also
 reach the root logger's stderr handler.  This prevents duplicate ERROR output.
 
 
@@ -52,7 +52,7 @@ typical record looks like:
       "level": "INFO",
       "message": "Starting async processing pipeline",
       "timestamp": "2025-04-01T14:32:01.123456+00:00",
-      "logger": "scaldys",
+      "logger": "scaldys_template",
       "module": "async_processor",
       "function": "process_items",
       "line": 257,
@@ -153,7 +153,7 @@ Extending the logging system
 
 1. Add a handler entry under ``"handlers"`` in the ``dictConfig`` dict in
    ``_configure_logging()``.
-2. Add the handler name to the ``"handlers"`` list of the ``scaldys`` logger
+2. Add the handler name to the ``"handlers"`` list of the ``scaldys_template`` logger
    (or the ``queue_handler`` handlers list if you want async delivery).
 
 **Adding a new formatter**:
@@ -179,5 +179,5 @@ Use a ``logging.Filter`` that injects fields into the ``LogRecord``:
             record.app_version = VERSION
             return True
 
-Register it as a filter on the ``scaldys`` logger or on the ``file_json``
+Register it as a filter on the ``scaldys_template`` logger or on the ``file_json``
 handler.

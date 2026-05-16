@@ -18,17 +18,17 @@
     packages that are already installed.
 
 .PARAMETER InstallDir
-    Root of the application installation (e.g. "C:\Program Files\Scaldys").
+    Root of the application installation (e.g. "C:\Program Files\Scaldys-Template").
     When omitted, the directory is inferred from the script's own location
     (the script lives in <InstallDir>\bin\).
 
 .EXAMPLE
     # Run from an elevated PowerShell prompt after installation:
-    & "C:\Program Files\Scaldys\bin\setup_pyruntime.ps1"
+    & "C:\Program Files\Scaldys-Template\bin\setup_pyruntime.ps1"
 
 .EXAMPLE
     # Pass the install directory explicitly:
-    & "C:\Program Files\Scaldys\bin\setup_pyruntime.ps1" -InstallDir "C:\Program Files\Scaldys"
+    & "C:\Program Files\Scaldys-Template\bin\setup_pyruntime.ps1" -InstallDir "C:\Program Files\Scaldys-Template"
 #>
 
 param(
@@ -42,8 +42,8 @@ Set-StrictMode -Version Latest
 # PROJECT CONFIGURATION -- change these two values when adapting
 # this script to a different project.
 # ============================================================
-$ProjectDisplayName = "Scaldys"   # Human-readable name (used in messages)
-$PackageName        = "scaldys"   # pip-installable package name
+$ProjectDisplayName = "Scaldys-Template"   # Human-readable name (used in messages)
+$PackageName        = "scaldys-template"   # pip-installable package name
 # ============================================================
 
 function Pause-OnExit {

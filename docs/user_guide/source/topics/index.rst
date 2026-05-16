@@ -4,7 +4,7 @@
 Topics
 ******
 
-These topic guides provide a set of in-depth explanations for various parts of the ``scaldys`` package.
+These topic guides provide a set of in-depth explanations for various parts of the ``scaldys_template`` package.
 
 .. toctree::
    :maxdepth: 2

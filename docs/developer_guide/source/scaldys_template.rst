@@ -1,5 +1,5 @@
-scaldys package
-===============
+scaldys\_app package
+====================
 
 Subpackages
 -----------
@@ -7,13 +7,13 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   scaldys.cli
-   scaldys.common
+   scaldys_template.cli
+   scaldys_template.common
 
 Module contents
 ---------------
 
-.. automodule:: scaldys
+.. automodule:: scaldys_template
    :members:
    :show-inheritance:
    :undoc-members:

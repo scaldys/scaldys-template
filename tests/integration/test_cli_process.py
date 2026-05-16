@@ -27,7 +27,7 @@ from __future__ import annotations
 import pytest
 from typer.testing import CliRunner
 
-from scaldys.cli.cli import app
+from scaldys_template.cli.cli import app
 
 
 runner = CliRunner()
@@ -61,7 +61,7 @@ class TestCliProcessIntegration:
         because the 'async sleep > timeout' outcome cannot be guaranteed
         reliably on all hardware with real asyncio timers."""
         import asyncio
-        import scaldys.core.async_processor as _mod
+        import scaldys_template.core.async_processor as _mod
 
         async def _always_slow(item_id: int, timeout_per_item: float):
             await asyncio.sleep(10)  # always exceeds timeout_per_item
@@ -74,7 +74,7 @@ class TestCliProcessIntegration:
     def test_timeout_failures_appear_in_output(self, isolated_app_location, mocker):
         """When all items time out, FAIL must appear in the progress output."""
         import asyncio
-        import scaldys.core.async_processor as _mod
+        import scaldys_template.core.async_processor as _mod
 
         async def _always_slow(item_id: int, timeout_per_item: float):
             await asyncio.sleep(10)

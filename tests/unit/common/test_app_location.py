@@ -20,7 +20,7 @@ from unittest.mock import patch
 
 import pytest
 
-from scaldys.common.app_location import (
+from scaldys_template.common.app_location import (
     AppLocation,
     is_frozen,
     is_running_from_source,
@@ -125,13 +125,13 @@ class TestIsRunningFromSource:
     @pytest.mark.parametrize(
         "path_str, expected",
         [
-            # Typical source-tree execution: must contain both "src" AND "scaldys"
-            (r"C:\Dev\scaldys\src\scaldys\common", True),
-            ("/home/user/projects/scaldys/src/scaldys/common", True),
+            # Typical source-tree execution: must contain both "src" AND "scaldys_template"
+            (r"C:\Dev\scaldys-template\src\scaldys_template\common", True),
+            ("/home/user/projects/scaldys-template/src/scaldys_template/common", True),
             # Installed package — no "src" component
-            (r"C:\Users\user\AppData\Local\Programs\scaldys", False),
-            ("/usr/local/lib/python3.13/site-packages/scaldys", False),
-            # Has "src" but not PACKAGE_NAME ("scaldys")
+            (r"C:\Users\user\AppData\Local\Programs\scaldys_template", False),
+            ("/usr/local/lib/python3.13/site-packages/scaldys_template", False),
+            # Has "src" but not PACKAGE_NAME ("scaldys_template")
             ("/home/user/src/other_package/common", False),
         ],
     )
@@ -150,7 +150,7 @@ class TestGetOsAppDataPath:
     def test_windows_uses_localappdata(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("LOCALAPPDATA", r"C:\Users\testuser\AppData\Local")
         result = get_os_app_data_path()
-        assert "Scaldys" in result.parts or "scaldys" in str(result).lower()
+        assert "Scaldys" in result.parts or "scaldys_template" in str(result).lower()
 
     @pytest.mark.skipif(platform.system() != "Windows", reason="Windows-specific path logic")
     def test_windows_raises_if_localappdata_missing(self, monkeypatch: pytest.MonkeyPatch):

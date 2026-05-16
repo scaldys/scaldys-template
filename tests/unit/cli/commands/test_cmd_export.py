@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from scaldys.cli.cli import app
+from scaldys_template.cli.cli import app
 
 runner = CliRunner()
 

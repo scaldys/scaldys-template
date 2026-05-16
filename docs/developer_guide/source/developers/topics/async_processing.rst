@@ -20,7 +20,7 @@ The only symbol callers should import is ``process_items``:
 
 .. code-block:: python
 
-    from scaldys.core.async_processor import process_items, ProcessingResult
+    from scaldys_template.core.async_processor import process_items, ProcessingResult
 
     results: list[ProcessingResult] = process_items(
         item_ids=[1, 2, 3, 4, 5],

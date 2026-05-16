@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "scaldys"
-copyright = "2024-2026, scaldys"
-author = "scaldys"
+project = "scaldys_template"
+copyright = "2024-2026, scaldys_template"
+author = "scaldys_template"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

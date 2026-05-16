@@ -26,7 +26,7 @@ fork on GitHub: https://github.com/scaldys/scaldys-template
 ## Project Structure
 
 ```
-src/scaldys/
+src/scaldys_template/
 ├── __main__.py          ← lifecycle entry point (freeze_support, crash hook,
 │                           signal handlers, asyncio policy, env validation)
 ├── cli/
@@ -49,10 +49,10 @@ src/scaldys/
 tests/
 ├── conftest.py              ← isolated_app_location keystone fixture
 ├── unit/
-│   ├── conftest.py          ← reset_scaldys_logger autouse fixture
-│   ├── common/              ← mirrors src/scaldys/common/
-│   ├── cli/                 ← mirrors src/scaldys/cli/
-│   └── core/                ← mirrors src/scaldys/core/
+│   ├── conftest.py          ← reset_scaldys_template_logger autouse fixture
+│   ├── common/              ← mirrors src/scaldys_template/common/
+│   ├── cli/                 ← mirrors src/scaldys_template/cli/
+│   └── core/                ← mirrors src/scaldys_template/core/
 └── integration/             ← full CLI invocations via CliRunner
 ```
 
@@ -81,8 +81,8 @@ tests/
 
 2. **Customize the template:**
 
-   * Replace all occurrences of `scaldys` / `Scaldys` (case-sensitive) with your project name
-   * Update file and directory names containing "scaldys"
+   * Replace all occurrences of `scaldys_template` / `Scaldys-Template` (case-sensitive) with your project name
+   * Update file and directory names containing "scaldys_template"
    * Modify package metadata in `pyproject.toml`
 
 3. **Set up your repository:**
@@ -113,39 +113,39 @@ For comprehensive documentation on using `uv`, visit the official documentation:
 
 ### Execute the Application
 
-The CLI entry point is `scaldys.__main__:main`, which runs lifecycle setup before
+The CLI entry point is `scaldys_template.__main__:main`, which runs lifecycle setup before
 handing off to the Typer app.  Global options (`--log`, `--verbose`) must appear
 **before** the subcommand name:
 
 ```bash
 # Show help
-uv run scaldys --help
+uv run scaldys-template --help
 
 # Show available commands
-uv run scaldys --help
+uv run scaldys-template --help
 
 # Run the export command with debug logging
-uv run scaldys --log debug export config.yml
+uv run scaldys-template --log debug export config.yml
 
 # Run the process command with verbose output
-uv run scaldys --verbose process --num-tasks 20
+uv run scaldys-template --verbose process --num-tasks 20
 
 # Run via python -m (same lifecycle path)
-uv run python -m scaldys --log info export config.yml
+uv run python -m scaldys_template --log info export config.yml
 
 # Manage the persisted log level
-uv run scaldys settings log warning
-uv run scaldys settings          # show current level
+uv run scaldys-template settings log warning
+uv run scaldys-template settings          # show current level
 ```
 
 You can also run directly from the source directory:
 
 ```bash
 # using uv
-uv run scaldys.py
+uv run scaldys-template.py
 
 # using Python directly
-python src/scaldys.py
+python src/scaldys_template.py
 ```
 
 
@@ -164,8 +164,8 @@ uv build
 ```
 
 This creates distribution files in the `dist/` directory:
-- `scaldys-x.y.z.tar.gz` (source distribution)
-- `scaldys-x.y.z-py3-none-any.whl` (wheel distribution)
+- `scaldys_template-x.y.z.tar.gz` (source distribution)
+- `scaldys_template-x.y.z-py3-none-any.whl` (wheel distribution)
 
 
 #### Build Options
@@ -194,13 +194,13 @@ You can verify your build artifacts before distribution:
 
 ```bash
 # List contents of the wheel
-python -m zipfile -l dist/scaldys-*.whl
+python -m zipfile -l dist/scaldys_template-*.whl
 
 # Install from the local wheel to test
-pip install --force-reinstall dist/scaldys-*.whl
+pip install --force-reinstall dist/scaldys_template-*.whl
 
 # Run a smoke test after installation
-scaldys --version
+scaldys-template --version
 ```
 
 
@@ -295,7 +295,7 @@ uv run pytest -m integration
 uv run pytest -m "not slow"
 
 # Run tests with coverage report
-uv run pytest --cov=src/scaldys --cov-report=term-missing
+uv run pytest --cov=src/scaldys_template --cov-report=term-missing
 
 # Lint and check formatting
 uv run ruff check ./src

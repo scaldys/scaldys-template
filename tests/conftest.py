@@ -29,7 +29,7 @@ from pathlib import Path
 
 import pytest
 
-from scaldys.common.app_location import AppLocation
+from scaldys_template.common.app_location import AppLocation
 
 
 # ---------------------------------------------------------------------------

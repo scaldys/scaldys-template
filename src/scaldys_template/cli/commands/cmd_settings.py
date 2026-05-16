@@ -8,8 +8,8 @@ from rich.console import Console
 from rich.panel import Panel
 from typing_extensions import Annotated
 
-from scaldys.__about__ import APP_NAME, PACKAGE_NAME
-from scaldys.cli.settings import AppSettings
+from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME
+from scaldys_template.cli.settings import AppSettings
 
 __all__ = ["log"]
 

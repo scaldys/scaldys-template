@@ -5,7 +5,7 @@ import logging
 
 from pathlib import Path
 
-from scaldys.__about__ import PACKAGE_NAME
+from scaldys_template.__about__ import PACKAGE_NAME
 
 __all__ = ["export_data"]
 

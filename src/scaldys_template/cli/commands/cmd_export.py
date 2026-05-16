@@ -9,9 +9,9 @@ from rich.console import Console
 from rich.panel import Panel
 from typing_extensions import Annotated
 
-from scaldys.__about__ import APP_NAME, PACKAGE_NAME, VERSION
-from scaldys.core.export import export_data
-from scaldys.common.app_location import AppLocation
+from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, VERSION
+from scaldys_template.core.export import export_data
+from scaldys_template.common.app_location import AppLocation
 
 __all__ = ["export"]
 

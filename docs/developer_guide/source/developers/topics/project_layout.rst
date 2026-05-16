@@ -44,10 +44,10 @@ Source tree (``src/``)
 .. code-block:: text
 
     src/
-    ├── scaldys.py              # Convenience alias: `python src/scaldys.py`
-    └── scaldys/
+    ├── scaldys_template.py          # Convenience alias: `python src/scaldys_template.py`
+    └── scaldys_template/
         ├── __about__.py        # APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME, VERSION
-        ├── __init__.py         # Re-exports: from scaldys.cli import *; from scaldys.common import *
+        ├── __init__.py         # Re-exports: from scaldys_template.cli import *; from scaldys_template.common import *
         ├── __main__.py         # Application lifecycle entry point
         ├── py.typed            # PEP 561 marker — package ships inline types
         ├── cli/
@@ -70,8 +70,8 @@ Source tree (``src/``)
             ├── database.py         # DatabaseConnection, ConnectionPool, transaction()
             └── export.py           # export_data() — data serialisation stub
 
-``src/scaldys.py`` is a one-liner (``from scaldys.cli.cli import app``) that
-makes ``python src/scaldys.py`` work without installing the package.  It is
+``src/scaldys_template.py`` is a one-liner (``from scaldys_template.cli.cli import app``) that
+makes ``python src/scaldys_template.py`` work without installing the package.  It is
 not part of the installed distribution.
 
 
@@ -83,7 +83,7 @@ Test tree (``tests/``)
     tests/
     ├── conftest.py             # Top-level fixtures: tmp_app_location patch
     ├── unit/
-    │   ├── conftest.py         # reset_scaldys_logger fixture
+    │   ├── conftest.py         # reset_scaldys_template_logger fixture
     │   ├── common/             # Tests for common/
     │   ├── cli/                # Tests for cli/
     │   └── core/               # Tests for core/
@@ -152,7 +152,7 @@ Configuration files
     * Tool configuration: ``[tool.ruff]``, ``[tool.pyright]``,
       ``[tool.pytest.ini_options]``, ``[tool.uv.sources]``.
     * Build system (setuptools).
-    * Entry point: ``scaldys = "scaldys.__main__:main"``.
+    * Entry point: ``scaldys-template = "scaldys_template.__main__:main"``.
 
 ``builder.toml``
     Configuration for the ``scaldys-builder`` pipeline:

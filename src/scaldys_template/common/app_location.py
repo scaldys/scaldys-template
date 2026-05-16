@@ -9,7 +9,7 @@ from pathlib import Path
 
 import platformdirs
 
-from scaldys.__about__ import APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME
+from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME
 
 __all__ = ["AppLocation"]
 

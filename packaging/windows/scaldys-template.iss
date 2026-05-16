@@ -26,13 +26,13 @@
 ;     only produces a binary wheel in dist/wheels/.  No installer is built.
 ;     Set in builder.toml:  deployment_mode = "wheel_only"
 
-#define MyAppName "scaldys"
+#define MyAppName "Scaldys-Template"
 #define MyAppVersion ""
 #define MyAppPublisher "Scaldys"
 #define MyAppURL "http://www.scaldys.net/"
-#define MyAppExeName "scaldys.exe"
-#define MyAppBatName "scaldys_commandline.bat"
-#define MyAppPs1Name "scaldys_powershell.ps1"
+#define MyAppExeName "scaldys-template.exe"
+#define MyAppBatName "scaldys-template_commandline.bat"
+#define MyAppPs1Name "scaldys-template_powershell.ps1"
 #define MyAppHelpName "manual"
 
 #ifndef SourceDir
@@ -60,8 +60,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\Scaldys
-DefaultGroupName=Scaldys
+DefaultDirName={pf}\Scaldys-Template
+DefaultGroupName=Scaldys-Template
 UsePreviousGroup=no
 OutputDir=..\..\dist\installer
 OutputBaseFilename=setup

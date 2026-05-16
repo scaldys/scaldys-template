@@ -33,7 +33,7 @@ import random
 from dataclasses import dataclass, field
 from typing import Callable
 
-from scaldys.__about__ import PACKAGE_NAME
+from scaldys_template.__about__ import PACKAGE_NAME
 
 __all__ = ["ProcessingResult", "process_items"]
 
@@ -141,7 +141,7 @@ async def _run_pipeline(
     # Import here to avoid a circular import if __main__ is not yet loaded
     # (e.g. during unit tests that import this module directly).
     try:
-        from scaldys.__main__ import _shutdown_event
+        from scaldys_template.__main__ import _shutdown_event
     except ImportError:
         import threading
 

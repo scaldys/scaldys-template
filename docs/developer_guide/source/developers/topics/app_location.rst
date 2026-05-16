@@ -86,7 +86,7 @@ When running as an installed package, ``AppDataDir`` is:
        set)
 
 ``APP_NAME``, ``ORGANIZATION_NAME``, and ``PACKAGE_NAME`` are defined in
-``src/scaldys/__about__.py`` and should be the first things you change when
+``src/scaldys_template/__about__.py`` and should be the first things you change when
 adapting the template.
 
 

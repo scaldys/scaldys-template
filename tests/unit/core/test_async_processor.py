@@ -21,8 +21,8 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-import scaldys.core.async_processor as _mod
-from scaldys.core.async_processor import ProcessingResult, process_items
+import scaldys_template.core.async_processor as _mod
+from scaldys_template.core.async_processor import ProcessingResult, process_items
 
 
 # ---------------------------------------------------------------------------
@@ -135,13 +135,13 @@ class TestRunPipelineAsync:
     """
 
     async def test_empty_input_returns_empty_list(self):
-        from scaldys.core.async_processor import _run_pipeline
+        from scaldys_template.core.async_processor import _run_pipeline
 
         results = await _run_pipeline([], on_progress=None, timeout_per_item=5.0)
         assert results == []
 
     async def test_single_success_item(self, monkeypatch: pytest.MonkeyPatch):
-        from scaldys.core.async_processor import _run_pipeline
+        from scaldys_template.core.async_processor import _run_pipeline
 
         async def _stub(item_id: int, timeout_per_item: float) -> ProcessingResult:
             return ProcessingResult(item_id=item_id, value=1.0, elapsed_ms=0.0)
@@ -153,7 +153,7 @@ class TestRunPipelineAsync:
         assert results[0].item_id == 42
 
     async def test_progress_callback_receives_each_result(self, monkeypatch: pytest.MonkeyPatch):
-        from scaldys.core.async_processor import _run_pipeline
+        from scaldys_template.core.async_processor import _run_pipeline
 
         async def _stub(item_id: int, timeout_per_item: float) -> ProcessingResult:
             return ProcessingResult(item_id=item_id, value=float(item_id), elapsed_ms=0.0)

@@ -1,6 +1,6 @@
 [cython]
 compiled_modules = [
-    "scaldys.core.export",
+    "scaldys_template.core.export",
 ]
 
 [docs]

@@ -31,7 +31,7 @@ The INI file is stored at::
 
 On a Windows installation this resolves to something like::
 
-    C:\Users\<user>\AppData\Local\Scaldys\Scaldys\scaldys_settings.ini
+    C:\Users\<user>\AppData\Local\Scaldys\Scaldys-Template\scaldys_template_settings.ini
 
 
 Lifecycle

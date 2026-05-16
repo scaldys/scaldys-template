@@ -5,7 +5,7 @@ Architecture
 ************
 
 ``scaldys-template`` is structured around **three top-level packages** inside
-``src/scaldys/``, each with a single responsibility:
+``src/scaldys_template/``, each with a single responsibility:
 
 * **cli/** — argument parsing, global options, command routing, settings.
 * **common/** — shared infrastructure (paths, logging) with no dependency on
@@ -16,7 +16,7 @@ The module layout mirrors this split:
 
 .. code-block:: text
 
-    src/scaldys/
+    src/scaldys_template/
     ├── __about__.py            # APP_NAME, PACKAGE_NAME, VERSION constants
     ├── __init__.py             # re-exports cli.* and common.*
     ├── __main__.py             # lifecycle entry point (freeze_support → app())
@@ -46,7 +46,7 @@ Lifecycle entry point (``__main__.py``)
 =======================================
 
 ``__main__.py`` is the single entry point for all execution paths — installed
-CLI, ``python -m scaldys``, and frozen PyInstaller binary.  Its *only*
+CLI, ``python -m scaldys_template``, and frozen PyInstaller binary.  Its *only*
 responsibility is the startup sequence; it contains no domain logic.
 
 The numbered sequence in ``main()`` is intentional and must not be reordered:
@@ -93,7 +93,7 @@ Shutdown event
 
 .. code-block:: python
 
-    from scaldys.__main__ import _shutdown_event
+    from scaldys_template.__main__ import _shutdown_event
 
 Any long-running loop — the async pipeline, a polling loop, a server — should
 check ``_shutdown_event.is_set()`` between iterations to participate in
@@ -253,7 +253,7 @@ The logging system is built on Python's ``dictConfig`` and three handlers:
 
 .. code-block:: text
 
-    scaldys logger
+    scaldys_template logger
     ├── queue_handler  ──▶  QueueListener ──▶  file_json (RotatingFileHandler)
     ├── stdout         ──▶  filtered: DEBUG and INFO only (NonErrorFilter)
     └── stderr         ──▶  ERROR and above
@@ -367,7 +367,7 @@ Tests are split into three categories, enforced by pytest markers:
 
 The test ``conftest.py`` patches ``AppLocation`` to redirect all paths into a
 temporary directory, so integration tests never read or write the developer's
-real user data.  A ``reset_scaldys_logger`` fixture in the unit ``conftest.py``
+real user data.  A ``reset_scaldys_template_logger`` fixture in the unit ``conftest.py``
 removes all handlers from the package logger after each test so logging-related
 tests do not interfere with one another.
 
