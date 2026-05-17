@@ -12,6 +12,7 @@ tune its behaviour, extend it, or troubleshoot an issue.
    :maxdepth: 2
 
    project_layout
+   markdown_formatting
    logging
    app_location
    settings
@@ -25,6 +26,10 @@ Guide summaries
 :ref:`project_layout`
     The directory structure of the template, what each file is for, and where
     build output is written.
+
+:ref:`markdown_formatting_guide`
+    Why ``.prettierrc`` and ``.pre-commit-config.yaml`` exist, how Prettier is
+    managed without Node.js, and how the same check runs in GitHub Actions CI.
 
 :ref:`logging_guide`
     How the JSON Lines structured logging system works: the handler chain,

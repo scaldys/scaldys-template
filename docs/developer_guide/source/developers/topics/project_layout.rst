@@ -30,6 +30,7 @@ Repository root
     ├── src/                    # All Python source code
     ├── tests/                  # Pytest test suite
     ├── .gitignore
+    ├── .pre-commit-config.yaml # Pre-commit hooks (Prettier for Markdown)
     ├── .prettierrc             # Prettier config for Markdown formatting
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
     ├── scaldys.toml            # scaldys-project pipeline configuration
@@ -166,6 +167,10 @@ Configuration files
 ``.python-version``
     Pins the Python version for ``uv``; currently ``>=3.13,<3.14``.
 
+``.pre-commit-config.yaml``
+    Git hook configuration.  Runs Prettier on staged Markdown files before
+    every commit.  See :ref:`markdown_formatting_guide`.
+
 ``.prettierrc``
-    Prettier configuration for Markdown: ``printWidth: 80``,
-    ``proseWrap: "always"``.
+    Prettier options: ``printWidth: 80``, ``proseWrap: "always"``,
+    ``endOfLine: "auto"``.  See :ref:`markdown_formatting_guide`.
