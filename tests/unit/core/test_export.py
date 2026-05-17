@@ -16,8 +16,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import mock_open, patch
-
 import pytest
 
 from scaldys_template.core.export import export_data

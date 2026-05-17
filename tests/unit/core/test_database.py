@@ -194,7 +194,7 @@ class TestConnectionPool:
 
     def test_acquire_releases_on_exit(self, config: DatabaseConfig):
         pool = ConnectionPool(config, max_connections=2)
-        with pool.acquire() as c:
+        with pool.acquire():
             pass
         # After context exit the semaphore should be at its original value
         # (we can verify by acquiring again without blocking).

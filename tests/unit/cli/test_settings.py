@@ -14,7 +14,6 @@ Patterns demonstrated
 from __future__ import annotations
 
 import configparser
-from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -36,7 +35,7 @@ class TestAppSettingsDefaults:
     def test_settings_file_is_created_on_first_run(self, isolated_app_location):
         """Constructing AppSettings must create the settings INI file."""
         data_dir = isolated_app_location[2]  # AppLocation.AppDataDir == 2
-        settings = AppSettings()
+        AppSettings()
         ini_files = list(data_dir.glob("*.ini"))
         assert len(ini_files) == 1
 

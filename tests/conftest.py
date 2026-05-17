@@ -25,6 +25,7 @@ Run selectively with:
 
 from __future__ import annotations
 
+import datetime
 from pathlib import Path
 
 import pytest
@@ -103,8 +104,6 @@ def isolated_app_location(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> di
 # ---------------------------------------------------------------------------
 # These were present in the original conftest.py.  New tests should use
 # pytest's built-in `tmp_path` fixture instead of `temporary_test_directory`.
-
-import datetime
 
 
 @pytest.fixture(scope="session")

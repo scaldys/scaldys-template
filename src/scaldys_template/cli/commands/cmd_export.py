@@ -108,5 +108,5 @@ def export(
         num_values,
     )
 
-    console.print(f"[green]Export complete.[/green]")
+    console.print("[green]Export complete.[/green]")
     logger.info(f"{APP_NAME} stopped")

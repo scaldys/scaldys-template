@@ -10,7 +10,7 @@ from rich.console import Console
 import scaldys_template.cli.commands.cmd_export as cmd_export
 import scaldys_template.cli.commands.cmd_process as cmd_process
 import scaldys_template.cli.commands.cmd_settings as cmd_settings
-from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, VERSION
+from scaldys_template.__about__ import APP_NAME, VERSION
 from scaldys_template.cli.commands.arg_types import ARG_TYPE_LOG_LEVEL, ARG_TYPE_VERBOSE
 from scaldys_template.cli.settings import AppSettings
 from scaldys_template.common.logging import setup_logging
