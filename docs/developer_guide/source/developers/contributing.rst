@@ -22,8 +22,6 @@ Prerequisites
 * Python 3.13 (enforced by ``.python-version`` and ``pyproject.toml``).
 * `uv <https://docs.astral.sh/uv/>`_ — used for all virtual-environment and
   dependency management.
-* Node.js / npm — only needed to run ``prettier`` for Markdown formatting
-  (optional, not required for Python development).
 * ``scaldys-project`` checked out at ``../scaldys-project``
   if you need to run the full Windows build pipeline.
 
@@ -35,6 +33,7 @@ Clone and install
     git clone https://github.com/scaldys/scaldys-template.git
     cd scaldys-template
     uv sync --group dev
+    uv run pre-commit install
 
 ``uv sync`` creates ``.venv/``, installs the project in editable mode, and
 installs all dev-group dependencies (pytest, ruff, pyright, Sphinx, etc.).
@@ -114,15 +113,17 @@ there.
 ``pyright`` is configured to use the ``.venv`` virtual environment
 (``venvPath = "."``; ``venv = ".venv"``).
 
-To format Markdown files (requires Node.js)::
+Markdown files are formatted with `Prettier <https://prettier.io/>`_ via
+pre-commit.  To run it manually::
 
-    npx prettier --write "**/*.md"
+    uv run pre-commit run prettier --all-files
 
 
 Pre-commit Hooks
 ================
 
-The project ships a pre-commit configuration.  Install the hooks once::
+The project ships a pre-commit configuration.  Install the hooks once after
+cloning (already included in the Clone and install step above)::
 
     uv run pre-commit install
 

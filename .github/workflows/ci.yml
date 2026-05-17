@@ -25,7 +25,7 @@ jobs:
 
       # This isn't a general Python lint, this style is just used in this repository
       - name: Prettier format
-        run: npx prettier --prose-wrap always --check "**/*.md"
+        run: uv run pre-commit run prettier --all-files
 
       - name: PyRight type consistency
         run: uv run pyright ./src

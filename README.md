@@ -84,14 +84,12 @@ tests/
    ```
 
 2. **Customize the template:**
-
    - Replace all occurrences of `scaldys_template` / `Scaldys-Template`
      (case-sensitive) with your project name
    - Update file and directory names containing "scaldys_template"
    - Modify package metadata in `pyproject.toml`
 
 3. **Set up your repository:**
-
    - Create a new repository on GitHub/GitLab
    - Follow their instructions to push your local repository
    - Set up required GitHub environments for trusted publishing
@@ -341,7 +339,6 @@ This template supports trusted publishing to PyPI using GitHub Actions:
 3. For testing purposes, use TestPyPI: modify the `run` step in
    `.github/workflows/release.yml` to use TestPyPI
 4. Configure trusted publishing:
-
    - Log in to PyPI (https://pypi.org/) or TestPyPI (https://test.pypi.org/)
    - Go to "Your projects" → "Publishing" → "Trusted Publisher Management"
    - Click "Add a new pending publisher" and configure:
