@@ -1,6 +1,6 @@
 [project]
 name = "scaldys-template"
-version = "0.4.1"
+version = "0.6.0"
 authors = [
   { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
@@ -39,7 +39,7 @@ scaldys_template = ["py.typed"]
 
 [dependency-groups]
 dev = [
-    "scaldys-builder[cython,windows,docs]",
+    "scaldys-project[cython,windows,docs]",
     "pre-commit>=4.5.0",
     "pyright>=1.1.409",
     "pytest>=9.0.3",
@@ -61,7 +61,7 @@ markers = [
 ]
 
 [tool.uv.sources]
-scaldys-builder = { path = "../scaldys-builder", editable = true }
+scaldys-project = { path = "../scaldys-project", editable = true }
 
 [tool.ruff]
 line-length = 100

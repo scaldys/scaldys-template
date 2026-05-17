@@ -1,7 +1,7 @@
 ; Scaldys project installer script for Inno Setup.
 ; This file is used by deployment modes that produce a Windows installer.
 ; The active mode is set via deployment_mode in builder.toml and controls
-; which preprocessor defines scaldys-builder passes to ISCC at build time.
+; which preprocessor defines scaldys-project passes to ISCC at build time.
 ;
 ;   Mode 1 -- pyinstaller (default, no extra define passed):
 ;     The installer deploys the PyInstaller-frozen executable tree bundled in
@@ -22,7 +22,7 @@
 ;         Set in builder.toml:  bundle_pyruntime = true
 ;
 ;   Mode 3 -- wheel_only:
-;     This file is NOT used.  scaldys-builder skips Inno Setup entirely and
+;     This file is NOT used.  scaldys-project skips Inno Setup entirely and
 ;     only produces a binary wheel in dist/.  No installer is built.
 ;     Set in builder.toml:  deployment_mode = "wheel_only"
 

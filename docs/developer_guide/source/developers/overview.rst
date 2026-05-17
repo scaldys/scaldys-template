@@ -55,10 +55,10 @@ application needs to address:
     public interface.
 
 
-Relationship to scaldys-builder
+Relationship to scaldys-project
 ================================
 
-``scaldys-builder`` consumes ``scaldys-template`` projects.  The template
+``scaldys-project`` consumes ``scaldys-template`` projects.  The template
 ships with:
 
 * A ``builder.toml`` wiring the Windows build pipeline.
@@ -66,7 +66,7 @@ ships with:
 * Sphinx documentation trees (``docs/user_guide/``, ``docs/developer_guide/``).
 * GitHub Actions workflows for CI, PyPI publishing, and releases.
 
-The ``pyproject.toml`` ``[tool.uv.sources]`` section points ``scaldys-builder``
+The ``pyproject.toml`` ``[tool.uv.sources]`` section points ``scaldys-project``
 at a local editable checkout during development so the two projects stay in
 sync without a PyPI publish cycle.
 

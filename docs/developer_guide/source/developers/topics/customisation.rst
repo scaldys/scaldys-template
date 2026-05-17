@@ -163,7 +163,7 @@ Both documentation trees use the ``sphinx_rtd_theme``.  To add pages, create
 Step 6 — Configure the Windows distribution pipeline
 ======================================================
 
-If you plan to use ``scaldys-builder`` to produce a standalone Windows
+If you plan to use ``scaldys-project`` to produce a standalone Windows
 executable and installer:
 
 1. Update ``builder.toml``:
@@ -187,8 +187,8 @@ executable and installer:
 
 3. Verify the build pipeline::
 
-       uv run scaldys-builder check
-       uv run scaldys-builder build all
+       uv run scaldys-project check
+       uv run scaldys-project build all
 
 
 Step 7 — Update CI/CD workflows

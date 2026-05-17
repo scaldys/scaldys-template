@@ -28,6 +28,22 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.6.0] - 2026-05-17
+====================
+
+**Changed**
+
+  - Renamed ``scaldys-builder`` to ``scaldys-project`` throughout: dependency
+    name in ``pyproject.toml`` (``[dependency-groups] dev`` and
+    ``[tool.uv.sources]``), ``uv.lock``, all documentation (``.rst`` files),
+    ``README.md``, ``CHANGELOG``, and the Inno Setup script comment in
+    ``packaging/windows/scaldys-template.iss``.
+
+  - ``pyproject.toml`` / ``uv.lock``: updated the editable source path from
+    ``../scaldys-builder`` to ``../scaldys/scaldys-project``, reflecting that
+    the two repositories are no longer required to be sibling directories.
+
+
 [0.5.0] - 2026-05-16
 ====================
 

@@ -19,7 +19,7 @@ fork on GitHub: https://github.com/scaldys/scaldys-template
 * Comprehensive testing with `pytest`, `pytest-asyncio`, `pytest-mock`, and coverage reporting — structured with unit / integration / slow markers
 * Code quality verification with `ruff` (linting & formatting) and `pyright` (type checking)
 * Documentation with reStructuredText and `sphinx` using ReadTheDocs theme
-* Windows build infrastructure with `Cython`, `scaldys-builder`, and — depending on the deployment mode — `PyInstaller`, `Inno Setup`, or wheel-only packaging
+* Windows build infrastructure with `Cython`, `scaldys-project`, and — depending on the deployment mode — `PyInstaller`, `Inno Setup`, or wheel-only packaging
 * GitHub Actions workflows for CI/CD and PyPI publishing
 
 
@@ -223,10 +223,10 @@ The project includes GitHub Actions workflows that automatically build packages 
 See the workflow file at `.github/workflows/release.yml` for details.
 
 
-### Windows Packaging (scaldys-builder)
+### Windows Packaging (scaldys-project)
 
 This template includes a dedicated Windows build system managed by the
-`scaldys-builder` CLI command installed by `uv sync`.
+`scaldys-project` CLI command installed by `uv sync`.
 
 **Deployment modes** — controlled by `deployment_mode` in `builder.toml`:
 
@@ -247,19 +247,19 @@ This template includes a dedicated Windows build system managed by the
 
 ```bash
 # Full build: documentation + Windows distribution
-scaldys-builder build all
+scaldys-project build all
 
 # Documentation only
-scaldys-builder build docs
+scaldys-project build docs
 
 # Windows distribution only (mode-dependent)
-scaldys-builder build windows
+scaldys-project build windows
 
 # Remove build/, dist/ and artifacts/
-scaldys-builder build clean
+scaldys-project build clean
 
 # Verify project compliance
-scaldys-builder check
+scaldys-project check
 ```
 
 **Prerequisites:**

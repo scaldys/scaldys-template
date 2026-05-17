@@ -401,5 +401,5 @@ These principles guided the template's design and should guide future changes:
 **Cython compatibility**
     Every file that is a candidate for Cython compilation carries
     ``# cython: language_level=3`` at the top.  This is enforced by the
-    scaldys-builder Cython pipeline.  Files that should not be compiled (pure
+    scaldys-project Cython pipeline.  Files that should not be compiled (pure
     data, config) omit the directive.

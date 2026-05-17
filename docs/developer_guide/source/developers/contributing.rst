@@ -24,7 +24,7 @@ Prerequisites
   dependency management.
 * Node.js / npm — only needed to run ``prettier`` for Markdown formatting
   (optional, not required for Python development).
-* ``scaldys-builder`` checked out at ``../scaldys-builder`` (sibling directory)
+* ``scaldys-project`` checked out at ``../scaldys-project``
   if you need to run the full Windows build pipeline.
 
 Clone and install
@@ -40,12 +40,12 @@ Clone and install
 installs all dev-group dependencies (pytest, ruff, pyright, Sphinx, etc.).
 
 The ``[tool.uv.sources]`` section in ``pyproject.toml`` points
-``scaldys-builder`` at the sibling checkout::
+``scaldys-project`` at the local checkout::
 
     [tool.uv.sources]
-    scaldys-builder = { path = "../scaldys-builder", editable = true }
+    scaldys-project = { path = "../scaldys-project", editable = true }
 
-Any change to ``scaldys-builder`` source is picked up immediately without
+Any change to ``scaldys-project`` source is picked up immediately without
 reinstalling.
 
 
@@ -146,9 +146,9 @@ Or via the convenience wrappers::
     cd docs/developer_guide && make html
     cd docs/user_guide && make html
 
-Or using ``scaldys-builder``::
+Or using ``scaldys-project``::
 
-    uv run scaldys-builder build docs
+    uv run scaldys-project build docs
 
 
 Versioning, Building, and Publishing
@@ -220,7 +220,7 @@ changes to make it your own:
    ``.github/workflows/`` and verify the PyPI publishing configuration.
 
 6. **Configure builder.toml**: update the ``[cython]`` and ``[windows]``
-   sections if you plan to use the scaldys-builder Windows distribution
+   sections if you plan to use the scaldys-project Windows distribution
    pipeline.
 
 

@@ -32,7 +32,7 @@ Repository root
     ├── .gitignore
     ├── .prettierrc             # Prettier config for Markdown formatting
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
-    ├── builder.toml            # scaldys-builder pipeline configuration
+    ├── builder.toml            # scaldys-project pipeline configuration
     ├── package.json            # Node.js dependency for prettier
     ├── pyproject.toml          # Project metadata, dependencies, tool config
     └── README.md               # Project overview and quick-start
@@ -123,7 +123,7 @@ Build output is written to ``docs/<tree>/build/html/`` (excluded from git by
 Build output locations
 ======================
 
-When ``scaldys-builder`` runs the Windows distribution pipeline, it writes:
+When ``scaldys-project`` runs the Windows distribution pipeline, it writes:
 
 .. code-block:: text
 
@@ -140,7 +140,7 @@ When ``scaldys-builder`` runs the Windows distribution pipeline, it writes:
     └── documentation/  # Standalone documentation copy (if public_doc_dirs is set)
 
 All build directories are excluded from git and cleaned by
-``scaldys-builder build clean``.
+``scaldys-project build clean``.
 
 
 Configuration files
@@ -158,7 +158,7 @@ Configuration files
     * Entry point: ``scaldys-template = "scaldys_template.__main__:main"``.
 
 ``builder.toml``
-    Configuration for the ``scaldys-builder`` pipeline:
+    Configuration for the ``scaldys-project`` pipeline:
 
     * ``[cython]`` — list of modules to compile and the source root.
     * ``[windows]`` — path to the Inno Setup script directory.
