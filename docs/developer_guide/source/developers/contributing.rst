@@ -163,17 +163,14 @@ Build a wheel and source distribution::
 
     uv build
 
-Publish to PyPI (requires a configured API token or trusted publishing via
-GitHub Actions)::
+Releases are published to PyPI automatically by the ``release.yml`` GitHub
+Actions workflow when a version tag (``v*``) is pushed.  The workflow uses
+OIDC Trusted Publishing — no API tokens or secrets are stored in the
+repository.
 
-    uv publish
-
-The ``python-publish.yml`` workflow in ``.github/workflows/`` publishes
-automatically when a version tag (``v*``) is pushed.  To test against TestPyPI
-first, uncomment the ``[[tool.uv.index]]`` block in ``pyproject.toml`` and
-run::
-
-    uv publish --index testpypi
+For a full walkthrough covering PyPI setup, the GitHub ``release`` environment,
+version bumping, tag pushing, and a TestPyPI dry run, see
+:ref:`publishing_guide`.
 
 
 CI/CD Workflows
@@ -185,13 +182,15 @@ Three GitHub Actions workflows are included:
     Runs on every push and pull request.  Executes ruff, pyright, and
     ``pytest``.
 
-``python-publish.yml``
+``release.yml``
     Triggered by a version tag push (``v*``).  Builds the wheel and publishes
     to PyPI using OIDC trusted publishing (no stored secrets required).
+    See :ref:`publishing_guide` for setup instructions.
 
-``release.yml``
-    Creates a GitHub Release and attaches the built wheel and source
-    distribution as release assets.
+``python-publish.yml``
+    An alternative workflow triggered when a GitHub Release is published.
+    Uses ``pypa/gh-action-pypi-publish`` instead of ``uv publish``.
+    Not required if ``release.yml`` is used.
 
 To adapt the workflows to a renamed project, update the ``name`` field in
 ``pyproject.toml`` and the ``scaldys_template`` references in the workflow files.

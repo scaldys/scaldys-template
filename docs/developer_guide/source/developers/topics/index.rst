@@ -18,6 +18,7 @@ tune its behaviour, extend it, or troubleshoot an issue.
    settings
    async_processing
    customisation
+   publishing
 
 
 Guide summaries
@@ -52,3 +53,9 @@ Guide summaries
 :ref:`customisation_guide`
     Step-by-step guide to renaming the package, replacing stubs, adding
     commands, and wiring up the Windows distribution pipeline.
+
+:ref:`publishing_guide`
+    End-to-end walkthrough of publishing to PyPI: setting up OIDC Trusted
+    Publishing on PyPI, creating the GitHub ``release`` environment, bumping
+    the version, pushing a tag to trigger the workflow, and running a TestPyPI
+    dry run first.
