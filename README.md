@@ -241,7 +241,7 @@ This template includes a dedicated Windows build system managed by the
 * **Standalone executable:** (`pyinstaller` mode) Bundles the application into a self-contained directory via PyInstaller.
 * **Managed Python runtime:** (`pyruntime` mode) Deploys a `uv`-managed virtual environment alongside the app, supporting online and offline installer variants.
 * **Professional installer:** (`pyinstaller` / `pyruntime` modes) Creates a Windows setup `.exe` using Inno Setup with desktop shortcuts.
-* **Binary wheel:** (all modes) Built from compiled sources and placed in `dist/wheels/` for users with their own environment.
+* **Binary wheel:** (all modes) Built from compiled sources and placed in `dist/` for users with their own environment.
 
 **Build commands:**
 
@@ -255,7 +255,7 @@ scaldys-builder build docs
 # Windows distribution only (mode-dependent)
 scaldys-builder build windows
 
-# Remove build/ and dist/
+# Remove build/, dist/ and artifacts/
 scaldys-builder build clean
 
 # Verify project compliance

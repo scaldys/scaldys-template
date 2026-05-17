@@ -7,6 +7,7 @@ __pycache__/
 *.egg
 *.egg-info/
 dist/
+artifacts/
 build/
 .eggs/
 wheels/

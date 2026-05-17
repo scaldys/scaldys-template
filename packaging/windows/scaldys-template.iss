@@ -5,7 +5,7 @@
 ;
 ;   Mode 1 -- pyinstaller (default, no extra define passed):
 ;     The installer deploys the PyInstaller-frozen executable tree bundled in
-;     dist/portable/.  No Python runtime is installed alongside it.
+;     artifacts/portable/.  No Python runtime is installed alongside it.
 ;     Launcher scripts detect <app>.exe in bin/ and call it directly.
 ;     Set in builder.toml:  deployment_mode = "pyinstaller"
 ;
@@ -23,7 +23,7 @@
 ;
 ;   Mode 3 -- wheel_only:
 ;     This file is NOT used.  scaldys-builder skips Inno Setup entirely and
-;     only produces a binary wheel in dist/wheels/.  No installer is built.
+;     only produces a binary wheel in dist/.  No installer is built.
 ;     Set in builder.toml:  deployment_mode = "wheel_only"
 
 #define MyAppName "Scaldys-Template"
@@ -36,7 +36,7 @@
 #define MyAppHelpName "manual"
 
 #ifndef SourceDir
-  #define SourceDir "..\..\dist\portable"
+  #define SourceDir "..\..\artifacts\portable"
 #endif
 
 ; Determine PythonRuntime install mode (only relevant when PyruntimeMode is set).
@@ -63,7 +63,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\Scaldys-Template
 DefaultGroupName=Scaldys-Template
 UsePreviousGroup=no
-OutputDir=..\..\dist\installer
+OutputDir=..\..\artifacts\installer
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes

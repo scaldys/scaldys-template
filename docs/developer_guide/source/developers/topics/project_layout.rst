@@ -132,9 +132,12 @@ When ``scaldys-builder`` runs the Windows distribution pipeline, it writes:
     └── <docs-name>/    # Sphinx HTML output per documentation unit
 
     dist/
-    ├── wheels/         # Binary distribution wheel (.whl)
+        scaldys_template-x.y.z-cp313-cp313-win_amd64.whl   # Binary distribution wheel
+
+    artifacts/
     ├── portable/       # Staged distribution tree (pyinstaller/pyruntime modes)
-    └── installer/      # Windows installer (pyinstaller/pyruntime modes)
+    ├── installer/      # Windows installer (pyinstaller/pyruntime modes)
+    └── documentation/  # Standalone documentation copy (if public_doc_dirs is set)
 
 All build directories are excluded from git and cleaned by
 ``scaldys-builder build clean``.

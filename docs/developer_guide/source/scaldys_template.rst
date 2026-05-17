@@ -1,5 +1,5 @@
-scaldys\_app package
-====================
+scaldys\_template package
+=========================
 
 Subpackages
 -----------

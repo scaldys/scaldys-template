@@ -1,19 +1,19 @@
-scaldys\_app.common package
-===========================
+scaldys\_template.common package
+================================
 
 Submodules
 ----------
 
-scaldys\_app.common.app\_location module
-----------------------------------------
+scaldys\_template.common.app\_location module
+---------------------------------------------
 
 .. automodule:: scaldys_template.common.app_location
    :members:
    :show-inheritance:
    :undoc-members:
 
-scaldys\_app.common.logging module
-----------------------------------
+scaldys\_template.common.logging module
+---------------------------------------
 
 .. automodule:: scaldys_template.common.logging
    :members:

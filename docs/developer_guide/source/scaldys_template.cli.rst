@@ -1,5 +1,5 @@
-scaldys\_app.cli package
-========================
+scaldys\_template.cli package
+=============================
 
 Subpackages
 -----------
@@ -12,16 +12,16 @@ Subpackages
 Submodules
 ----------
 
-scaldys\_app.cli.cli module
----------------------------
+scaldys\_template.cli.cli module
+--------------------------------
 
 .. automodule:: scaldys_template.cli.cli
    :members:
    :show-inheritance:
    :undoc-members:
 
-scaldys\_app.cli.settings module
---------------------------------
+scaldys\_template.cli.settings module
+-------------------------------------
 
 .. automodule:: scaldys_template.cli.settings
    :members:

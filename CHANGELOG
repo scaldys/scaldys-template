@@ -28,6 +28,29 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.5.0] - 2026-05-16
+====================
+
+**Changed**
+
+  - ``packaging/windows/scaldys-template.iss``: updated ``SourceDir`` and
+    ``OutputDir`` to reference ``artifacts\portable`` and
+    ``artifacts\installer`` respectively, matching the ``scaldys-builder``
+    0.7.0 build output layout (previously ``dist\portable`` and
+    ``dist\installer``).
+
+  - ``.gitignore``: added ``artifacts/`` entry to exclude the new top-level
+    build artefacts directory.
+
+  - ``README.md``: updated *Binary wheel* bullet from ``dist/wheels/`` to
+    ``dist/``; updated ``build clean`` description to include ``artifacts/``.
+
+  - ``docs/developer_guide/``: build output tree in ``project_layout.rst``
+    updated to reflect the ``scaldys-builder`` 0.7.0 layout — wheel lands
+    directly in ``dist/`` and all other artefacts land in ``artifacts/``
+    (``portable/``, ``installer/``, ``documentation/``).
+
+
 [0.4.1] - 2026-05-16
 ====================
 
