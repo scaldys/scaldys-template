@@ -4,9 +4,11 @@
 Publishing
 *********
 
-This guide covers everything needed to publish your project to PyPI using
-GitHub Actions with OIDC Trusted Publishing — no API tokens or secrets to
-manage.
+This guide explains how to publish a project derived from this template to
+PyPI.  Because the template uses Cython-compiled extensions, the release
+process is intentionally manual: the binary wheel is built locally with
+``scaldys-project build all`` and uploaded with ``scaldys-project publish``.
+GitHub Actions handles only CI quality gates and GitHub Release creation.
 
 .. important::
    **This is a template guide.**  Every occurrence of ``scaldys-template``
@@ -20,15 +22,47 @@ manage.
    :depth: 2
 
 
+Why manual publishing?
+======================
+
+Projects derived from this template compile one or more Python modules with
+Cython (configured via the ``[cython]`` section of ``scaldys.toml``).  The
+compiled ``.pyd``/``.so`` extensions replace the original ``.py`` sources in
+the distributed wheel, which is the mechanism that prevents casual inspection
+of the implementation.
+
+An automated CI workflow running ``uv build`` on a Linux runner would produce
+a *pure-Python* source distribution — essentially a zip file with all ``.py``
+sources intact.  Uploading that to PyPI defeats the purpose of compilation
+entirely.
+
+The alternative — building a binary wheel inside CI — would require
+reproducing the full ``scaldys-project build`` pipeline (MSVC compiler,
+Cython, PyInstaller, Sphinx) on a GitHub Actions runner.  This would add
+significant CI complexity with no benefit: the correct binary wheel is already
+produced locally as part of the normal development cycle.
+
+Manual publishing is therefore the safe and straightforward choice:
+
+- The binary wheel from ``scaldys-project build all`` is the only artifact
+  uploaded to PyPI.
+- No compiled source code is ever exposed.
+- No OIDC configuration or CI secrets are required for PyPI.
+
+
 Overview
 ========
 
-Releases are triggered by pushing a version tag (e.g. ``v1.0.0``) to GitHub.
-The ``release.yml`` workflow then builds the distributions with ``uv build``
-and publishes them to PyPI via ``uv publish --trusted-publishing always``.
+Release workflow at a glance::
 
-CI (``ci.yml``) runs on every push and pull request: it lints, type-checks,
-and runs the test suite.  A release should only be triggered once CI is green.
+    scaldys-project build all           # 1. compile + package
+    scaldys-project publish             # 2. upload binary wheel to PyPI
+    git tag v1.0.0 && git push --tags   # 3. trigger GitHub Release
+
+CI (``ci.yml``) runs on every push and pull request: lint, format check, type
+checking, and tests across platforms.  The build and publish steps are
+deliberately absent — the binary wheel can only be produced by the local
+pipeline.
 
 
 Prerequisites
@@ -36,61 +70,103 @@ Prerequisites
 
 - A `PyPI account <https://pypi.org/account/register/>`_ with 2FA enabled
   (now required by PyPI for publishing)
-- The GitHub repository must exist and have GitHub Actions enabled
+- A PyPI API token for your project (see Step 1)
+- ``scaldys-project build all`` has been run and ``dist/`` contains a binary
+  wheel
 
 
-Step 1 — PyPI Trusted Publishing
-=================================
-
-Trusted Publishing lets PyPI verify the identity of a GitHub Actions workflow
-using OIDC tokens.  No API token or secret is stored in the repository.
-
-1. Log in to `pypi.org <https://pypi.org>`_ and go to **Your account →
-   Publishing** (or visit
-   ``https://pypi.org/manage/account/publishing/`` directly).
-2. Under **Add a new pending publisher**, fill in:
-
-   ==================== ================================================
-   Field                Value
-   ==================== ================================================
-   PyPI project name    your project name (e.g. ``my-project``)
-   Owner                your GitHub username or organisation
-   Repository name      your GitHub repository name
-   Workflow name        ``release.yml``
-   Environment name     ``release``
-   ==================== ================================================
-
-3. Click **Add**.  PyPI will accept tokens from that exact workflow/environment
-   combination and no other source.
-
-.. note::
-   Use ``testpypi`` (``test.pypi.org``) to do a dry run first.  Set up a
-   separate pending publisher on Test PyPI with the same fields, and
-   temporarily point the workflow at ``--index testpypi``.  See
-   :ref:`testpypi_dry_run_template` below.
-
-
-Step 2 — GitHub Environment
-============================
-
-The workflow declares ``environment: release``, which must exist in the
-repository settings before the workflow can publish.
-
-1. In the GitHub repository, go to **Settings → Environments → New
-   environment**.
-2. Name it ``release``.
-3. Optionally add a **required reviewer** (deployment protection rule) so that
-   a human must approve each publish job before it runs.
-4. Save.
-
-The ``id-token: write`` permission in the workflow is what allows GitHub to
-mint the OIDC token that PyPI verifies.
-
-
-Step 3 — Workflow Files
+Step 1 — PyPI API Token
 ========================
 
-The workflow files are located in the repository under ``.github/workflows/``.
+``scaldys-project publish`` calls ``uv publish`` locally.  Authentication
+uses a PyPI API token:
+
+1. Log in to `pypi.org <https://pypi.org>`_ and go to **Account settings →
+   API tokens → Add API token**.
+2. For the first upload, use an account-scoped token (the project does not
+   exist yet on PyPI, so a project-scoped token cannot be created).  Restrict
+   it to the specific project on subsequent releases.
+3. Copy the token — it is shown only once.
+
+Pass the token to the publish command via an environment variable::
+
+    UV_PUBLISH_TOKEN=pypi-... scaldys-project publish
+
+For permanent configuration see the `uv authentication documentation
+<https://docs.astral.sh/uv/guides/publish/#authentication>`_.
+
+.. note::
+   No OIDC Trusted Publishing setup is required.  The token is used locally
+   only and is never stored in the repository or CI environment.
+
+
+Step 2 — Build the Binary Wheel
+================================
+
+Run the full build from the project root::
+
+    scaldys-project build all
+
+This compiles the Cython extensions, assembles the binary wheel, builds
+documentation, and produces the Windows installer.  The wheel is written to
+``dist/``::
+
+    dist/<your_package>-1.0.0-cp313-cp313-win_amd64.whl
+
+The platform tag (``win_amd64``, not ``none-any``) confirms this is a binary
+wheel with compiled extensions.
+
+
+Step 3 — Publish to PyPI
+=========================
+
+From the project root::
+
+    scaldys-project publish
+
+The command validates the contents of ``dist/`` before uploading:
+
+- Exits with an error if ``dist/`` is missing or contains no wheels.
+- Refuses to publish a pure-Python wheel (platform tag ``none-any``) to
+  prevent accidental source code exposure.
+- Refuses to publish if multiple binary wheels are found — run
+  ``scaldys-project build clean`` then ``scaldys-project build all`` to
+  produce a clean build.
+- Calls ``uv publish <wheel>`` on the validated binary wheel.
+
+To publish to TestPyPI first (recommended for first-time setup)::
+
+    scaldys-project publish --test
+
+
+Step 4 — Version Bump and Tag
+==============================
+
+Version is declared once in ``pyproject.toml``::
+
+    [project]
+    version = "1.0.0"
+
+Before a release:
+
+1. Edit ``pyproject.toml`` and bump ``version``.
+2. Update ``CHANGELOG`` with the release notes.
+3. Commit::
+
+       git commit -am "Release v1.0.0"
+
+4. Run Steps 2 and 3 above to build and publish the wheel.
+5. Push a version tag to trigger the GitHub Release::
+
+       git tag v1.0.0
+       git push origin v1.0.0
+
+The tag push creates a GitHub Release with auto-generated notes from the
+commit history.  PyPI has already been updated in the previous step.
+
+
+Workflow files
+==============
 
 ci.yml
 ------
@@ -103,8 +179,10 @@ Jobs:
 
 - **code_quality** — ``ruff check``, ``ruff format --diff``, Prettier,
   ``pyright``
-- **test** — ``pytest --cov`` across the matrix
-- **build** — ``uv build`` (verifies the package can be built)
+- **test** — ``pytest --cov`` on Ubuntu, macOS, and Windows
+
+No build or publish step is present.  The binary wheel requires the local
+``scaldys-project`` pipeline and cannot be reproduced in CI.
 
 release.yml
 -----------
@@ -121,66 +199,23 @@ Runs when a ``v*`` tag is pushed::
           - v*
 
     jobs:
-      pypi:
-        name: Publish to PyPI
+      github_release:
+        name: Create GitHub Release
         runs-on: ubuntu-latest
-        environment:
-          name: release
         permissions:
-          id-token: write
+          contents: write
         steps:
           - uses: actions/checkout@v4
-          - uses: astral-sh/setup-uv@v3
-          - name: Build the project
-            run: uv build --index-strategy unsafe-best-match
-          - name: Publish
-            run: uv publish --trusted-publishing always
+          - name: Create release
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            run: |
+              gh release create "${{ github.ref_name }}" \
+                --title "${{ github.ref_name }}" \
+                --generate-notes
 
-.. note::
-   The template ships with the ``tags:`` trigger commented out and
-   ``on: push`` active.  Make sure to uncomment the tag trigger and remove the
-   bare ``push`` trigger before the first release, otherwise every push to
-   the repository will attempt a publish.
-
-
-Step 4 — Version Bump
-======================
-
-Version is declared once in ``pyproject.toml``::
-
-    [project]
-    version = "1.0.0"
-
-It is read at runtime via ``importlib.metadata`` in
-``src/<your_package>/__about__.py``.
-
-Before tagging a release:
-
-1. Edit ``pyproject.toml`` and bump ``version``.
-2. Update ``CHANGELOG`` with the release notes.
-3. Commit both changes::
-
-       git commit -am "Release v1.0.0"
-
-
-Step 5 — Trigger a Release
-============================
-
-Push a version tag to kick off the ``release.yml`` workflow::
-
-    git tag v1.0.0
-    git push origin v1.0.0
-
-GitHub Actions will:
-
-1. Check out the repository at the tagged commit.
-2. Run ``uv build``, producing ``dist/<your_package>-1.0.0-py3-none-any.whl``
-   and ``dist/<your_package>-1.0.0.tar.gz``.
-3. Authenticate to PyPI using an OIDC token (no secret needed).
-4. Upload both distributions via ``uv publish``.
-
-The package will appear on ``https://pypi.org/project/<your-project>/``
-within a minute or two.
+This workflow creates a GitHub Release with auto-generated release notes.
+It does **not** build or publish to PyPI.
 
 
 .. _testpypi_dry_run_template:
@@ -188,20 +223,16 @@ within a minute or two.
 TestPyPI Dry Run
 ================
 
-Before the first real release it is a good idea to verify the full pipeline
+Before the first real release it is good practice to verify the full pipeline
 against `Test PyPI <https://test.pypi.org>`_.
 
-1. Create an account on ``test.pypi.org`` and add a pending publisher there
-   with the same fields as in :ref:`Step 1 <publishing_guide>` but pointing at
-   ``test.pypi.org``.
-2. Temporarily change the publish step in ``release.yml``::
+1. Create an account on ``test.pypi.org`` and generate an API token there.
+2. Set ``UV_PUBLISH_TOKEN`` to the TestPyPI token.
+3. Run::
 
-       run: uv publish --index testpypi --trusted-publishing always
+       scaldys-project publish --test
 
-3. Push a pre-release tag::
-
-       git tag v1.0.0rc1
-       git push origin v1.0.0rc1
-
-4. Confirm the package appears on ``https://test.pypi.org/project/<your-project>/``.
-5. Revert the workflow change before the real release.
+4. Confirm the package appears on
+   ``https://test.pypi.org/project/<your-project>/``.
+5. Revert ``UV_PUBLISH_TOKEN`` to the real PyPI token before the actual
+   release.

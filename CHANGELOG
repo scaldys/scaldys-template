@@ -28,6 +28,38 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.8.0] - 2026-05-18
+====================
+
+**Changed**
+
+  - ``release.yml``: automated PyPI publishing removed.  The workflow now
+    only creates a GitHub Release with auto-generated notes when a ``v*`` tag
+    is pushed.  PyPI publishing is handled manually via
+    ``scaldys-project publish`` (see below).
+
+    Rationale: ``uv build`` on a CI runner produces a pure-Python wheel that
+    exposes Cython source code on PyPI.  The correct artifact — a binary wheel
+    with compiled ``.pyd`` extensions — can only be produced by the local
+    ``scaldys-project build all`` pipeline.
+
+  - ``ci.yml``: ``build`` job removed.  CI now covers only quality gates:
+    lint (``ruff check``), format check (``ruff format --diff``), type
+    checking (``pyright``), and tests (``pytest --cov``) across Ubuntu,
+    macOS, and Windows.  The ``build`` job produced a pure-Python wheel that
+    was never used, adding noise and masking the true release artifact.
+
+**Docs**
+
+  - ``docs/developer_guide/``: *Publishing* guide rewritten for the new
+    release workflow.  Explains why manual publishing is required for
+    binary-wheel projects, documents the ``scaldys-project publish`` command
+    and its guard-rails (rejects pure-Python wheels, rejects multiple binary
+    wheels), covers PyPI API token setup, and provides a TestPyPI dry-run
+    checklist.  The previous OIDC Trusted Publishing content has been removed
+    as it is no longer applicable.
+
+
 [0.7.0] - 2026-05-17
 ====================
 

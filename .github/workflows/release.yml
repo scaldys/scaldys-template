@@ -1,35 +1,32 @@
 name: Release
 
+# PyPI publishing for projects with Cython-compiled binary wheels is handled
+# manually via `scaldys-project publish`.  Automated CI publishing would upload
+# a pure-Python source distribution that exposes Cython source code on PyPI.
+#
+# Release workflow:
+#   1. scaldys-project build all    → binary wheel in dist/ + Windows installer
+#   2. scaldys-project publish      → upload binary wheel to PyPI
+#   3. git tag v<version> && git push --tags  → triggers this workflow
+
 on:
   push:
-#    tags:
-#      # Publish on any tag starting with a `v`, e.g. v1.2.3
-#      - v*
+    tags:
+      - v*
 
 jobs:
-  pypi:
-    name: Publish to PyPI
+  github_release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
-    # Environment and permissions trusted publishing.
-    environment:
-      # Create this environment in the GitHub repository under Settings -> Environments
-      name: release
     permissions:
-      id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
 
-      - name: Build the project
-        run: uv build --index-strategy unsafe-best-match
-
-#      # Check that basic features work and we didn't miss to include crucial files
-#      - name: Smoke test (wheel)
-#        run: uv run --isolated --no-project -p 3.12 --with dist/*.whl tests/smoke_test.py
-#      - name: Smoke test (source distribution)
-#        run: uv run --isolated --no-project -p 3.12 --with dist/*.tar.gz tests/smoke_test.py
-
-      - name: Publish
-        run: uv publish --trusted-publishing always
-        # To publish to TestPyPI instead of PyPI, specify --index as shown below.
-        # run: uv publish --index testpypi --trusted-publishing always
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --generate-notes

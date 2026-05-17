@@ -778,15 +778,11 @@ wheels = [
 
 [[package]]
 name = "scaldys-project"
-version = "0.10.0"
-source = { registry = "https://pypi.org/simple" }
+version = "0.11.1"
+source = { editable = "../scaldys-project" }
 dependencies = [
     { name = "rich" },
     { name = "typer" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b9/d3/0888be0fb5faca32568923022bf83bb728b18b4fd5aa2b291d4d644aeb72/scaldys_project-0.10.0.tar.gz", hash = "sha256:e85139161a3513cedf5e55dbd34e10bb87273616be331dd01601ce34e54c0e26", size = 26158 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b4/47/37f75e10849d5b14e36660a32863b735ed233d3c39e23c4bdb779447376b/scaldys_project-0.10.0-py3-none-any.whl", hash = "sha256:6a0e2460397c6c9227ae08daa004b0867543ed0151c152d90b85a5de88b4d8a2", size = 26602 },
 ]
 
 [package.optional-dependencies]
@@ -800,6 +796,32 @@ docs = [
 ]
 windows = [
     { name = "pyinstaller" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cython", marker = "extra == 'cython'", specifier = ">=3.2.4" },
+    { name = "pyinstaller", marker = "extra == 'windows'", specifier = ">=6.20.0" },
+    { name = "rich", specifier = ">=15.0.0" },
+    { name = "setuptools", marker = "extra == 'cython'", specifier = ">=82.0.1" },
+    { name = "sphinx", marker = "extra == 'docs'", specifier = ">=9.1.0" },
+    { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = ">=3.1.0" },
+    { name = "typer", specifier = ">=0.25.0" },
+]
+provides-extras = ["cython", "windows", "docs"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "cython", specifier = ">=3.2.4" },
+    { name = "pre-commit", specifier = ">=4.5.0" },
+    { name = "pyinstaller", specifier = ">=6.20.0" },
+    { name = "pyright", specifier = ">=1.1.409" },
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "setuptools", specifier = ">=82.0.1" },
+    { name = "sphinx", specifier = ">=9.1.0" },
+    { name = "sphinx-rtd-theme", specifier = ">=3.1.0" },
 ]
 
 [[package]]
@@ -846,7 +868,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=7.1.0" },
     { name = "pytest-mock", specifier = ">=3.14.0" },
     { name = "ruff", specifier = ">=0.15.12" },
-    { name = "scaldys-project", extras = ["cython", "windows", "docs"], specifier = ">=0.10.0" },
+    { name = "scaldys-project", extras = ["cython", "windows", "docs"], editable = "../scaldys-project" },
     { name = "sphinx", specifier = ">=9.1.0" },
     { name = "sphinx-rtd-theme", specifier = ">=3.1.0" },
 ]

@@ -55,7 +55,7 @@ Guide summaries
     commands, and wiring up the Windows distribution pipeline.
 
 :ref:`publishing_guide`
-    End-to-end walkthrough of publishing to PyPI: setting up OIDC Trusted
-    Publishing on PyPI, creating the GitHub ``release`` environment, bumping
-    the version, pushing a tag to trigger the workflow, and running a TestPyPI
-    dry run first.
+    Why binary-wheel projects publish manually instead of via CI, how to
+    obtain a PyPI API token, the ``scaldys-project build all`` →
+    ``scaldys-project publish`` → tag workflow, and a TestPyPI dry-run
+    checklist.

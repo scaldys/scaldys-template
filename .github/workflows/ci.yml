@@ -1,5 +1,7 @@
 # CI setup
-# Lint, format code and documentation, check type consistency, run tests with coverage and build
+# Lint, format code and documentation, check type consistency, run tests with coverage.
+# No build step: binary wheels with Cython-compiled extensions are built locally
+# via `scaldys-project build all` and published manually via `scaldys-project publish`.
 name: Python Code Quality
 
 on:
@@ -44,13 +46,3 @@ jobs:
       - uses: astral-sh/setup-uv@v3
 
       - run: uv run pytest -v --durations=0 --cov --cov-report=xml
-
-  build:
-    name: Build the project
-    needs: [code_quality, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
-
-      - run: uv build
