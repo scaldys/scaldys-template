@@ -228,7 +228,7 @@ See the workflow file at `.github/workflows/release.yml` for details.
 This template includes a dedicated Windows build system managed by the
 `scaldys-project` CLI command installed by `uv sync`.
 
-**Deployment modes** — controlled by `deployment_mode` in `builder.toml`:
+**Deployment modes** — controlled by `deployment_mode` in `scaldys.toml`:
 
 | Mode | What it builds | When to use |
 |------|---------------|-------------|

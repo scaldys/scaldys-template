@@ -28,6 +28,17 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.7.0] - 2026-05-17
+====================
+
+**Changed**
+
+  - ``builder.toml`` renamed to ``scaldys.toml``.  All references updated
+    across code, documentation, and packaging scripts:
+    ``packaging/windows/scaldys-template.iss``,
+    ``docs/developer_guide/`` (``.rst`` files), and ``README.md``.
+
+
 [0.6.0] - 2026-05-17
 ====================
 
@@ -81,7 +92,7 @@
 
 **Changed**
 
-  - ``builder.toml``: ``[windows]`` section extended with ``deployment_mode``
+  - ``scaldys.toml``: ``[windows]`` section extended with ``deployment_mode``
     (default ``"pyinstaller"``) and commented-out ``bundle_pyruntime`` option.
     All three modes documented inline: ``"pyinstaller"``, ``"pyruntime"``,
     ``"wheel_only"``.

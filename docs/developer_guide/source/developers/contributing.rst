@@ -219,7 +219,7 @@ changes to make it your own:
 5. **Update CI workflows**: change the package name references in
    ``.github/workflows/`` and verify the PyPI publishing configuration.
 
-6. **Configure builder.toml**: update the ``[cython]`` and ``[windows]``
+6. **Configure scaldys.toml**: update the ``[cython]`` and ``[windows]``
    sections if you plan to use the scaldys-project Windows distribution
    pipeline.
 

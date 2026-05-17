@@ -1,13 +1,13 @@
 ; Scaldys project installer script for Inno Setup.
 ; This file is used by deployment modes that produce a Windows installer.
-; The active mode is set via deployment_mode in builder.toml and controls
+; The active mode is set via deployment_mode in scaldys.toml and controls
 ; which preprocessor defines scaldys-project passes to ISCC at build time.
 ;
 ;   Mode 1 -- pyinstaller (default, no extra define passed):
 ;     The installer deploys the PyInstaller-frozen executable tree bundled in
 ;     artifacts/portable/.  No Python runtime is installed alongside it.
 ;     Launcher scripts detect <app>.exe in bin/ and call it directly.
-;     Set in builder.toml:  deployment_mode = "pyinstaller"
+;     Set in scaldys.toml:  deployment_mode = "pyinstaller"
 ;
 ;   Mode 2 -- pyruntime (/DPyruntimeMode=1):
 ;     PyInstaller is not used.  The installer deploys a managed Python virtual
@@ -15,16 +15,16 @@
 ;     scripts activate that environment rather than calling a frozen executable.
 ;     Use this mode when the application must coexist with tools such as Quarto
 ;     that require a real Python interpreter.
-;     Set in builder.toml:  deployment_mode = "pyruntime"
+;     Set in scaldys.toml:  deployment_mode = "pyruntime"
 ;     Within Mode 2, two sub-modes are available:
 ;       Online  (default): uv downloads Python and installs the wheel at install time.
 ;       Offline (/DPythonRuntimeDir=<path>): a pre-built venv is bundled in setup.exe.
-;         Set in builder.toml:  bundle_pyruntime = true
+;         Set in scaldys.toml:  bundle_pyruntime = true
 ;
 ;   Mode 3 -- wheel_only:
 ;     This file is NOT used.  scaldys-project skips Inno Setup entirely and
 ;     only produces a binary wheel in dist/.  No installer is built.
-;     Set in builder.toml:  deployment_mode = "wheel_only"
+;     Set in scaldys.toml:  deployment_mode = "wheel_only"
 
 #define MyAppName "Scaldys-Template"
 #define MyAppVersion ""
