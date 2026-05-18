@@ -88,9 +88,15 @@ uses a PyPI API token:
    it to the specific project on subsequent releases.
 3. Copy the token — it is shown only once.
 
-Pass the token to the publish command via an environment variable::
+Pass the token to the publish command via an environment variable.
+
+On Unix (bash/zsh)::
 
     UV_PUBLISH_TOKEN=pypi-... scaldys-project publish
+
+On Windows (PowerShell)::
+
+    $env:UV_PUBLISH_TOKEN = "pypi-..."; scaldys-project publish
 
 For permanent configuration see the `uv authentication documentation
 <https://docs.astral.sh/uv/guides/publish/#authentication>`_.

@@ -59,7 +59,6 @@ docs/**/_build/
 app_data/
 node_modules/
 src/scaldys/logs/*.jsonl
-.prettierrc
 ideas.md
 package.json
 package-lock.json

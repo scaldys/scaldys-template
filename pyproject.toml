@@ -5,7 +5,7 @@ authors = [
   { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
 description = "A skeleton for Python projects by Scaldys."
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.13"
 classifiers = [
     "Programming Language :: Python",
