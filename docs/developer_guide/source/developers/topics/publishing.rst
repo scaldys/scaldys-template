@@ -26,7 +26,7 @@ Why manual publishing?
 ======================
 
 Projects derived from this template compile one or more Python modules with
-Cython (configured via the ``[cython]`` section of ``scaldys.toml``).  The
+Cython (configured via the ``[cython]`` section of ``scaldys-project.toml``).  The
 compiled ``.pyd``/``.so`` extensions replace the original ``.py`` sources in
 the distributed wheel, which is the mechanism that prevents casual inspection
 of the implementation.

@@ -33,7 +33,7 @@ Repository root
     ├── .pre-commit-config.yaml # Pre-commit hooks (Prettier for Markdown)
     ├── .prettierrc             # Prettier config for Markdown formatting
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
-    ├── scaldys.toml            # scaldys-project pipeline configuration
+    ├── scaldys-project.toml            # scaldys-project pipeline configuration
     ├── package.json            # Node.js dependency for prettier
     ├── pyproject.toml          # Project metadata, dependencies, tool config
     └── README.md               # Project overview and quick-start
@@ -158,7 +158,7 @@ Configuration files
     * Build system (setuptools).
     * Entry point: ``scaldys-template = "scaldys_template.__main__:main"``.
 
-``scaldys.toml``
+``scaldys-project.toml``
     Configuration for the ``scaldys-project`` pipeline:
 
     * ``[cython]`` — list of modules to compile and the source root.

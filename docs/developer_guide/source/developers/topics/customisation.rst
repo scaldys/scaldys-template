@@ -166,7 +166,7 @@ Step 6 — Configure the Windows distribution pipeline
 If you plan to use ``scaldys-project`` to produce a standalone Windows
 executable and installer:
 
-1. Update ``scaldys.toml``:
+1. Update ``scaldys-project.toml``:
 
    .. code-block:: toml
 
