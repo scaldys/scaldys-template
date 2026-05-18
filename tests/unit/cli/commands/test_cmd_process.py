@@ -78,7 +78,7 @@ class TestProcessCommand:
 
     def test_exit_code_0_when_all_succeed(self, isolated_app_location, mocker):
         mocker.patch(
-            "scaldys.cli.commands.cmd_process.process_items",
+            "scaldys_template.cli.commands.cmd_process.process_items",
             return_value=self._all_success_results(3),
         )
         result = runner.invoke(app, ["process", "--num-tasks", "3"])
@@ -86,7 +86,7 @@ class TestProcessCommand:
 
     def test_exit_code_1_when_any_fail(self, isolated_app_location, mocker):
         mocker.patch(
-            "scaldys.cli.commands.cmd_process.process_items",
+            "scaldys_template.cli.commands.cmd_process.process_items",
             return_value=self._one_failure_results(3),
         )
         result = runner.invoke(app, ["process", "--num-tasks", "3"])
@@ -94,7 +94,7 @@ class TestProcessCommand:
 
     def test_output_contains_per_item_lines(self, isolated_app_location, mocker):
         mocker.patch(
-            "scaldys.cli.commands.cmd_process.process_items",
+            "scaldys_template.cli.commands.cmd_process.process_items",
             return_value=self._all_success_results(2),
         )
         result = runner.invoke(app, ["process", "--num-tasks", "2"])
@@ -103,7 +103,7 @@ class TestProcessCommand:
 
     def test_output_contains_summary(self, isolated_app_location, mocker):
         mocker.patch(
-            "scaldys.cli.commands.cmd_process.process_items",
+            "scaldys_template.cli.commands.cmd_process.process_items",
             return_value=self._all_success_results(2),
         )
         result = runner.invoke(app, ["process", "--num-tasks", "2"])
@@ -111,7 +111,7 @@ class TestProcessCommand:
 
     def test_num_tasks_is_forwarded_to_process_items(self, isolated_app_location, mocker):
         mock_pi = mocker.patch(
-            "scaldys.cli.commands.cmd_process.process_items",
+            "scaldys_template.cli.commands.cmd_process.process_items",
             return_value=[],
         )
         runner.invoke(app, ["process", "--num-tasks", "42"])
@@ -121,7 +121,7 @@ class TestProcessCommand:
 
     def test_timeout_is_forwarded_to_process_items(self, isolated_app_location, mocker):
         mock_pi = mocker.patch(
-            "scaldys.cli.commands.cmd_process.process_items",
+            "scaldys_template.cli.commands.cmd_process.process_items",
             return_value=[],
         )
         runner.invoke(app, ["process", "--num-tasks", "3", "--timeout", "2.5"])

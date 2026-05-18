@@ -50,7 +50,7 @@ class TestExportCommand:
 
     def test_export_calls_export_data(self, isolated_app_location, mocker, tmp_path):
         """export_data should be called exactly once when all args are valid."""
-        mock_export = mocker.patch("scaldys.cli.commands.cmd_export.export_data")
+        mock_export = mocker.patch("scaldys_template.cli.commands.cmd_export.export_data")
         config = tmp_path / "config.yml"
         config.write_text("v: 1\n", encoding="utf-8")
 
@@ -63,7 +63,7 @@ class TestExportCommand:
     ):
         """Without --force, export should log an error and NOT call export_data
         when the output directory already exists."""
-        mock_export = mocker.patch("scaldys.cli.commands.cmd_export.export_data")
+        mock_export = mocker.patch("scaldys_template.cli.commands.cmd_export.export_data")
         config = tmp_path / "config.yml"
         config.write_text("v: 1\n", encoding="utf-8")
         existing_output = tmp_path / "existing_output"
@@ -75,7 +75,7 @@ class TestExportCommand:
 
     def test_export_overwrites_with_force_flag(self, isolated_app_location, mocker, tmp_path):
         """With --force, export_data MUST be called even if output dir exists."""
-        mock_export = mocker.patch("scaldys.cli.commands.cmd_export.export_data")
+        mock_export = mocker.patch("scaldys_template.cli.commands.cmd_export.export_data")
         config = tmp_path / "config.yml"
         config.write_text("v: 1\n", encoding="utf-8")
         existing_output = tmp_path / "existing_output"
@@ -87,7 +87,7 @@ class TestExportCommand:
 
     def test_num_values_is_passed_to_export_data(self, isolated_app_location, mocker, tmp_path):
         """--num_values N must be forwarded to export_data as num_values=N."""
-        mock_export = mocker.patch("scaldys.cli.commands.cmd_export.export_data")
+        mock_export = mocker.patch("scaldys_template.cli.commands.cmd_export.export_data")
         config = tmp_path / "config.yml"
         config.write_text("v: 1\n", encoding="utf-8")
 
