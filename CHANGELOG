@@ -28,6 +28,17 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.9.0] - 2026-05-18
+====================
+
+**Changed**
+
+  - ``scaldys.toml`` renamed to ``scaldys-project.toml``.  All references
+    updated across code, documentation, and packaging scripts:
+    ``packaging/windows/scaldys-template.iss``,
+    ``docs/developer_guide/`` (``.rst`` files), and ``README.md``.
+
+
 [0.8.0] - 2026-05-18
 ====================
 

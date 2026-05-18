@@ -5,7 +5,6 @@ compiled_modules = [
 
 [docs]
 public_doc_dirs = ["user_guide"]
-internal_doc_dirs = ["developer_guide"]
 
 [windows]
 script_dir = "packaging/windows"
