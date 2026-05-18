@@ -125,10 +125,24 @@ class TestIsRunningFromSource:
         "path_str, expected",
         [
             # Typical source-tree execution: must contain both "src" AND "scaldys_template"
-            (r"C:\Dev\scaldys-template\src\scaldys_template\common", True),
+            pytest.param(
+                r"C:\Dev\scaldys-template\src\scaldys_template\common",
+                True,
+                marks=pytest.mark.skipif(
+                    platform.system() != "Windows",
+                    reason="Backslash paths are only valid separators on Windows",
+                ),
+            ),
             ("/home/user/projects/scaldys-template/src/scaldys_template/common", True),
             # Installed package — no "src" component
-            (r"C:\Users\user\AppData\Local\Programs\scaldys_template", False),
+            pytest.param(
+                r"C:\Users\user\AppData\Local\Programs\scaldys_template",
+                False,
+                marks=pytest.mark.skipif(
+                    platform.system() != "Windows",
+                    reason="Backslash paths are only valid separators on Windows",
+                ),
+            ),
             ("/usr/local/lib/python3.13/site-packages/scaldys_template", False),
             # Has "src" but not PACKAGE_NAME ("scaldys_template")
             ("/home/user/src/other_package/common", False),
