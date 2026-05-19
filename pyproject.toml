@@ -1,6 +1,6 @@
 [project]
 name = "scaldys-template"
-version = "0.9.0"
+version = "0.10.0"
 authors = [
   { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
@@ -39,7 +39,7 @@ scaldys_template = ["py.typed"]
 
 [dependency-groups]
 dev = [
-    "scaldys-project[cython,windows,docs]>=0.12.0",
+    "scaldys-project[cython,windows,docs]>=0.13.0",
     "pre-commit>=4.5.0",
     "pyright>=1.1.409",
     "pytest>=9.0.3",
