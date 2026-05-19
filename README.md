@@ -229,7 +229,8 @@ when you create a new release. See the workflow file at
 This template includes a dedicated Windows build system managed by the
 `scaldys-project` CLI command installed by `uv sync`.
 
-**Deployment modes** — controlled by `deployment_mode` in `scaldys-project.toml`:
+**Deployment modes** — controlled by `deployment_mode` in
+`scaldys-project.toml`:
 
 | Mode                    | What it builds                                                    | When to use                           |
 | ----------------------- | ----------------------------------------------------------------- | ------------------------------------- |

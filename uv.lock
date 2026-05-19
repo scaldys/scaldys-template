@@ -778,15 +778,15 @@ wheels = [
 
 [[package]]
 name = "scaldys-project"
-version = "0.11.0"
+version = "0.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "rich" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f5/05/e8b5a84b18232a38107c9c26650ecba57a8e79a399efb9d77388c3764b82/scaldys_project-0.11.0.tar.gz", hash = "sha256:133e58bfc7604d256066759a358e2d46e52549e710163c06dd9f37504b986237", size = 27886 }
+sdist = { url = "https://files.pythonhosted.org/packages/1d/a7/12bf59f6f2ed2e2df5d46487ca46d8bf4b04d97f50d8f11d3630c2512eed/scaldys_project-0.12.0.tar.gz", hash = "sha256:d994290236a327e8d0e2cad6995cf8088f6821efdcf28daede55446a73f7c2a4", size = 29271 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/63/d859eb1a19442190d4587fda56dc4355e4f18f978b5d672149ced54297c5/scaldys_project-0.11.0-py3-none-any.whl", hash = "sha256:b378dab4eb206db06a6793438612b9cc73ed3f3dfee49a05e3038b14851b4462", size = 30617 },
+    { url = "https://files.pythonhosted.org/packages/c5/b6/f07a00c7b0cfffdc36eb81ee3b437d5abda701716f2c4e1c7919a43d0b8e/scaldys_project-0.12.0-py3-none-any.whl", hash = "sha256:8728b700b935f3335d1bf763a731f927c8497a23a5395560b0bdffb20c7e8f8c", size = 33211 },
 ]
 
 [package.optional-dependencies]
@@ -846,7 +846,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=7.1.0" },
     { name = "pytest-mock", specifier = ">=3.14.0" },
     { name = "ruff", specifier = ">=0.15.12" },
-    { name = "scaldys-project", extras = ["cython", "windows", "docs"], specifier = ">=0.11.0" },
+    { name = "scaldys-project", extras = ["cython", "windows", "docs"], specifier = ">=0.12.0" },
     { name = "sphinx", specifier = ">=9.1.0" },
     { name = "sphinx-rtd-theme", specifier = ">=3.1.0" },
 ]
