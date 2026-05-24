@@ -21,7 +21,7 @@ from tkinter import filedialog, ttk
 from typing import Any
 
 import ttkbootstrap as tb
-from ttkbootstrap.constants import BOTH, CENTER, END, HEADINGS, X, YES
+from ttkbootstrap.constants import BOTH, CENTER, HEADINGS, X, YES
 
 from scaldys_template.__about__ import PACKAGE_NAME
 from scaldys_template.core.signal_engine import FFTResult, SignalData, SignalMetrics

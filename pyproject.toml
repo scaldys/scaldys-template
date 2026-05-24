@@ -45,7 +45,7 @@ scaldys_template = ["py.typed"]
 
 [dependency-groups]
 dev = [
-    "scaldys-project[cython,windows,docs]>=0.13.0",
+    "scaldys-project[cython,windows,docs]>=0.14.0",
     "pre-commit>=4.5.0",
     "lxml-stubs>=0.5.1",
     "pyright>=1.1.409",
@@ -56,6 +56,7 @@ dev = [
     "ruff>=0.15.12",
     "sphinx>=9.1.0",
     "sphinx-rtd-theme>=3.1.0",
+    "sphinx-lint>=1.0.2",
 ]
 
 [tool.pytest.ini_options]

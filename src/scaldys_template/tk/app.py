@@ -20,6 +20,7 @@ from scaldys_template.__about__ import APP_NAME
 import scaldys_template.tk.fontawesome_icons as faw
 from scaldys_template.tk.styles import Styles
 from scaldys_template.tk.ui import analyzer_frame, play_frame
+from scaldys_template.tk.ui.about_dialog import AboutDialog
 from scaldys_template.tk.utils import set_dpi_awareness
 
 logger = logging.getLogger(__name__)
@@ -103,7 +104,7 @@ class MenuBar(tb.Frame):
         help_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
         help_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
-        help_menu.add_command(label="About")
+        help_menu.add_command(label="About", command=self._cmd_about)
         help_btn["menu"] = help_menu
 
     def _build_standard_menubar(self) -> None:
@@ -131,7 +132,7 @@ class MenuBar(tb.Frame):
         menubar.add_cascade(label="Analyzer", menu=analyzer_menu)
 
         help_menu = tk.Menu(menubar, tearoff=0)
-        help_menu.add_command(label="About")
+        help_menu.add_command(label="About", command=self._cmd_about)
         menubar.add_cascade(label="Help", menu=help_menu)
 
         self.master.config(menu=menubar)  # type: ignore[attr-defined]
@@ -155,6 +156,9 @@ class MenuBar(tb.Frame):
     def _cmd_reset(self) -> None:
         if isinstance(self.main_content, analyzer_frame.AnalyzerFrame):
             self.main_content._on_reset()
+
+    def _cmd_about(self) -> None:
+        AboutDialog(self.master)  # type: ignore[arg-type]
 
 
 # ---------------------------------------------------------------------------
