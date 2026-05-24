@@ -189,10 +189,10 @@ class ToolBar(tb.Frame):
     def _load_icons(self) -> None:
         size = 24
         self._img_play = faw.icon_to_image(
-            faw.Icons.circle_play_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_stop = faw.icon_to_image(
-            faw.Icons.circle_stop_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.circle_stop_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_settings = faw.icon_to_image(
             faw.Icons.gear_solid, fill=self._fg_color, scale_to_width=size
@@ -273,18 +273,26 @@ class SideBar(tb.Frame):
 
     def _load_icons(self) -> None:
         size = 30
-        arrow_size = size // 3
         self._img_left_arrow = faw.icon_to_image(
-            faw.Icons.angle_left_solid, fill=self._fg_color, scale_to_width=arrow_size
+            faw.Icons.angle_left_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_right_arrow = faw.icon_to_image(
-            faw.Icons.angle_right_solid, fill=self._fg_color, scale_to_width=arrow_size
+            faw.Icons.angle_right_solid, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_left_arrows = faw.icon_to_image(
+            faw.Icons.angles_left_solid, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_right_arrows = faw.icon_to_image(
+            faw.Icons.angles_right_solid, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_hamburger = faw.icon_to_image(
+            faw.Icons.bars_solid_full, fill=self._fg_color, scale_to_width=size
         )
         self._img_play = faw.icon_to_image(
-            faw.Icons.circle_play_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_stop = faw.icon_to_image(
-            faw.Icons.circle_stop_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.circle_stop_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_settings = faw.icon_to_image(
             faw.Icons.gear_solid, fill=self._fg_color, scale_to_width=size
@@ -300,8 +308,11 @@ class SideBar(tb.Frame):
         bottom.pack(side="bottom", fill="x")
 
         self._toggle_label_btn = tb.Button(
-            top, image=self._img_right_arrow, takefocus=0, command=self._toggle_labels
+            top, image=self._img_right_arrows, takefocus=0, command=self._toggle_labels
         )
+        # self._toggle_label_btn = tb.Button(
+        #     top, image=self._img_hamburger, takefocus=0, command=self._toggle_labels
+        # )
         self._toggle_label_btn.pack(side="top", **pad)
 
         self._play_btn = tb.Button(
@@ -329,8 +340,11 @@ class SideBar(tb.Frame):
 
     def _show_labels(self) -> None:
         self._toggle_label_btn.configure(
-            image=self._img_left_arrow, style=Styles.BARS_BUTTON_RIGHT_TEXT
+            image=self._img_left_arrows, style=Styles.BARS_BUTTON
         )
+        # self._toggle_label_btn.configure(
+        #     image=self._img_hamburger, style=Styles.BARS_BUTTON_RIGHT_TEXT
+        # )
         self._play_btn.configure(text=_indent("Play"), style=Styles.BARS_BUTTON_LEFT_TEXT)
         self._stop_btn.configure(text=_indent("Stop"), style=Styles.BARS_BUTTON_LEFT_TEXT)
         self._settings_btn.configure(text=_indent("Settings"), style=Styles.BARS_BUTTON_LEFT_TEXT)
@@ -338,8 +352,12 @@ class SideBar(tb.Frame):
 
     def _hide_labels(self) -> None:
         self._toggle_label_btn.configure(
-            image=self._img_right_arrow, style=Styles.BARS_BUTTON_RIGHT_TEXT
+            # image=self._img_right_arrows, style=Styles.BARS_BUTTON_RIGHT_TEXT
+            image=self._img_right_arrows, style=Styles.BARS_BUTTON
         )
+        # self._toggle_label_btn.configure(
+        #     image=self._img_hamburger, style=Styles.BARS_BUTTON
+        # )
         self._play_btn.configure(text="", style=Styles.BARS_BUTTON)
         self._stop_btn.configure(text="", style=Styles.BARS_BUTTON)
         self._settings_btn.configure(text="", style=Styles.BARS_BUTTON)

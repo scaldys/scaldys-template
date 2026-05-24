@@ -23,19 +23,20 @@ class Icons(StrEnum):
     ``faw.Icons.gear_solid`` can be passed anywhere a plain ``str`` is expected.
     """
 
-    angle_left_solid = "angle-left-solid"
-    angle_right_solid = "angle-right-solid"
-    arrow_left_solid = "arrow-left-solid"
-    arrow_right_solid = "arrow-right-solid"
-    chevron_left_solid = "chevron-left-solid"
-    chevron_right_solid = "chevron-right-solid"
-    circle_play_regular = "circle-play-regular"
-    circle_play_solid = "circle-play-solid"
-    circle_stop_regular = "circle-stop-regular"
-    circle_stop_solid = "circle-stop-solid"
-    gear_solid = "gear-solid"
-    play_solid = "play-solid"
-    stop_solid = "stop-solid"
+    angle_left_solid = "angle-left-solid-full"
+    angle_right_solid = "angle-right-solid-full"
+    angles_left_solid = "angles-left-solid-full"
+    angles_right_solid = "angles-right-solid-full"
+    arrow_left_solid = "arrow-left-solid-full"
+    arrow_right_solid = "arrow-right-solid-full"
+    chevron_left_solid = "chevron-left-solid-full"
+    chevron_right_solid = "chevron-right-solid-full"
+    circle_play_solid = "circle-play-solid-full"
+    circle_stop_solid = "circle-stop-solid-full"
+    bars_solid_full = "bars-solid-full"
+    gear_solid = "gear-solid-full"
+    play_solid = "play-solid-full"
+    stop_solid = "stop-solid-full"
 
 
 def icon_to_image(
