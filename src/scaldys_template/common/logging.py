@@ -7,7 +7,7 @@ import logging
 import pathlib
 
 from logging.config import dictConfig
-from logging.handlers import QueueHandler
+from logging.handlers import QueueHandler, RotatingFileHandler
 from typing import override
 
 from scaldys_template.__about__ import PACKAGE_NAME
@@ -149,7 +149,7 @@ def _configure_logging(log_file_path: pathlib.Path) -> None:
                     "filters": ["non_error"],
                 },
                 "file_json": {
-                    "class": "logging.handlers.RotatingFileHandler",
+                    "class": f"{PACKAGE_NAME}.common.logging.WindowsSafeRotatingFileHandler",
                     "level": "DEBUG",
                     "formatter": "json",
                     "filename": log_file_path,
@@ -241,6 +241,22 @@ class JsonFormatter(logging.Formatter):
                 message[key] = val
 
         return message
+
+
+class WindowsSafeRotatingFileHandler(RotatingFileHandler):
+    """RotatingFileHandler that silently skips rollover on Windows file-lock errors.
+
+    On Windows, renaming an open log file fails with PermissionError when
+    another process holds the file. Skipping the rollover is preferable to
+    crashing the logging thread.
+    """
+
+    @override
+    def doRollover(self) -> None:
+        try:
+            super().doRollover()
+        except PermissionError:
+            pass
 
 
 class NonErrorFilter(logging.Filter):
