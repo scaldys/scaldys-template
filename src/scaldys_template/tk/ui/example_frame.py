@@ -118,13 +118,15 @@ class ExampleFrame(tb.Frame):
         """Theme-switcher row at the top of the frame."""
         style = tb.Style()
         theme_names = style.theme_names()
+        current_theme = style.theme
+        assert current_theme is not None
 
         container = tb.Frame(self, padding=(10, 10, 10, 0))
         container.pack(fill=X, expand=YES)
 
         # StringVar shared between the large label and the combobox so both
         # update automatically when a new theme is selected.
-        self._theme_var = tk.StringVar(value=style.theme.name)
+        self._theme_var = tk.StringVar(value=current_theme.name)
 
         tb.Label(container, textvariable=self._theme_var, font="-size 24 -weight bold").pack(
             side=LEFT
@@ -133,7 +135,7 @@ class ExampleFrame(tb.Frame):
 
         theme_cbo = tb.Combobox(container, textvariable=self._theme_var, values=theme_names)
         theme_cbo.pack(padx=10, side=RIGHT)
-        theme_cbo.current(theme_names.index(style.theme.name))
+        theme_cbo.current(theme_names.index(current_theme.name))
 
         def on_theme_selected(_event: tk.Event) -> None:  # type: ignore[type-arg]
             new_theme = theme_cbo.get()
@@ -195,7 +197,7 @@ class ExampleFrame(tb.Frame):
 
         tv = tb.Treeview(container, columns=[0, 1], show=HEADINGS, height=5)
         for row in table_data:
-            tv.insert("", END, values=row)
+            tv.insert("", "end", values=row)
         tv.selection_set("I001")
         tv.heading(0, text="City")
         tv.heading(1, text="Rank")
@@ -297,6 +299,8 @@ class ExampleFrame(tb.Frame):
         """Text entry, spinbox, combobox, and date picker."""
         style = tb.Style()
         theme_names = style.theme_names()
+        current_theme = style.theme
+        assert current_theme is not None
 
         group = tb.Labelframe(parent, text="Other input widgets", padding=10)
         group.pack(fill=BOTH, pady=(10, 5), expand=YES)
@@ -313,8 +317,8 @@ class ExampleFrame(tb.Frame):
         spinbox.pack(fill=X)
         spinbox.set(45)
 
-        cbo = tb.Combobox(group, text=style.theme.name, values=theme_names, exportselection=False)
+        cbo = tb.Combobox(group, values=theme_names, exportselection=False)
         cbo.pack(fill=X, pady=5)
-        cbo.current(theme_names.index(style.theme.name))
+        cbo.current(theme_names.index(current_theme.name))
 
         tb.DateEntry(group).pack(fill=X)

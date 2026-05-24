@@ -23,7 +23,7 @@ import threading
 import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox
-from typing import Any
+from typing import Any, Literal
 
 import ttkbootstrap as tb
 from ttkbootstrap.constants import BOTH, LEFT, X, YES  # BOTH, BOTTOM, LEFT, RIGHT, TOP, X, YES
@@ -48,8 +48,8 @@ __all__ = ["AnalyzerFrame"]
 logger = logging.getLogger(PACKAGE_NAME)
 
 # Result queue item types
-_ResultOk = tuple[str, SignalData, FFTResult, SignalMetrics, SignalParameters]
-_ResultErr = tuple[str, str]
+_ResultOk = tuple[Literal["ok"], SignalData, FFTResult, SignalMetrics, SignalParameters]
+_ResultErr = tuple[Literal["error"], str]
 
 
 class AnalyzerFrame(tb.Frame):

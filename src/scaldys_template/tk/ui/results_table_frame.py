@@ -17,7 +17,7 @@ import csv
 import logging
 import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 from typing import Any
 
 import ttkbootstrap as tb
@@ -34,7 +34,7 @@ logger = logging.getLogger(PACKAGE_NAME)
 _MAX_DISPLAY_ROWS = 2000
 
 
-class ResultsTableFrame(tb.LabelFrame):
+class ResultsTableFrame(ttk.LabelFrame):
     """Tabbed results table.
 
     Parameters
@@ -193,7 +193,7 @@ class ResultsTableFrame(tb.LabelFrame):
         for i in indices:
             tree.insert(
                 "",
-                END,
+                "end",
                 values=(
                     f"{sd.time[i]:.6f}",
                     f"{sd.signal[i]:.6f}",
@@ -209,7 +209,7 @@ class ResultsTableFrame(tb.LabelFrame):
         for freq, mag, phase in zip(fft.frequencies, fft.magnitude_db, fft.phase_deg):
             tree.insert(
                 "",
-                END,
+                "end",
                 values=(
                     f"{freq:.3f}",
                     f"{mag:.3f}",

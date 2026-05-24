@@ -12,6 +12,7 @@ input widgets inside a scrollable ttkbootstrap ``LabelFrame``.  It provides:
 from __future__ import annotations
 
 import tkinter as tk
+from tkinter import ttk
 from typing import Any
 
 import ttkbootstrap as tb
@@ -44,7 +45,7 @@ _WINDOW_TYPE_LABELS: list[str] = ["Rectangular", "Hanning", "Hamming", "Blackman
 _WINDOW_TYPE_VALUES: list[WindowType] = list(WindowType)
 
 
-class SignalParametersFrame(tb.LabelFrame):
+class SignalParametersFrame(ttk.LabelFrame):
     """Parameter entry panel backed by ``SignalParameters``.
 
     Parameters
@@ -60,7 +61,7 @@ class SignalParametersFrame(tb.LabelFrame):
         super().__init__(master, **kwargs)
 
         self._vars: dict[str, tk.Variable] = {}
-        self._widgets: dict[str, tk.Widget] = {}
+        self._widgets: dict[str, Any] = {}
         self._error_labels: dict[str, tb.Label] = {}
 
         self._build()

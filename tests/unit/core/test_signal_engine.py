@@ -1,5 +1,7 @@
 """Unit tests for the signal engine (generate, FFT, metrics)."""
 
+from typing import Any
+
 import numpy as np
 import pytest
 
@@ -11,9 +13,9 @@ from scaldys_template.core.signal_engine import (
 from scaldys_template.core.signal_model import NoiseType, SignalParameters, SignalType
 
 
-def _params(**kwargs) -> SignalParameters:
+def _params(**kwargs: Any) -> SignalParameters:
     """Helper: create parameters with sane defaults overridden by *kwargs*."""
-    defaults = dict(
+    defaults: dict[str, Any] = dict(
         frequency=100.0,
         sampling_rate=8000.0,
         duration=0.1,

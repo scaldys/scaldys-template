@@ -44,6 +44,7 @@ class MenuBar(tb.Frame):
 
     def __init__(self, master: tk.Misc, **kwargs: Any) -> None:
         super().__init__(master, **kwargs)
+        self.main_content: tb.Frame | None = None
         self._initialize()
 
     def _initialize(self) -> None:
@@ -74,10 +75,26 @@ class MenuBar(tb.Frame):
         file_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
         file_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
-        file_menu.add_command(label="Load...", accelerator="Ctrl+O")
+        file_menu.add_command(
+            label="Load parameters…", accelerator="Ctrl+O", command=self._cmd_load
+        )
+        file_menu.add_command(
+            label="Save parameters…", accelerator="Ctrl+S", command=self._cmd_save
+        )
         file_menu.add_separator()
         file_menu.add_command(label="Exit", accelerator="Ctrl+Q", command=self.master.destroy)  # type: ignore[attr-defined]
         file_btn["menu"] = file_menu
+
+        # Analyzer menu
+        analyzer_btn = tb.Menubutton(
+            menubar, text="Analyzer", compound="left", style=Styles.NO_ARROW_MENUBUTTON
+        )
+        analyzer_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
+
+        analyzer_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
+        analyzer_menu.add_command(label="Run analysis", accelerator="F5", command=self._cmd_run)
+        analyzer_menu.add_command(label="Reset to defaults", command=self._cmd_reset)
+        analyzer_btn["menu"] = analyzer_menu
 
         # Help menu
         help_btn = tb.Menubutton(
@@ -85,11 +102,15 @@ class MenuBar(tb.Frame):
         )
         help_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
+        help_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
+        help_menu.add_command(label="About")
+        help_btn["menu"] = help_menu
+
     def _build_standard_menubar(self) -> None:
         """Standard ``tk.Menu`` for macOS / Linux."""
         menubar = tk.Menu(self.master)  # type: ignore[arg-type]
 
-        file_menu = tk.Menu(menubar, tearoff=0, autostyle=False)
+        file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(
             label="Load parameters…",
             accelerator="Ctrl+O",
@@ -104,12 +125,12 @@ class MenuBar(tb.Frame):
         file_menu.add_command(label="Exit", accelerator="Ctrl+Q", command=self.master.destroy)  # type: ignore[attr-defined]
         menubar.add_cascade(label="File", menu=file_menu)
 
-        analyzer_menu = tk.Menu(menubar, tearoff=0, autostyle=False)
+        analyzer_menu = tk.Menu(menubar, tearoff=0)
         analyzer_menu.add_command(label="Run analysis", accelerator="F5", command=self._cmd_run)
         analyzer_menu.add_command(label="Reset to defaults", command=self._cmd_reset)
         menubar.add_cascade(label="Analyzer", menu=analyzer_menu)
 
-        help_menu = tk.Menu(menubar, tearoff=0, autostyle=False)
+        help_menu = tk.Menu(menubar, tearoff=0)
         help_menu.add_command(label="About")
         menubar.add_cascade(label="Help", menu=help_menu)
 
@@ -374,12 +395,13 @@ class Application(tb.Window):
             needed, call ``_load_icons()`` on those widgets and reconfigure
             the buttons.
         """
-        fg: str = (
-            self.style.colors.get("fg")
-            if self.style.theme.type == "dark"
-            else self.style.colors.get("bg")
-        )
-        dark: str = self.style.colors.get("dark")
+        # Pyright can't resolve style.colors (a ttkbootstrap Colors object) or
+        # style.theme (a ThemeDefinition) because they're not in the type stubs.
+        # Casting them to Any locally is the clean fix.
+        colors: Any = self.style.colors
+        theme: Any = self.style.theme
+        fg: str = colors.get("fg") if theme.type == "dark" else colors.get("bg")
+        dark: str = colors.get("dark")
 
         self.bars_fg_color: str = fg
         self.bars_bg_color: str = dark
@@ -424,6 +446,8 @@ class Application(tb.Window):
         self.play_panel = play_frame.PlayPanel(content, style=Styles.BARS_FRAME)
         self.main_content = analyzer_frame.AnalyzerFrame(content)
 
+        self.menubar.main_content = self.main_content
+
         self.sidebar.grid(row=0, column=0, sticky="ns", padx=0, pady=2)
         self.play_panel.grid(row=0, column=1, sticky="ns", padx=1, pady=2)
         self.play_panel.grid_remove()  # hidden by default
@@ -443,11 +467,11 @@ class Application(tb.Window):
     def _bind_shortcuts(self) -> None:
         self.bind_all("<Control-q>", lambda _event: self._on_close())
         self.bind_all("<Control-Q>", lambda _event: self._on_close())
-        self.bind_all("<F5>", lambda _event: self._cmd_run())
-        self.bind_all("<Control-s>", lambda _event: self._cmd_save())
-        self.bind_all("<Control-S>", lambda _event: self._cmd_save())
-        self.bind_all("<Control-o>", lambda _event: self._cmd_load())
-        self.bind_all("<Control-O>", lambda _event: self._cmd_load())
+        self.bind_all("<F5>", lambda _event: self.menubar._cmd_run())
+        self.bind_all("<Control-s>", lambda _event: self.menubar._cmd_save())
+        self.bind_all("<Control-S>", lambda _event: self.menubar._cmd_save())
+        self.bind_all("<Control-o>", lambda _event: self.menubar._cmd_load())
+        self.bind_all("<Control-O>", lambda _event: self.menubar._cmd_load())
 
     # ------------------------------------------------------------------
     # Play-panel toggle

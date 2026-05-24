@@ -4,6 +4,7 @@ Replace the placeholder content with application-specific controls such as a
 playback queue, a tree of items to process, or any secondary navigation widget.
 """
 
+import tkinter as tk
 from typing import Any
 
 import ttkbootstrap as tb
@@ -15,7 +16,7 @@ class PlayPanel(tb.Frame):
     Toggled via :py:meth:`~scaldys_template.tk.app.Application.toggle_play_frame`.
     """
 
-    def __init__(self, master: tb.Window, **kwargs: Any) -> None:
+    def __init__(self, master: tk.Misc, **kwargs: Any) -> None:
         super().__init__(master, **kwargs)
         self._initialize()
 

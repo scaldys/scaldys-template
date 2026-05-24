@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import logging
 import tkinter as tk
+from tkinter import ttk
 from typing import Any
 
 import ttkbootstrap as tb
@@ -24,7 +25,8 @@ import matplotlib
 
 matplotlib.use("TkAgg")  # must be set before importing pyplot
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.figure import Figure
 
 from scaldys_template.__about__ import PACKAGE_NAME
@@ -48,7 +50,9 @@ def _theme_colors() -> tuple[str, str, str, str]:
         ``(fig_bg, axes_bg, fg_color, grid_color)``
     """
     style = tb.Style()
-    if style.theme.type == "dark":
+    theme = style.theme
+    assert theme is not None
+    if theme.type == "dark":
         fig_bg = "#1e1e2e"
         axes_bg = "#2a2a3e"
         fg = "#e0e0e0"
@@ -95,7 +99,7 @@ class _PlotTab(tb.Frame):
         self.canvas.draw_idle()
 
 
-class PlotFrame(tb.LabelFrame):
+class PlotFrame(ttk.LabelFrame):
     """Three-tab plot panel embedding matplotlib figures.
 
     Parameters
