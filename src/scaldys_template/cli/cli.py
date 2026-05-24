@@ -7,7 +7,9 @@ from click import Context
 from art import text2art
 from rich.console import Console
 
+import scaldys_template.cli.commands.cmd_analyze as cmd_analyze
 import scaldys_template.cli.commands.cmd_export as cmd_export
+import scaldys_template.cli.commands.cmd_gui as cmd_gui
 import scaldys_template.cli.commands.cmd_process as cmd_process
 import scaldys_template.cli.commands.cmd_settings as cmd_settings
 from scaldys_template.__about__ import APP_NAME, VERSION
@@ -84,6 +86,8 @@ app = typer.Typer(
     },
 )
 
+app.command()(cmd_gui.gui)
+app.command()(cmd_analyze.analyze)
 app.command()(cmd_export.export)
 app.command()(cmd_process.process)
 app.add_typer(cmd_settings.app, name="settings")

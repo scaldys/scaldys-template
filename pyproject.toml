@@ -17,9 +17,15 @@ classifiers = [
 license-files = ["LICEN[CS]E*"]
 dependencies = [
     "art>=6.5",
+    "lxml>=6.1.1",
+    "matplotlib>=3.9",
+    "numpy>=2.0",
+    "pillow>=12.2.0",
     "platformdirs>=4.9.6",
     "pydantic>=2.0",
     "rich>=13.0",
+    "tksvg>=0.7.4",
+    "ttkbootstrap>=1.20.3",
     "typer>=0.25.0",
 ]
 
@@ -41,6 +47,7 @@ scaldys_template = ["py.typed"]
 dev = [
     "scaldys-project[cython,windows,docs]>=0.13.0",
     "pre-commit>=4.5.0",
+    "lxml-stubs>=0.5.1",
     "pyright>=1.1.409",
     "pytest>=9.0.3",
     "pytest-asyncio>=0.25.0",

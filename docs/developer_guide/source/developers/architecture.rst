@@ -4,13 +4,15 @@
 Architecture
 ************
 
-``scaldys-template`` is structured around **three top-level packages** inside
+``scaldys-template`` is structured around **four top-level packages** inside
 ``src/scaldys_template/``, each with a single responsibility:
 
 * **cli/** — argument parsing, global options, command routing, settings.
 * **common/** — shared infrastructure (paths, logging) with no dependency on
   the CLI or on domain logic.
-* **core/** — domain logic stubs (export, async processing, database).
+* **core/** — domain logic: reference stubs (export, async processing, database)
+  plus the Signal Analyzer engine.
+* **tk/** — the Tkinter GUI application (Signal Analyzer window).
 
 The module layout mirrors this split:
 
@@ -26,16 +28,33 @@ The module layout mirrors this split:
     │   ├── settings.py         # AppSettings — INI persistence + Pydantic validation
     │   └── commands/
     │       ├── arg_types.py    # Shared Annotated type aliases (ARG_TYPE_VERBOSE, …)
+    │       ├── cmd_analyze.py  # analyze command — headless CSV/PNG output
     │       ├── cmd_export.py   # export command
+    │       ├── cmd_gui.py      # gui command — launches the Tkinter window
     │       ├── cmd_process.py  # process command (async demo)
     │       └── cmd_settings.py # settings sub-app
     ├── common/
     │   ├── app_location.py     # AppLocation — cross-platform directory resolution
     │   └── logging.py          # setup_logging(), JsonFormatter, NonErrorFilter
-    └── core/
-        ├── async_processor.py  # process_items() — async pipeline template
-        ├── database.py         # DatabaseConnection, ConnectionPool, transaction()
-        └── export.py           # export_data() — data serialisation stub
+    ├── core/
+    │   ├── async_processor.py  # process_items() — async pipeline template
+    │   ├── database.py         # DatabaseConnection, ConnectionPool, transaction()
+    │   ├── export.py           # export_data() — data serialisation stub
+    │   ├── signal_engine.py    # generate_signal / compute_fft / compute_metrics
+    │   ├── signal_model.py     # SignalParameters — Pydantic model + validators
+    │   └── parameter_store.py  # JSON save/load via AppLocation
+    └── tk/
+        ├── app.py              # Application window, MenuBar, ToolBar, SideBar
+        ├── fontawesome_icons.py
+        ├── styles.py
+        ├── utils.py
+        └── ui/
+            ├── analyzer_frame.py        # top-level Signal Analyzer layout
+            ├── example_frame.py         # ttkbootstrap widget showcase
+            ├── play_frame.py            # play/demo panel
+            ├── plot_frame.py            # embedded matplotlib figures
+            ├── results_table_frame.py   # Treeview + metrics bar + CSV export
+            └── signal_parameters_frame.py  # parameter entry widgets
 
 .. contents:: On this page
    :local:
@@ -350,6 +369,28 @@ and exposes an ``acquire()`` context manager for safe checkout/checkin.
 All three classes are stubs: the stub bodies log what they *would* do and
 return plausible fake data.  Replace the stub bodies with your real driver
 calls while keeping the same interface.
+
+
+Signal Analyzer (``core/signal_*`` + ``tk/ui/`` + ``cli/commands/cmd_*``)
+==========================================================================
+
+The Signal Analyzer is the primary example application.  It demonstrates a
+complete vertical slice of the template: a typed parameter model, a pure
+computation engine, a non-blocking GUI, and a headless CLI command that shares
+the same engine.
+
+The dependency order is strict:
+
+.. code-block:: text
+
+    core/signal_model.py          ← no dependencies on GUI or CLI
+    core/signal_engine.py         ← imports signal_model only
+    core/parameter_store.py       ← imports signal_model + AppLocation
+    tk/ui/*_frame.py              ← imports core/*  (GUI → core, never core → GUI)
+    cli/commands/cmd_analyze.py   ← imports core/*  (CLI → core, never core → CLI)
+    cli/commands/cmd_gui.py       ← imports tk/app  (deferred, inside function body)
+
+The full design is documented in :ref:`signal_analyzer_dev_guide`.
 
 
 Testing strategy

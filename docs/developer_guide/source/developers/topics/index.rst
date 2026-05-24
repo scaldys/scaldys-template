@@ -11,6 +11,7 @@ tune its behaviour, extend it, or troubleshoot an issue.
 .. toctree::
    :maxdepth: 2
 
+   signal_analyzer
    project_layout
    markdown_formatting
    logging
@@ -23,6 +24,13 @@ tune its behaviour, extend it, or troubleshoot an issue.
 
 Guide summaries
 ===============
+
+:ref:`signal_analyzer_dev_guide`
+    Architecture and design of the Signal Analyzer example application: the
+    Pydantic parameter model with cross-field validation, the pure-NumPy engine
+    (``generate_signal`` / ``compute_fft`` / ``compute_metrics``), the
+    thread-safe GUI run pattern (``threading.Thread`` + ``queue.Queue`` +
+    ``after()``), the embedded matplotlib figures, and the headless CLI command.
 
 :ref:`project_layout`
     The directory structure of the template, what each file is for, and where

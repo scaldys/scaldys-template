@@ -9,6 +9,7 @@ These topic guides provide a set of in-depth explanations for various parts of t
 .. toctree::
    :maxdepth: 2
 
+   signal_analyzer
 
 For Python documentation, here is a suggested convention:
 
