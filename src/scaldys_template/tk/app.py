@@ -19,7 +19,8 @@ from platformdirs import user_data_dir
 from scaldys_template.__about__ import APP_NAME
 import scaldys_template.tk.fontawesome_icons as faw
 from scaldys_template.tk.styles import Styles
-from scaldys_template.tk.ui import analyzer_frame, play_frame
+from scaldys_template.tk.ui import play_frame
+from scaldys_template.tk.ui.analyzer import analyzer_frame
 from scaldys_template.tk.ui.about_dialog import AboutDialog
 from scaldys_template.tk.utils import set_dpi_awareness
 

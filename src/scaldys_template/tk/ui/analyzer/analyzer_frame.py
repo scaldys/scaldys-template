@@ -39,9 +39,9 @@ from scaldys_template.core.signal_engine import (
     generate_signal,
 )
 from scaldys_template.core.signal_model import SignalParameters
-from scaldys_template.tk.ui.plot_frame import PlotFrame
-from scaldys_template.tk.ui.results_table_frame import ResultsTableFrame
-from scaldys_template.tk.ui.signal_parameters_frame import SignalParametersFrame
+from scaldys_template.tk.ui.analyzer.plot_frame import PlotFrame
+from scaldys_template.tk.ui.analyzer.results_table_frame import ResultsTableFrame
+from scaldys_template.tk.ui.analyzer.signal_parameters_frame import SignalParametersFrame
 
 __all__ = ["AnalyzerFrame"]
 

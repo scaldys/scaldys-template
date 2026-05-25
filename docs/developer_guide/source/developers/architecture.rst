@@ -49,12 +49,13 @@ The module layout mirrors this split:
         ├── styles.py
         ├── utils.py
         └── ui/
-            ├── analyzer_frame.py        # top-level Signal Analyzer layout
+            ├── analyzer/
+            │   ├── analyzer_frame.py        # top-level Signal Analyzer layout
+            │   ├── plot_frame.py            # embedded matplotlib figures
+            │   ├── results_table_frame.py   # Treeview + metrics bar + CSV export
+            │   └── signal_parameters_frame.py  # parameter entry widgets
             ├── example_frame.py         # ttkbootstrap widget showcase
-            ├── play_frame.py            # play/demo panel
-            ├── plot_frame.py            # embedded matplotlib figures
-            ├── results_table_frame.py   # Treeview + metrics bar + CSV export
-            └── signal_parameters_frame.py  # parameter entry widgets
+            └── play_frame.py            # play/demo panel
 
 .. contents:: On this page
    :local:
@@ -386,7 +387,7 @@ The dependency order is strict:
     core/signal_model.py          ← no dependencies on GUI or CLI
     core/signal_engine.py         ← imports signal_model only
     core/parameter_store.py       ← imports signal_model + AppLocation
-    tk/ui/*_frame.py              ← imports core/*  (GUI → core, never core → GUI)
+    tk/ui/analyzer/*_frame.py     ← imports core/*  (GUI → core, never core → GUI)
     cli/commands/cmd_analyze.py   ← imports core/*  (CLI → core, never core → CLI)
     cli/commands/cmd_gui.py       ← imports tk/app  (deferred, inside function body)
 

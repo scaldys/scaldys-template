@@ -29,10 +29,11 @@ The signal analyzer spans three existing packages:
     │   └── parameter_store.py    # JSON save / load via AppLocation
     ├── tk/
     │   └── ui/
-    │       ├── analyzer_frame.py        # top-level GUI layout + async run wiring
-    │       ├── signal_parameters_frame.py  # parameter entry widgets
-    │       ├── plot_frame.py            # embedded matplotlib figures
-    │       └── results_table_frame.py   # Treeview table + metrics bar
+    │       └── analyzer/
+    │           ├── analyzer_frame.py        # top-level GUI layout + async run wiring
+    │           ├── signal_parameters_frame.py  # parameter entry widgets
+    │           ├── plot_frame.py            # embedded matplotlib figures
+    │           └── results_table_frame.py   # Treeview table + metrics bar
     └── cli/
         ├── commands/
         │   ├── cmd_gui.py          # ``gui`` command — launches the window
@@ -42,8 +43,8 @@ The three packages have a strict dependency order:
 
 .. code-block:: text
 
-    core/  ←  tk/ui/  (GUI imports engine, never the other way)
-    core/  ←  cli/commands/  (commands import engine, never the other way)
+    core/  ←  tk/ui/analyzer/  (GUI imports engine, never the other way)
+    core/  ←  cli/commands/    (commands import engine, never the other way)
     tk/ui/ ←  cli/commands/cmd_gui  (cmd_gui imports Application)
 
 This means the entire ``core/`` layer can be unit-tested without Tkinter,
