@@ -28,6 +28,35 @@
     [0.1.0] - yyyy-mm-dd
 
 
+[0.10.0] - 2026-05-20
+====================
+
+**Added**
+
+  - Signal Analyzer GUI: full feature implementation including core model, engine,
+    and persistence logic.  GUI components (frames, plots, table) moved into a
+    dedicated ``gui/signal_analyzer/`` directory.  User and developer guides
+    updated accordingly; unit tests added for model, engine, and persistence.
+
+  - ``About`` dialog exposing application metadata (version, author, licence).
+    ``Help`` menu updated to surface the dialog.
+
+  - ``WindowsSafeRotatingFileHandler``: a ``RotatingFileHandler`` subclass that
+    gracefully handles Windows file-lock errors during log rollover, preventing
+    crashes when a log file is held open by another process.
+
+**Changed**
+
+  - Font Awesome icons replaced with updated "full" versions (v7.2.0).  Widget
+    styles and button layouts adjusted for visual consistency.
+
+  - ``scaldys-project`` dependency bumped to v0.13.0.
+
+**Fixed**
+
+  - Pyright type-checking feedback resolved across several modules.
+
+
 [0.9.0] - 2026-05-18
 ====================
 
