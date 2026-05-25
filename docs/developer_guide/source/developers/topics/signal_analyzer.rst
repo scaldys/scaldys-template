@@ -254,6 +254,19 @@ demonstrates.  Its three design goals are:
    at render time so they match the application's dark/light colour scheme.
 
 
+``SideBar`` and Navigation
+--------------------------
+
+The ``SideBar`` on the left edge of the window manages top-level navigation. It
+is expanded by default to show labels but can be collapsed to icons-only.
+
+**Selection synchronization**
+    The sidebar maintains an "active" button state. When the user switches
+    views (either by clicking a sidebar button or via application logic), the
+    sidebar highlights the corresponding button with the theme's primary
+    color. This provides a clear visual cue of the current application state.
+
+
 ``AnalyzerFrame`` — layout and run wiring
 ------------------------------------------
 
@@ -540,11 +553,16 @@ Coverage breakdown
      - End-to-end CLI invocations via ``typer.testing.CliRunner``: CSV file
        creation, column headers, metrics values, force/no-force behaviour,
        invalid parameter file handling.
+   * - ``tests/unit/tk/test_app_state.py``
+     - GUI state and navigation: sidebar expansion, button selection
+       highlighting, and view switching logic.
 
-No GUI tests are included.  Testing Tkinter widgets reliably requires a display
-and adds significant CI complexity.  The layer separation means that the
-business-critical code (model, engine, persistence) is fully covered by unit
-tests that run without any display.
+GUI testing is performed using standard unit tests that instantiate the
+``Application``.  These tests verify widget states and styles but require a
+valid Tcl/Tk environment; they are automatically skipped in headless CI
+environments.  The layer separation ensures that even without GUI tests, the
+business-critical code (model, engine, persistence) is fully covered by
+platform-independent unit tests.
 
 Key testing patterns
 --------------------

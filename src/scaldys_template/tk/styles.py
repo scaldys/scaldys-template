@@ -15,7 +15,9 @@ class Styles:
 
     # Buttons inside the toolbar / sidebar
     BARS_BUTTON: str = "MyBars.TButton"
+    BARS_BUTTON_SELECTED: str = "Selected.MyBars.TButton"
     BARS_BUTTON_LEFT_TEXT: str = "MyLeftTxt.MyBars.TButton"  # icon left, text right
+    BARS_BUTTON_SELECTED_LEFT_TEXT: str = "Selected.MyLeftTxt.MyBars.TButton"
     BARS_BUTTON_RIGHT_TEXT: str = "MyRightTxt.MyBars.TButton"  # icon right, text left
 
     # Menubutton without the default dropdown arrow

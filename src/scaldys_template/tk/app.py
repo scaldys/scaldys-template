@@ -19,8 +19,8 @@ from platformdirs import user_data_dir
 from scaldys_template.__about__ import APP_NAME
 import scaldys_template.tk.fontawesome_icons as faw
 from scaldys_template.tk.styles import Styles
-from scaldys_template.tk.ui import play_frame
-from scaldys_template.tk.ui.analyzer import analyzer_frame
+from scaldys_template.tk.ui import play_frame, ExampleFrame, PlayFrame, PlayPanel
+from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.ui.about_dialog import AboutDialog
 from scaldys_template.tk.utils import set_dpi_awareness
 
@@ -143,19 +143,19 @@ class MenuBar(tb.Frame):
     # ------------------------------------------------------------------
 
     def _cmd_run(self) -> None:
-        if isinstance(self.main_content, analyzer_frame.AnalyzerFrame):
+        if isinstance(self.main_content, AnalyzerFrame):
             self.main_content._on_run()
 
     def _cmd_save(self) -> None:
-        if isinstance(self.main_content, analyzer_frame.AnalyzerFrame):
+        if isinstance(self.main_content, AnalyzerFrame):
             self.main_content._on_save()
 
     def _cmd_load(self) -> None:
-        if isinstance(self.main_content, analyzer_frame.AnalyzerFrame):
+        if isinstance(self.main_content, AnalyzerFrame):
             self.main_content._on_load()
 
     def _cmd_reset(self) -> None:
-        if isinstance(self.main_content, analyzer_frame.AnalyzerFrame):
+        if isinstance(self.main_content, AnalyzerFrame):
             self.main_content._on_reset()
 
     def _cmd_about(self) -> None:
@@ -250,8 +250,10 @@ class SideBar(tb.Frame):
         Icon / text colour derived from the active theme.
     bg_color:
         Background colour derived from the active theme.
-    on_toggle_play:
-        Callback invoked when the play button is clicked (toggles the play panel).
+    on_show_analyzer:
+        Callback invoked when the play button is clicked (shows the analyzer frame).
+    on_show_examples:
+        Callback invoked when the example button is clicked (shows the example frame).
     """
 
     def __init__(
@@ -259,32 +261,34 @@ class SideBar(tb.Frame):
         master: tk.Misc,
         fg_color: str,
         bg_color: str,
-        on_toggle_play: Callable[[], None],
+        on_show_analyzer: Callable[[], None],
+        on_show_examples: Callable[[], None],
+        on_show_play: Callable[[], None],
         **kwargs: Any,
     ) -> None:
         super().__init__(master, **kwargs)
         self._fg_color = fg_color
         self._bg_color = bg_color
-        self._on_toggle_play = on_toggle_play
-        self._has_labels = False
+        self._on_show_analyzer = on_show_analyzer
+        self._on_show_examples = on_show_examples
+        self._on_show_play = on_show_play
+        self._has_labels = True
+        self._active_button: tb.Button | None = None
 
         self._load_icons()
         self._initialize()
-        self._hide_labels()
+        self._show_labels()
 
     def _load_icons(self) -> None:
-        size = 30
+        size = 20
+        self._img_analyzer = faw.icon_to_image(
+            faw.Icons.square_poll_solid, fill=self._fg_color, scale_to_width=size
+        )
         self._img_left_arrow = faw.icon_to_image(
             faw.Icons.angle_left_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_right_arrow = faw.icon_to_image(
             faw.Icons.angle_right_solid, fill=self._fg_color, scale_to_width=size
-        )
-        self._img_left_arrows = faw.icon_to_image(
-            faw.Icons.angles_left_solid, fill=self._fg_color, scale_to_width=size
-        )
-        self._img_right_arrows = faw.icon_to_image(
-            faw.Icons.angles_right_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_hamburger = faw.icon_to_image(
             faw.Icons.bars_solid_full, fill=self._fg_color, scale_to_width=size
@@ -292,15 +296,15 @@ class SideBar(tb.Frame):
         self._img_play = faw.icon_to_image(
             faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
         )
-        self._img_stop = faw.icon_to_image(
-            faw.Icons.circle_stop_solid, fill=self._fg_color, scale_to_width=size
+        self._img_ui_examples = faw.icon_to_image(
+            faw.Icons.cubes_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_settings = faw.icon_to_image(
             faw.Icons.gear_solid, fill=self._fg_color, scale_to_width=size
         )
 
     def _initialize(self) -> None:
-        pad: dict[str, Any] = {"ipadx": 5, "ipady": 15, "pady": 0, "fill": "x"}
+        pad: dict[str, Any] = {"ipadx": 0, "ipady": 10, "pady": 0, "fill": "x"}
 
         top = tb.Frame(self)
         top.pack(side="top", fill="x")
@@ -309,26 +313,36 @@ class SideBar(tb.Frame):
         bottom.pack(side="bottom", fill="x")
 
         self._toggle_label_btn = tb.Button(
-            top, image=self._img_right_arrows, takefocus=0, command=self._toggle_labels
+            top, image=self._img_hamburger, takefocus=0, command=self._toggle_labels
         )
-        # self._toggle_label_btn = tb.Button(
-        #     top, image=self._img_hamburger, takefocus=0, command=self._toggle_labels
-        # )
         self._toggle_label_btn.pack(side="top", **pad)
 
-        self._play_btn = tb.Button(
-            top, image=self._img_play, compound="left", takefocus=0, command=self._on_toggle_play
-        )
-        self._play_btn.pack(side="top", **pad)
-
-        self._stop_btn = tb.Button(
+        self._analyzer_btn = tb.Button(
             top,
-            image=self._img_stop,
+            image=self._img_analyzer,
             compound="left",
             takefocus=0,
-            command=lambda: showinfo(message="Stop — wire up your command here"),
+            command=self._on_show_analyzer,
         )
-        self._stop_btn.pack(side="top", **pad)
+        self._analyzer_btn.pack(side="top", **pad)
+
+        self._ui_examples_btn = tb.Button(
+            top,
+            image=self._img_ui_examples,
+            compound="left",
+            takefocus=0,
+            command=self._on_show_examples,
+        )
+        self._ui_examples_btn.pack(side="top", **pad)
+
+        self._play_btn = tb.Button(
+            top,
+            image=self._img_play,
+            compound="left",
+            takefocus=0,
+            command=self._on_show_play,
+        )
+        self._play_btn.pack(side="top", **pad)
 
         self._settings_btn = tb.Button(
             bottom,
@@ -340,35 +354,56 @@ class SideBar(tb.Frame):
         self._settings_btn.pack(side="bottom", **pad)
 
     def _show_labels(self) -> None:
-        self._toggle_label_btn.configure(
-            image=self._img_left_arrows, style=Styles.BARS_BUTTON
-        )
-        # self._toggle_label_btn.configure(
-        #     image=self._img_hamburger, style=Styles.BARS_BUTTON_RIGHT_TEXT
-        # )
-        self._play_btn.configure(text=_indent("Play"), style=Styles.BARS_BUTTON_LEFT_TEXT)
-        self._stop_btn.configure(text=_indent("Stop"), style=Styles.BARS_BUTTON_LEFT_TEXT)
-        self._settings_btn.configure(text=_indent("Settings"), style=Styles.BARS_BUTTON_LEFT_TEXT)
         self._has_labels = True
+        self._toggle_label_btn.configure(
+            image=self._img_hamburger, style=Styles.BARS_BUTTON_LEFT_TEXT
+        )
+        self._update_styles()
 
     def _hide_labels(self) -> None:
-        self._toggle_label_btn.configure(
-            # image=self._img_right_arrows, style=Styles.BARS_BUTTON_RIGHT_TEXT
-            image=self._img_right_arrows, style=Styles.BARS_BUTTON
-        )
-        # self._toggle_label_btn.configure(
-        #     image=self._img_hamburger, style=Styles.BARS_BUTTON
-        # )
-        self._play_btn.configure(text="", style=Styles.BARS_BUTTON)
-        self._stop_btn.configure(text="", style=Styles.BARS_BUTTON)
-        self._settings_btn.configure(text="", style=Styles.BARS_BUTTON)
         self._has_labels = False
+        self._toggle_label_btn.configure(
+            image=self._img_hamburger, style=Styles.BARS_BUTTON_LEFT_TEXT
+        )
+        self._update_styles()
+
+    def _update_styles(self) -> None:
+        buttons = [
+            (self._analyzer_btn, "Analyzer"),
+            (self._ui_examples_btn, "UI Examples"),
+            (self._play_btn, "Play"),
+            (self._settings_btn, "Settings"),
+        ]
+        for btn, label in buttons:
+            is_active = btn == self._active_button
+            text = _indent(label) if self._has_labels else ""
+            style = (
+                Styles.BARS_BUTTON_SELECTED_LEFT_TEXT if is_active else Styles.BARS_BUTTON_LEFT_TEXT
+            )
+            btn.configure(text=text, style=style)
 
     def _toggle_labels(self) -> None:
         if self._has_labels:
             self._hide_labels()
         else:
             self._show_labels()
+
+    def set_active_button(self, btn: tb.Button | None) -> None:
+        """Highlight the specified button and un-highlight all others."""
+        self._active_button = btn
+        self._update_styles()
+
+    def select_analyzer(self) -> None:
+        """Highlight the analyzer button."""
+        self.set_active_button(self._analyzer_btn)
+
+    def select_ui_examples(self) -> None:
+        """Highlight the UI examples button."""
+        self.set_active_button(self._ui_examples_btn)
+
+    def select_play(self) -> None:
+        """Highlight the play button."""
+        self.set_active_button(self._play_btn)
 
 
 # ---------------------------------------------------------------------------
@@ -384,6 +419,17 @@ class Application(tb.Window):
         app = Application()
         app.mainloop()
     """
+
+    menubar: MenuBar
+    toolbar: ToolBar
+    sidebar: SideBar
+    play_panel: PlayPanel
+    analyzer_frame: AnalyzerFrame
+    example_frame: ExampleFrame
+    play_frame: PlayFrame
+    main_content: AnalyzerFrame | ExampleFrame | PlayFrame
+    bars_fg_color: str
+    bars_bg_color: str
 
     def __init__(self) -> None:
         super().__init__(themename="darkly")
@@ -435,7 +481,19 @@ class Application(tb.Window):
         self.style.configure(Styles.MENUBAR_FRAME, background=dark)
         self.style.configure(Styles.BARS_FRAME, background=dark)
         self.style.configure(Styles.BARS_BUTTON, borderwidth=0, background=dark, foreground=fg)
+        self.style.configure(
+            Styles.BARS_BUTTON_SELECTED,
+            borderwidth=0,
+            background=colors.get("primary"),
+            foreground=fg,
+        )
         self.style.configure(Styles.BARS_BUTTON_LEFT_TEXT, anchor="w")
+        self.style.configure(
+            Styles.BARS_BUTTON_SELECTED_LEFT_TEXT,
+            anchor="w",
+            background=colors.get("primary"),
+            foreground=fg,
+        )
         self.style.configure(Styles.BARS_BUTTON_RIGHT_TEXT, anchor="e")
 
     # ------------------------------------------------------------------
@@ -463,18 +521,33 @@ class Application(tb.Window):
             content,
             fg_color=self.bars_fg_color,
             bg_color=self.bars_bg_color,
-            on_toggle_play=self.toggle_play_frame,
+            on_show_analyzer=self.show_analyzer_frame,
+            on_show_examples=self.show_example_frame,
+            on_show_play=self.show_play_frame,
             style=Styles.BARS_FRAME,
         )
         self.play_panel = play_frame.PlayPanel(content, style=Styles.BARS_FRAME)
-        self.main_content = analyzer_frame.AnalyzerFrame(content)
 
+        self.analyzer_frame = AnalyzerFrame(content)
+        self.example_frame = ExampleFrame(content, on_theme_change=self.apply_custom_styling)
+        self.play_frame = PlayFrame(content, on_theme_change=self.apply_custom_styling)
+
+        self.main_content = self.analyzer_frame
         self.menubar.main_content = self.main_content
+        self.sidebar.select_analyzer()
 
         self.sidebar.grid(row=0, column=0, sticky="ns", padx=0, pady=2)
+
+        self.analyzer_frame.grid(row=0, column=2, sticky="nsew")
+
+        self.example_frame.grid(row=0, column=2, sticky="nsew")
+        self.example_frame.grid_remove()
+
+        self.play_frame.grid(row=0, column=2, sticky="nsew")
+        self.play_frame.grid_remove()
+
         self.play_panel.grid(row=0, column=1, sticky="ns", padx=1, pady=2)
         self.play_panel.grid_remove()  # hidden by default
-        self.main_content.grid(row=0, column=2, sticky="nsew")
 
         self._is_play_frame_visible: bool = False
 
@@ -495,6 +568,46 @@ class Application(tb.Window):
         self.bind_all("<Control-S>", lambda _event: self.menubar._cmd_save())
         self.bind_all("<Control-o>", lambda _event: self.menubar._cmd_load())
         self.bind_all("<Control-O>", lambda _event: self.menubar._cmd_load())
+
+    # ------------------------------------------------------------------
+    # View switching
+    # ------------------------------------------------------------------
+
+    def show_example_frame(self) -> None:
+        """Switch the main content area to the ExampleFrame."""
+        self.sidebar.select_ui_examples()
+        self.analyzer_frame.grid_remove()
+        self.play_frame.grid_remove()
+        self.example_frame.grid()
+        self.play_panel.grid_remove()
+        self.main_content = self.example_frame  # type: ignore[assignment]
+        self.menubar.main_content = self.main_content
+
+    def show_analyzer_frame(self) -> None:
+        """Switch the main content area to the AnalyzerFrame."""
+        self.sidebar.select_analyzer()
+        self.analyzer_frame.grid()
+        self.example_frame.grid_remove()
+        self.play_frame.grid_remove()
+        self.play_panel.grid_remove()
+        self.main_content = self.analyzer_frame  # type: ignore[assignment]
+        self.menubar.main_content = self.main_content
+
+    def show_play_frame(self) -> None:
+        """Switch the main content area to the PlayFrame.
+
+        If already visible, toggle the play panel.
+        """
+        self.sidebar.select_play()
+        if self.main_content == self.play_frame:
+            self.play_frame.toggle_panel()
+        else:
+            self.analyzer_frame.grid_remove()
+            self.example_frame.grid_remove()
+            self.play_frame.grid()
+            self.play_panel.grid_remove()
+            self.main_content = self.play_frame  # type: ignore[assignment]
+            self.menubar.main_content = self.main_content
 
     # ------------------------------------------------------------------
     # Play-panel toggle

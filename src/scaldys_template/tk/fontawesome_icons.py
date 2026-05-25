@@ -29,13 +29,15 @@ class Icons(StrEnum):
     angles_right_solid = "angles-right-solid-full"
     arrow_left_solid = "arrow-left-solid-full"
     arrow_right_solid = "arrow-right-solid-full"
+    bars_solid_full = "bars-solid-full"
     chevron_left_solid = "chevron-left-solid-full"
     chevron_right_solid = "chevron-right-solid-full"
     circle_play_solid = "circle-play-solid-full"
     circle_stop_solid = "circle-stop-solid-full"
-    bars_solid_full = "bars-solid-full"
+    cubes_solid = "cubes-solid-full"
     gear_solid = "gear-solid-full"
     play_solid = "play-solid-full"
+    square_poll_solid = "square-poll-vertical-solid-full"
     stop_solid = "stop-solid-full"
 
 

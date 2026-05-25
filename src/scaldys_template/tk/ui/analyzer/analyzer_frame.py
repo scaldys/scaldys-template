@@ -233,3 +233,13 @@ class AnalyzerFrame(tb.Frame):
         self._params_frame.set_parameters(SignalParameters())
         self._table_frame.clear()
         self._plot_frame.clear()
+
+    def set_parameters(self, params: SignalParameters) -> None:
+        """Update the UI with new signal parameters.
+
+        Parameters
+        ----------
+        params : SignalParameters
+            The parameters to load into the UI.
+        """
+        self._params_frame.set_parameters(params)

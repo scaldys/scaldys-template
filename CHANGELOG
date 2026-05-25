@@ -23,13 +23,10 @@
     !
     !
     !
-    [ Unreleased ]
-    !
-    [0.1.0] - yyyy-mm-dd
 
 
-[0.10.0] - 2026-05-20
-====================
+[0.11.0] - 2026-05-20
+=====================
 
 **Added**
 
@@ -45,6 +42,8 @@
     gracefully handles Windows file-lock errors during log rollover, preventing
     crashes when a log file is held open by another process.
 
+  - GUI: unit tests for the ``Application`` state and ``SideBar`` navigation logic.
+
 **Changed**
 
   - Font Awesome icons replaced with updated "full" versions (v7.2.0).  Widget
@@ -52,9 +51,26 @@
 
   - ``scaldys-project`` dependency bumped to v0.13.0.
 
+  - SideBar: now expanded by default on startup.
+  - SideBar: implemented a selection highlighting mechanism for the active frame button using the theme's primary color.
+  - SideBar: selection state now automatically synchronizes with view switching in the main application.
+
+**Docs**
+
+  - User guide: updated Signal Analyzer layout overview to include the SideBar.
+  - Developer guide: updated Signal Analyzer design notes to document the new GUI testing strategy.
+
 **Fixed**
 
   - Pyright type-checking feedback resolved across several modules.
+
+
+[0.10.0] - 2026-05-20
+====================
+
+**Changed**
+
+  - Updated dependencies
 
 
 [0.9.0] - 2026-05-18

@@ -54,13 +54,21 @@ The GUI application
 Layout overview
 ---------------
 
-The window is divided into two columns:
+The window is structured with a navigation sidebar on the far left and the main
+content area occupying the rest of the space.
 
-* **Left column** — the parameter panel and action buttons.
-* **Right column** — the plot tabs (top) and the results table (bottom).
+* **Sidebar** — provides navigation between different application frames (Signal
+  Analyzer, UI Examples, Play).  It is expanded by default to show labels but can
+  be collapsed to icons-only using the hamburger button at the top.  The active
+  frame's button is highlighted with the theme's primary color.
+* **Main area** — shows the currently selected frame. For the Signal Analyzer,
+  this is further divided into:
+    * **Parameter panel** (left) — signal, noise, and FFT configuration.
+    * **Plot tabs** (top right) — Time Domain, Spectrum, and Phase plots.
+    * **Results table** (bottom right) — numerical data and metrics bar.
 
-A resizable splitter separates the plots from the table; drag it vertically to
-give more space to whichever panel you need.
+A resizable splitter separates the plots from the table in the main area; drag
+it vertically to give more space to whichever panel you need.
 
 
 Parameter panel
