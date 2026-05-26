@@ -528,7 +528,9 @@ class Application(tb.Window):
             on_show_navigation=self.show_navigation_frame,
             style=Styles.BARS_FRAME,
         )
-        self.navigation_panel = navigation_frame.NavigationPanel(content, style=Styles.BARS_FRAME)
+        self.navigation_panel = navigation_frame.NavigationPanel(
+            content, on_node_select=self._on_global_node_select, style=Styles.BARS_FRAME
+        )
 
         self.analyzer_frame = AnalyzerFrame(content)
         self.ui_examples_frame = UiExamplesFrame(content, on_theme_change=self.apply_custom_styling)
@@ -551,7 +553,7 @@ class Application(tb.Window):
         self.navigation_panel.grid(row=0, column=1, sticky="ns", padx=1, pady=2)
         self.navigation_panel.grid_remove()  # hidden by default
 
-        self._is_navigation_frame_visible: bool = False
+        self._is_navigation_panel_visible: bool = False
 
     # ------------------------------------------------------------------
     # Keyboard shortcuts
@@ -596,14 +598,9 @@ class Application(tb.Window):
         self.menubar.main_content = self.main_content
 
     def show_navigation_frame(self) -> None:
-        """Switch the main content area to the NavigationFrame.
-
-        If already visible, toggle the navigation panel.
-        """
+        """Switch the main content area to the NavigationFrame."""
         self.sidebar.select_navigation()
-        if self.main_content == self.navigation_frame:
-            self.navigation_frame.toggle_panel()
-        else:
+        if self.main_content != self.navigation_frame:
             self.analyzer_frame.grid_remove()
             self.ui_examples_frame.grid_remove()
             self.navigation_frame.grid()
@@ -617,11 +614,16 @@ class Application(tb.Window):
 
     def toggle_navigation_frame(self) -> None:
         """Show or hide the navigation panel beside the sidebar."""
-        if self._is_navigation_frame_visible:
+        if self._is_navigation_panel_visible:
             self.navigation_panel.grid_remove()
         else:
             self.navigation_panel.grid()
-        self._is_navigation_frame_visible = not self._is_navigation_frame_visible
+        self._is_navigation_panel_visible = not self._is_navigation_panel_visible
+
+    def _on_global_node_select(self, hierarchy: str) -> None:
+        """Handle node selection from the global navigation panel."""
+        if hasattr(self.main_content, "update_content"):
+            self.main_content.update_content(hierarchy)  # type: ignore[attr-defined]
 
 
 if __name__ == "__main__":
