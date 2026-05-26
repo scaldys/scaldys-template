@@ -55,7 +55,7 @@ The module layout mirrors this split:
             │   ├── results_table_frame.py   # Treeview + metrics bar + CSV export
             │   └── signal_parameters_frame.py  # parameter entry widgets
             ├── ui_examples_frame.py     # ttkbootstrap widget showcase
-            └── play_frame.py            # play/demo panel
+            └── navigation_frame.py      # navigation/demo panel
 
 .. contents:: On this page
    :local:

@@ -55,22 +55,22 @@ class TestApplicationState:
             "Analyzer button should be unselected"
         )
 
-        # 3. Switch to Play
-        app.show_play_frame()
-        assert app.sidebar._active_button == app.sidebar._play_btn, "Play should be selected"
-        assert app.sidebar._play_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT
+        # 3. Switch to Navigation
+        app.show_navigation_frame()
+        assert app.sidebar._active_button == app.sidebar._navigation_btn, "Navigation should be selected"
+        assert app.sidebar._navigation_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT
         assert app.sidebar._ui_examples_btn.cget("style") == Styles.BARS_BUTTON_LEFT_TEXT
 
         # 4. Toggle Labels (Hide)
         app.sidebar._toggle_labels()
         assert app.sidebar._has_labels is False
-        assert app.sidebar._play_btn.cget("text") == "", "Button text should be empty when hidden"
-        assert app.sidebar._play_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT, (
+        assert app.sidebar._navigation_btn.cget("text") == "", "Button text should be empty when hidden"
+        assert app.sidebar._navigation_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT, (
             "Style should be preserved when labels are hidden"
         )
 
         # 5. Toggle Labels (Show)
         app.sidebar._toggle_labels()
         assert app.sidebar._has_labels is True
-        assert "Play" in app.sidebar._play_btn.cget("text"), "Button text should be restored"
-        assert app.sidebar._play_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT
+        assert "Navigation" in app.sidebar._navigation_btn.cget("text"), "Button text should be restored"
+        assert app.sidebar._navigation_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT

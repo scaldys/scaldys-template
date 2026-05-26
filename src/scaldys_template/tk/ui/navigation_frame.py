@@ -1,6 +1,6 @@
-"""Side panel and main frame for the Play view.
+"""Side panel and main frame for the Navigation view.
 
-The Play view consists of a PlayPanel on the left and a main content area.
+The Navigation view consists of a NavigationPanel on the left and a main content area.
 """
 
 import tkinter as tk
@@ -13,11 +13,11 @@ import scaldys_template.tk.fontawesome_icons as faw
 from scaldys_template.tk.styles import Styles
 
 
-class PlayPanel(tb.Frame):
+class NavigationPanel(tb.Frame):
     """Collapsible side panel positioned between the sidebar and the main content.
 
-    Toggled via :py:meth:`~scaldys_template.tk.app.Application.toggle_play_frame`
-    or via the toggle control in :py:class:`PlayFrame`.
+    Toggled via :py:meth:`~scaldys_template.tk.app.Application.toggle_navigation_frame`
+    or via the toggle control in :py:class:`NavigationFrame`.
     """
 
     def __init__(self, master: tk.Misc, **kwargs: Any) -> None:
@@ -27,7 +27,7 @@ class PlayPanel(tb.Frame):
         self._initialize()
 
     def _initialize(self) -> None:
-        tb.Label(self, text="Play Panel", padding=(10, 5)).pack(side="top", fill="x")
+        tb.Label(self, text="Navigation Panel", padding=(10, 5)).pack(side="top", fill="x")
         tb.Separator(self, orient="horizontal").pack(fill="x", padx=5)
         # Replace this placeholder with your playback controls or tree widget.
         tb.Label(self, text="(placeholder)", foreground="gray", padding=(10, 5)).pack(
@@ -35,11 +35,11 @@ class PlayPanel(tb.Frame):
         )
 
 
-class PlayFrame(tb.Frame):
-    """Main Play view frame.
+class NavigationFrame(tb.Frame):
+    """Main Navigation view frame.
 
     Similar to AnalyzerFrame or UiExamplesFrame, it acts as a top-level content widget.
-    It contains a PlayPanel on the left and a central frame.
+    It contains a NavigationPanel on the left and a central frame.
     """
 
     def __init__(
@@ -71,8 +71,8 @@ class PlayFrame(tb.Frame):
         self.header = tb.Frame(self, padding=(10, 5))
         self.header.pack(side=TOP, fill=X)
 
-        tb.Label(self.header, text="Play View", font="-size 18 -weight bold").pack(side=LEFT)
-
+        tb.Label(self.header, text="Navigation View", font="-size 18 -weight bold").pack(side=LEFT)
+        
         self.toggle_btn = tb.Button(
             self.header,
             image=self._img_left,
@@ -85,20 +85,20 @@ class PlayFrame(tb.Frame):
         self.content_area = tb.Frame(self)
         self.content_area.pack(side=TOP, fill=BOTH, expand=YES)
 
-        # Left side: PlayPanel
-        self.panel = PlayPanel(self.content_area, style=Styles.BARS_FRAME)
+        # Left side: NavigationPanel
+        self.panel = NavigationPanel(self.content_area, style=Styles.BARS_FRAME)
         self.panel.pack(side=LEFT, fill="y")
 
         # Main central frame
         self.main_area = tb.Frame(self.content_area, padding=20)
         self.main_area.pack(side=LEFT, fill=BOTH, expand=YES)
 
-        tb.Label(self.main_area, text="Main Play Content (Empty)", foreground="gray").pack(
+        tb.Label(self.main_area, text="Main Navigation Content (Empty)", foreground="gray").pack(
             expand=YES
         )
 
     def toggle_panel(self) -> None:
-        """Toggle the visibility of the internal play panel."""
+        """Toggle the visibility of the internal navigation panel."""
         if self._is_panel_visible:
             self.panel.pack_forget()
             self.toggle_btn.configure(image=self._img_right)

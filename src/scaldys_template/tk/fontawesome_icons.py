@@ -35,6 +35,7 @@ class Icons(StrEnum):
     circle_play_solid = "circle-play-solid-full"
     circle_stop_solid = "circle-stop-solid-full"
     cubes_solid = "cubes-solid-full"
+    folder_tree_solid = "folder-tree-solid-full"
     gear_solid = "gear-solid-full"
     play_solid = "play-solid-full"
     square_poll_solid = "square-poll-vertical-solid-full"

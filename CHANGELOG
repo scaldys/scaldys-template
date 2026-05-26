@@ -46,6 +46,10 @@
 
 **Changed**
 
+  - Renamed "Play" view to "Navigation" throughout the application.
+
+  - Renamed "Example" view to "UI Examples" throughout the application.
+
   - Font Awesome icons replaced with updated "full" versions (v7.2.0).  Widget
     styles and button layouts adjusted for visual consistency.
 

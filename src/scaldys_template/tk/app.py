@@ -19,7 +19,7 @@ from platformdirs import user_data_dir
 from scaldys_template.__about__ import APP_NAME
 import scaldys_template.tk.fontawesome_icons as faw
 from scaldys_template.tk.styles import Styles
-from scaldys_template.tk.ui import play_frame, UiExamplesFrame, PlayFrame, PlayPanel
+from scaldys_template.tk.ui import navigation_frame, UiExamplesFrame, NavigationFrame, NavigationPanel
 from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.ui.about_dialog import AboutDialog
 from scaldys_template.tk.utils import set_dpi_awareness
@@ -189,7 +189,7 @@ class ToolBar(tb.Frame):
 
     def _load_icons(self) -> None:
         size = 24
-        self._img_play = faw.icon_to_image(
+        self._img_navigation = faw.icon_to_image(
             faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_stop = faw.icon_to_image(
@@ -203,15 +203,15 @@ class ToolBar(tb.Frame):
         buttonbar = tb.Frame(self)
         buttonbar.pack(fill="x", side="left")
 
-        self._play_btn = tb.Button(
+        self._navigation_btn = tb.Button(
             buttonbar,
-            text=_indent("Play"),
-            image=self._img_play,
+            text=_indent("Navigation"),
+            image=self._img_navigation,
             compound="left",
             style=Styles.BARS_BUTTON,
-            command=lambda: showinfo(message="Play — wire up your command here"),
+            command=lambda: showinfo(message="Navigation — wire up your command here"),
         )
-        self._play_btn.pack(side="left", ipadx=5, ipady=5)
+        self._navigation_btn.pack(side="left", ipadx=5, ipady=5)
 
         self._stop_btn = tb.Button(
             buttonbar,
@@ -251,9 +251,11 @@ class SideBar(tb.Frame):
     bg_color:
         Background colour derived from the active theme.
     on_show_analyzer:
-        Callback invoked when the play button is clicked (shows the analyzer frame).
+        Callback invoked when the analyzer button is clicked (shows the analyzer frame).
     on_show_ui_examples:
         Callback invoked when the example button is clicked (shows the UI examples frame).
+    on_show_navigation:
+        Callback invoked when the navigation button is clicked (shows the navigation frame).
     """
 
     def __init__(
@@ -263,7 +265,7 @@ class SideBar(tb.Frame):
         bg_color: str,
         on_show_analyzer: Callable[[], None],
         on_show_ui_examples: Callable[[], None],
-        on_show_play: Callable[[], None],
+        on_show_navigation: Callable[[], None],
         **kwargs: Any,
     ) -> None:
         super().__init__(master, **kwargs)
@@ -271,7 +273,7 @@ class SideBar(tb.Frame):
         self._bg_color = bg_color
         self._on_show_analyzer = on_show_analyzer
         self._on_show_ui_examples = on_show_ui_examples
-        self._on_show_play = on_show_play
+        self._on_show_navigation = on_show_navigation
         self._has_labels = True
         self._active_button: tb.Button | None = None
 
@@ -293,8 +295,8 @@ class SideBar(tb.Frame):
         self._img_hamburger = faw.icon_to_image(
             faw.Icons.bars_solid_full, fill=self._fg_color, scale_to_width=size
         )
-        self._img_play = faw.icon_to_image(
-            faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
+        self._img_navigation = faw.icon_to_image(
+            faw.Icons.folder_tree_solid, fill=self._fg_color, scale_to_width=size
         )
         self._img_ui_examples = faw.icon_to_image(
             faw.Icons.cubes_solid, fill=self._fg_color, scale_to_width=size
@@ -335,14 +337,14 @@ class SideBar(tb.Frame):
         )
         self._ui_examples_btn.pack(side="top", **pad)
 
-        self._play_btn = tb.Button(
+        self._navigation_btn = tb.Button(
             top,
-            image=self._img_play,
+            image=self._img_navigation,
             compound="left",
             takefocus=0,
-            command=self._on_show_play,
+            command=self._on_show_navigation,
         )
-        self._play_btn.pack(side="top", **pad)
+        self._navigation_btn.pack(side="top", **pad)
 
         self._settings_btn = tb.Button(
             bottom,
@@ -371,7 +373,7 @@ class SideBar(tb.Frame):
         buttons = [
             (self._analyzer_btn, "Analyzer"),
             (self._ui_examples_btn, "UI Examples"),
-            (self._play_btn, "Play"),
+            (self._navigation_btn, "Navigation"),
             (self._settings_btn, "Settings"),
         ]
         for btn, label in buttons:
@@ -401,9 +403,9 @@ class SideBar(tb.Frame):
         """Highlight the UI examples button."""
         self.set_active_button(self._ui_examples_btn)
 
-    def select_play(self) -> None:
-        """Highlight the play button."""
-        self.set_active_button(self._play_btn)
+    def select_navigation(self) -> None:
+        """Highlight the navigation button."""
+        self.set_active_button(self._navigation_btn)
 
 
 # ---------------------------------------------------------------------------
@@ -423,11 +425,11 @@ class Application(tb.Window):
     menubar: MenuBar
     toolbar: ToolBar
     sidebar: SideBar
-    play_panel: PlayPanel
+    navigation_panel: NavigationPanel
     analyzer_frame: AnalyzerFrame
     ui_examples_frame: UiExamplesFrame
-    play_frame: PlayFrame
-    main_content: AnalyzerFrame | UiExamplesFrame | PlayFrame
+    navigation_frame: NavigationFrame
+    main_content: AnalyzerFrame | UiExamplesFrame | NavigationFrame
     bars_fg_color: str
     bars_bg_color: str
 
@@ -510,7 +512,7 @@ class Application(tb.Window):
         self.menubar.pack(side="top", fill="x")
         self.toolbar.pack(side="top", fill="x")
 
-        # Content area: grid allows reliable show/hide of the play panel
+        # Content area: grid allows reliable show/hide of the navigation panel
         # without the order-sensitive pack_forget() / pack() dance.
         content = tb.Frame(self)
         content.pack(fill="both", expand=True)
@@ -523,14 +525,14 @@ class Application(tb.Window):
             bg_color=self.bars_bg_color,
             on_show_analyzer=self.show_analyzer_frame,
             on_show_ui_examples=self.show_ui_examples_frame,
-            on_show_play=self.show_play_frame,
+            on_show_navigation=self.show_navigation_frame,
             style=Styles.BARS_FRAME,
         )
-        self.play_panel = play_frame.PlayPanel(content, style=Styles.BARS_FRAME)
+        self.navigation_panel = navigation_frame.NavigationPanel(content, style=Styles.BARS_FRAME)
 
         self.analyzer_frame = AnalyzerFrame(content)
         self.ui_examples_frame = UiExamplesFrame(content, on_theme_change=self.apply_custom_styling)
-        self.play_frame = PlayFrame(content, on_theme_change=self.apply_custom_styling)
+        self.navigation_frame = NavigationFrame(content, on_theme_change=self.apply_custom_styling)
 
         self.main_content = self.analyzer_frame
         self.menubar.main_content = self.main_content
@@ -543,13 +545,13 @@ class Application(tb.Window):
         self.ui_examples_frame.grid(row=0, column=2, sticky="nsew")
         self.ui_examples_frame.grid_remove()
 
-        self.play_frame.grid(row=0, column=2, sticky="nsew")
-        self.play_frame.grid_remove()
+        self.navigation_frame.grid(row=0, column=2, sticky="nsew")
+        self.navigation_frame.grid_remove()
 
-        self.play_panel.grid(row=0, column=1, sticky="ns", padx=1, pady=2)
-        self.play_panel.grid_remove()  # hidden by default
+        self.navigation_panel.grid(row=0, column=1, sticky="ns", padx=1, pady=2)
+        self.navigation_panel.grid_remove()  # hidden by default
 
-        self._is_play_frame_visible: bool = False
+        self._is_navigation_frame_visible: bool = False
 
     # ------------------------------------------------------------------
     # Keyboard shortcuts
@@ -577,9 +579,9 @@ class Application(tb.Window):
         """Switch the main content area to the UiExamplesFrame."""
         self.sidebar.select_ui_examples()
         self.analyzer_frame.grid_remove()
-        self.play_frame.grid_remove()
+        self.navigation_frame.grid_remove()
         self.ui_examples_frame.grid()
-        self.play_panel.grid_remove()
+        self.navigation_panel.grid_remove()
         self.main_content = self.ui_examples_frame  # type: ignore[assignment]
         self.menubar.main_content = self.main_content
 
@@ -588,38 +590,38 @@ class Application(tb.Window):
         self.sidebar.select_analyzer()
         self.analyzer_frame.grid()
         self.ui_examples_frame.grid_remove()
-        self.play_frame.grid_remove()
-        self.play_panel.grid_remove()
+        self.navigation_frame.grid_remove()
+        self.navigation_panel.grid_remove()
         self.main_content = self.analyzer_frame  # type: ignore[assignment]
         self.menubar.main_content = self.main_content
 
-    def show_play_frame(self) -> None:
-        """Switch the main content area to the PlayFrame.
+    def show_navigation_frame(self) -> None:
+        """Switch the main content area to the NavigationFrame.
 
-        If already visible, toggle the play panel.
+        If already visible, toggle the navigation panel.
         """
-        self.sidebar.select_play()
-        if self.main_content == self.play_frame:
-            self.play_frame.toggle_panel()
+        self.sidebar.select_navigation()
+        if self.main_content == self.navigation_frame:
+            self.navigation_frame.toggle_panel()
         else:
             self.analyzer_frame.grid_remove()
             self.ui_examples_frame.grid_remove()
-            self.play_frame.grid()
-            self.play_panel.grid_remove()
-            self.main_content = self.play_frame  # type: ignore[assignment]
+            self.navigation_frame.grid()
+            self.navigation_panel.grid_remove()
+            self.main_content = self.navigation_frame  # type: ignore[assignment]
             self.menubar.main_content = self.main_content
 
     # ------------------------------------------------------------------
-    # Play-panel toggle
+    # Navigation-panel toggle
     # ------------------------------------------------------------------
 
-    def toggle_play_frame(self) -> None:
-        """Show or hide the play panel beside the sidebar."""
-        if self._is_play_frame_visible:
-            self.play_panel.grid_remove()
+    def toggle_navigation_frame(self) -> None:
+        """Show or hide the navigation panel beside the sidebar."""
+        if self._is_navigation_frame_visible:
+            self.navigation_panel.grid_remove()
         else:
-            self.play_panel.grid()
-        self._is_play_frame_visible = not self._is_play_frame_visible
+            self.navigation_panel.grid()
+        self._is_navigation_frame_visible = not self._is_navigation_frame_visible
 
 
 if __name__ == "__main__":

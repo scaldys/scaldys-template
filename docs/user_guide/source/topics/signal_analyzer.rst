@@ -58,7 +58,7 @@ The window is structured with a navigation sidebar on the far left and the main
 content area occupying the rest of the space.
 
 * **Sidebar** — provides navigation between different application frames (Signal
-  Analyzer, UI Examples, Play).  It is expanded by default to show labels but can
+  Analyzer, UI Examples, Navigation).  It is expanded by default to show labels but can
   be collapsed to icons-only using the hamburger button at the top.  The active
   frame's button is highlighted with the theme's primary color.
 * **Main area** — shows the currently selected frame. For the Signal Analyzer,
