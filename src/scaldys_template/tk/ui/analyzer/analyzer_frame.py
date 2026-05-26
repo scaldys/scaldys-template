@@ -104,7 +104,21 @@ class AnalyzerFrame(tb.Frame):
         paned.add(self._table_frame, stretch="always")
 
         # Give ~60 % of vertical space to plots on first render
-        self.after(100, lambda: paned.sash_place(0, 0, int(paned.winfo_height() * 0.6) or 360))
+        self._init_paned_sash(paned)
+
+    def _init_paned_sash(self, paned: tk.PanedWindow) -> None:
+        """Wait for the paned window to be mapped and sized before placing the sash.
+
+        This prevents the sash from being stuck at (0, 0) if called before the
+        window manager has finished the initial layout.
+        """
+        height = paned.winfo_height()
+        if height <= 1:
+            # Not yet mapped or sized, try again shortly.
+            self.after(50, lambda: self._init_paned_sash(paned))
+        else:
+            # Set sash to 60% of height.
+            paned.sash_place(0, 0, int(height * 0.6) or 360)
 
     def _build_action_buttons(self, parent: tb.Frame) -> None:
         btn_frame = tb.Frame(parent, padding=(0, 8, 0, 0))
