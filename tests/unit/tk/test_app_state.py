@@ -45,8 +45,8 @@ class TestApplicationState:
             "Analyzer button should have text"
         )
 
-        # 2. Switch to Examples
-        app.show_example_frame()
+        # 2. Switch to UI Examples
+        app.show_ui_examples_frame()
         assert app.sidebar._active_button == app.sidebar._ui_examples_btn, (
             "UI Examples should be selected"
         )

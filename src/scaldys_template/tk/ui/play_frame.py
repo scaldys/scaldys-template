@@ -38,7 +38,7 @@ class PlayPanel(tb.Frame):
 class PlayFrame(tb.Frame):
     """Main Play view frame.
 
-    Similar to AnalyzerFrame or ExampleFrame, it acts as a top-level content widget.
+    Similar to AnalyzerFrame or UiExamplesFrame, it acts as a top-level content widget.
     It contains a PlayPanel on the left and a central frame.
     """
 

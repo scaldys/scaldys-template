@@ -54,7 +54,7 @@ The module layout mirrors this split:
             │   ├── plot_frame.py            # embedded matplotlib figures
             │   ├── results_table_frame.py   # Treeview + metrics bar + CSV export
             │   └── signal_parameters_frame.py  # parameter entry widgets
-            ├── example_frame.py         # ttkbootstrap widget showcase
+            ├── ui_examples_frame.py     # ttkbootstrap widget showcase
             └── play_frame.py            # play/demo panel
 
 .. contents:: On this page

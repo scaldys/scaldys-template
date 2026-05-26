@@ -19,7 +19,7 @@ from platformdirs import user_data_dir
 from scaldys_template.__about__ import APP_NAME
 import scaldys_template.tk.fontawesome_icons as faw
 from scaldys_template.tk.styles import Styles
-from scaldys_template.tk.ui import play_frame, ExampleFrame, PlayFrame, PlayPanel
+from scaldys_template.tk.ui import play_frame, UiExamplesFrame, PlayFrame, PlayPanel
 from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.ui.about_dialog import AboutDialog
 from scaldys_template.tk.utils import set_dpi_awareness
@@ -252,8 +252,8 @@ class SideBar(tb.Frame):
         Background colour derived from the active theme.
     on_show_analyzer:
         Callback invoked when the play button is clicked (shows the analyzer frame).
-    on_show_examples:
-        Callback invoked when the example button is clicked (shows the example frame).
+    on_show_ui_examples:
+        Callback invoked when the example button is clicked (shows the UI examples frame).
     """
 
     def __init__(
@@ -262,7 +262,7 @@ class SideBar(tb.Frame):
         fg_color: str,
         bg_color: str,
         on_show_analyzer: Callable[[], None],
-        on_show_examples: Callable[[], None],
+        on_show_ui_examples: Callable[[], None],
         on_show_play: Callable[[], None],
         **kwargs: Any,
     ) -> None:
@@ -270,7 +270,7 @@ class SideBar(tb.Frame):
         self._fg_color = fg_color
         self._bg_color = bg_color
         self._on_show_analyzer = on_show_analyzer
-        self._on_show_examples = on_show_examples
+        self._on_show_ui_examples = on_show_ui_examples
         self._on_show_play = on_show_play
         self._has_labels = True
         self._active_button: tb.Button | None = None
@@ -331,7 +331,7 @@ class SideBar(tb.Frame):
             image=self._img_ui_examples,
             compound="left",
             takefocus=0,
-            command=self._on_show_examples,
+            command=self._on_show_ui_examples,
         )
         self._ui_examples_btn.pack(side="top", **pad)
 
@@ -425,9 +425,9 @@ class Application(tb.Window):
     sidebar: SideBar
     play_panel: PlayPanel
     analyzer_frame: AnalyzerFrame
-    example_frame: ExampleFrame
+    ui_examples_frame: UiExamplesFrame
     play_frame: PlayFrame
-    main_content: AnalyzerFrame | ExampleFrame | PlayFrame
+    main_content: AnalyzerFrame | UiExamplesFrame | PlayFrame
     bars_fg_color: str
     bars_bg_color: str
 
@@ -455,7 +455,7 @@ class Application(tb.Window):
         """Configure ttkbootstrap styles to match the current theme.
 
         Called once on startup and again when the user switches themes via the
-        example frame.
+        UI examples frame.
 
         .. note::
             Icon colours in ``ToolBar`` and ``SideBar`` are baked into the
@@ -522,14 +522,14 @@ class Application(tb.Window):
             fg_color=self.bars_fg_color,
             bg_color=self.bars_bg_color,
             on_show_analyzer=self.show_analyzer_frame,
-            on_show_examples=self.show_example_frame,
+            on_show_ui_examples=self.show_ui_examples_frame,
             on_show_play=self.show_play_frame,
             style=Styles.BARS_FRAME,
         )
         self.play_panel = play_frame.PlayPanel(content, style=Styles.BARS_FRAME)
 
         self.analyzer_frame = AnalyzerFrame(content)
-        self.example_frame = ExampleFrame(content, on_theme_change=self.apply_custom_styling)
+        self.ui_examples_frame = UiExamplesFrame(content, on_theme_change=self.apply_custom_styling)
         self.play_frame = PlayFrame(content, on_theme_change=self.apply_custom_styling)
 
         self.main_content = self.analyzer_frame
@@ -540,8 +540,8 @@ class Application(tb.Window):
 
         self.analyzer_frame.grid(row=0, column=2, sticky="nsew")
 
-        self.example_frame.grid(row=0, column=2, sticky="nsew")
-        self.example_frame.grid_remove()
+        self.ui_examples_frame.grid(row=0, column=2, sticky="nsew")
+        self.ui_examples_frame.grid_remove()
 
         self.play_frame.grid(row=0, column=2, sticky="nsew")
         self.play_frame.grid_remove()
@@ -573,21 +573,21 @@ class Application(tb.Window):
     # View switching
     # ------------------------------------------------------------------
 
-    def show_example_frame(self) -> None:
-        """Switch the main content area to the ExampleFrame."""
+    def show_ui_examples_frame(self) -> None:
+        """Switch the main content area to the UiExamplesFrame."""
         self.sidebar.select_ui_examples()
         self.analyzer_frame.grid_remove()
         self.play_frame.grid_remove()
-        self.example_frame.grid()
+        self.ui_examples_frame.grid()
         self.play_panel.grid_remove()
-        self.main_content = self.example_frame  # type: ignore[assignment]
+        self.main_content = self.ui_examples_frame  # type: ignore[assignment]
         self.menubar.main_content = self.main_content
 
     def show_analyzer_frame(self) -> None:
         """Switch the main content area to the AnalyzerFrame."""
         self.sidebar.select_analyzer()
         self.analyzer_frame.grid()
-        self.example_frame.grid_remove()
+        self.ui_examples_frame.grid_remove()
         self.play_frame.grid_remove()
         self.play_panel.grid_remove()
         self.main_content = self.analyzer_frame  # type: ignore[assignment]
@@ -603,7 +603,7 @@ class Application(tb.Window):
             self.play_frame.toggle_panel()
         else:
             self.analyzer_frame.grid_remove()
-            self.example_frame.grid_remove()
+            self.ui_examples_frame.grid_remove()
             self.play_frame.grid()
             self.play_panel.grid_remove()
             self.main_content = self.play_frame  # type: ignore[assignment]

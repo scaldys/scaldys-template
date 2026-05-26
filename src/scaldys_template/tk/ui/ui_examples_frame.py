@@ -1,6 +1,6 @@
 """Comprehensive ttkbootstrap widget showcase.
 
-``ExampleFrame`` demonstrates every major widget category available in
+``UiExamplesFrame`` demonstrates every major widget category available in
 ttkbootstrap.  It is intended as a living reference: delete sections that are
 not relevant to your project and replace them with your own content.
 """
@@ -64,7 +64,7 @@ Namespaces are one honking great idea -- let's do more of those!\
 """
 
 
-class ExampleFrame(tb.Frame):
+class UiExamplesFrame(tb.Frame):
     """Widget showcase frame.
 
     Parameters
