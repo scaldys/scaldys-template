@@ -51,8 +51,7 @@ class MenuBar(tb.Frame):
 
     def _initialize(self) -> None:
         if os.name == "nt":
-            # self._build_windows_menubar()
-            self._build_standard_menubar()
+            self._build_windows_menubar()
         else:
             self._build_standard_menubar()
 
@@ -434,8 +433,8 @@ class Application(tb.Window):
     bars_bg_color: str
 
     def __init__(self) -> None:
-        super().__init__(themename="darkly")
         set_dpi_awareness()
+        super().__init__(themename="darkly")
 
         self.title(APP_NAME)
         self.minsize(1100, 650)

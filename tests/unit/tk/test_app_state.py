@@ -1,4 +1,6 @@
 import pytest
+from typing import Generator
+from pathlib import Path
 from unittest.mock import patch
 
 # Skip these tests if ttkbootstrap or tkinter is not available (e.g. headless CI without Xvfb)
@@ -13,7 +15,7 @@ from scaldys_template.common.app_location import AppLocation
 @pytest.mark.unit
 class TestApplicationState:
     @pytest.fixture
-    def app(self, isolated_app_location, monkeypatch):
+    def app(self, isolated_app_location: dict[int, Path], monkeypatch: pytest.MonkeyPatch) -> Generator[Application, None, None]:
         # Application calls user_data_dir(APP_NAME)
         # We want to ensure it uses a temporary directory.
         monkeypatch.setattr(
@@ -27,7 +29,7 @@ class TestApplicationState:
             yield app
             app.destroy()
 
-    def test_sidebar_and_view_switching(self, app):
+    def test_sidebar_and_view_switching(self, app: Application) -> None:
         """
         Verify the sidebar state, button selection logic, and view switching.
         Consolidated into a single test to avoid global state issues with multiple

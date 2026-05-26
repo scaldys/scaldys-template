@@ -1,5 +1,7 @@
 import pytest
 import tkinter as tk
+from typing import Generator
+from pathlib import Path
 import ttkbootstrap as tb
 from unittest.mock import MagicMock, patch
 
@@ -14,7 +16,7 @@ from scaldys_template.common.app_location import AppLocation
 @pytest.mark.unit
 class TestNavigationView:
     @pytest.fixture
-    def app(self, isolated_app_location, monkeypatch):
+    def app(self, isolated_app_location: dict[int, Path], monkeypatch: pytest.MonkeyPatch) -> Generator[Application, None, None]:
         # Application calls user_data_dir(APP_NAME)
         monkeypatch.setattr(
             "scaldys_template.tk.app.user_data_dir",
@@ -26,7 +28,7 @@ class TestNavigationView:
             yield app
             app.destroy()
 
-    def test_navigation_logic(self, app):
+    def test_navigation_logic(self, app: Application) -> None:
         """
         Consolidated test for NavigationFrame and NavigationPanel to avoid Tcl issues.
         """
