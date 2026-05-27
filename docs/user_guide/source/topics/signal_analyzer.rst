@@ -57,15 +57,22 @@ Layout overview
 The window is structured with a navigation sidebar on the far left and the main
 content area occupying the rest of the space.
 
-* **Sidebar** — provides navigation between different application frames (Signal
-  Analyzer, UI Examples, Navigation).  It is expanded by default to show labels but can
-  be collapsed to icons-only using the hamburger button at the top.  The active
-  frame's button is highlighted with the theme's primary color.
-* **Main area** — shows the currently selected frame. For the Signal Analyzer,
+* **Sidebar** — provides navigation between application frames.  It is expanded
+  by default to show labels but can be collapsed to icons-only using the
+  hamburger button at the top.  The active frame's button is highlighted with
+  the theme's primary color.  Available frames:
+
+  * **Signal Analyzer** — graphical parameter entry and results view.
+  * **JSON Editor** — text-based JSON view of the same parameters (see below).
+  * **UI Examples** — widget showcase.
+  * **Navigation** — tree navigator example.
+
+* **Main area** — shows the currently selected frame.  For the Signal Analyzer,
   this is further divided into:
-    * **Parameter panel** (left) — signal, noise, and FFT configuration.
-    * **Plot tabs** (top right) — Time Domain, Spectrum, and Phase plots.
-    * **Results table** (bottom right) — numerical data and metrics bar.
+
+  * **Parameter panel** (left) — signal, noise, and FFT configuration.
+  * **Plot tabs** (top right) — Time Domain, Spectrum, and Phase plots.
+  * **Results table** (bottom right) — numerical data and metrics bar.
 
 A resizable splitter separates the plots from the table in the main area; drag
 it vertically to give more space to whichever panel you need.
@@ -255,17 +262,28 @@ Each row is one FFT bin:
 * *Phase (°)* — spectral phase.
 
 
-Saving and loading parameters
-==============================
+File management
+===============
 
-Save parameters
+The **File** menu (menu bar at the top) provides all parameter file operations.
+
+Open…
+-----
+
+*File → Open…* (or **Ctrl+O**) opens a file-picker dialog.  Select any
+previously saved ``.json`` parameter file.  Both the Analyzer widgets and the
+JSON Editor update immediately.  The analysis does not run automatically —
+press **▶ Run** when ready.
+
+Save / Save As…
 ---------------
 
-Click **Save parameters…** (or press **Ctrl+S**) to save the current parameter
-values to a JSON file.  The file can be opened in any text editor, shared with
-colleagues, or loaded back later.
+*File → Save* (or **Ctrl+S**) writes the current parameters to the last-opened
+file.  If no file has been opened yet, it behaves like *Save As…*.
 
-Example saved file (excerpt):
+*File → Save As…* opens a save dialog and writes a new ``.json`` file.
+
+Example saved file:
 
 .. code-block:: json
 
@@ -275,21 +293,50 @@ Example saved file (excerpt):
       "amplitude": 1.0,
       "duration": 0.1,
       "sampling_rate": 44100.0,
+      "fft_window": "hanning",
       "fft_size": 1024
     }
 
-Load parameters
----------------
+Recent Files
+------------
 
-Click **Load parameters…** (or press **Ctrl+O**) to open a previously saved
-JSON file.  All parameter widgets update immediately.  The analysis does not
-run automatically after loading — press **▶ Run** when ready.
+*File → Recent Files* shows the last 10 opened or saved files.  Click any
+entry to reload it immediately.  The list persists across application restarts.
 
 Reset to defaults
 -----------------
 
-Click **Reset to defaults** to restore the factory default parameter values
-(440 Hz sine, 44 100 Hz, 0.1 s, Hanning window, 1024-point FFT).
+Click **Reset to defaults** (in the Analyzer's left panel) to restore the
+factory default parameter values (440 Hz sine, 44 100 Hz, 0.1 s, Hanning
+window, 1 024-point FFT).  Both the Analyzer widgets and the JSON Editor reset.
+
+
+JSON Editor
+===========
+
+The **JSON Editor** view (sidebar → file-lines icon) shows the current
+``SignalParameters`` as formatted JSON text in an editable text area.
+
+Bidirectional sync
+------------------
+
+* **Analyzer → Editor**: whenever you finish editing a widget in the Analyzer
+  (on focus-out for numeric fields, or on selection for dropdowns) the JSON
+  Editor updates automatically.
+* **Editor → Analyzer**: edit the JSON text directly, then click **Apply**.
+  The text is parsed and validated; if successful, the Analyzer widgets update.
+  If the JSON is invalid or a value fails validation, an error message is shown
+  below the text area and no state is changed.
+
+Typical use cases
+-----------------
+
+* **Copy/paste a configuration** — paste a JSON snippet from a colleague or a
+  script directly into the editor and click Apply.
+* **Bulk edit** — change multiple fields at once in the text rather than
+  clicking through each widget.
+* **Inspect the serialised form** — see exactly what will be written to disk
+  before saving.
 
 
 Exporting results
@@ -403,9 +450,9 @@ Keyboard shortcuts
    * - **F5**
      - Run analysis
    * - **Ctrl+S**
-     - Save parameters to file
+     - Save parameters (Save As… if no current file)
    * - **Ctrl+O**
-     - Load parameters from file
+     - Open parameters file
    * - **Ctrl+Q**
      - Close the application
 

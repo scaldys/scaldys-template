@@ -25,7 +25,7 @@
     !
 
 
-[0.11.0] - 2026-05-20
+[0.11.0] - 2026-05-27
 =====================
 
 **Added**
@@ -44,6 +44,23 @@
 
   - GUI: unit tests for the ``Application`` state and ``SideBar`` navigation logic.
 
+  - **JSON Editor view** (``tk/ui/editor_frame.py``): a new sidebar frame that
+    displays the current ``SignalParameters`` as formatted JSON in an editable
+    text widget.  An "Apply" button parses and validates the JSON and pushes the
+    result back to the Analyzer.  Bidirectional sync keeps both views consistent:
+    widget edits in the Analyzer update the editor in real time (on ``FocusOut``
+    / ``<<ComboboxSelected>>``), and "Apply" updates the Analyzer widgets.
+
+  - **Enhanced File menu**: the File menu now contains *Open…*, *Save*,
+    *Save As…*, and a *Recent Files* cascade (up to 10 entries, persisted to
+    ``recent_files.json`` in the application data directory).  All file
+    operations are centralised in ``Application``; the ``MenuBar`` delegates to
+    it via an injected reference.
+
+  - ``Application.update_parameters(params, source)``: central synchronisation
+    method that broadcasts a ``SignalParameters`` change to both the Analyzer
+    and the Editor, skipping the originating view to avoid feedback loops.
+
 **Changed**
 
   - Renamed "Play" view to "Navigation" throughout the application.
@@ -58,11 +75,33 @@
   - SideBar: now expanded by default on startup.
   - SideBar: implemented a selection highlighting mechanism for the active frame button using the theme's primary color.
   - SideBar: selection state now automatically synchronizes with view switching in the main application.
+  - SideBar: added "Editor" button (``file-lines-regular`` icon) for the new JSON
+    Editor view.  Also fixed a pre-existing bug where the icon enum referenced a
+    non-existent ``file-lines-solid-full.svg`` asset.
+
+  - ``AnalyzerFrame``: the dedicated *Save parameters…* and *Load parameters…*
+    buttons have been removed from the left panel.  File operations are now
+    handled exclusively through the File menu.  The *Reset to defaults* button
+    is retained.  An ``on_params_changed`` callback parameter has been added so
+    the frame can notify ``Application`` of parameter changes without importing
+    it directly.
+
+  - ``SignalParametersFrame``: added an ``on_change`` callback parameter.  The
+    callback fires on ``FocusOut`` (numeric widgets) and ``<<ComboboxSelected>>``
+    (dropdowns) using a silent ``_parse_parameters()`` helper that does not
+    modify the UI validation state.
+
+  - ``MenuBar``: now accepts an ``Application`` reference; all file-related
+    commands route through ``Application`` instead of ``AnalyzerFrame``.
 
 **Docs**
 
   - User guide: updated Signal Analyzer layout overview to include the SideBar.
   - Developer guide: updated Signal Analyzer design notes to document the new GUI testing strategy.
+  - User guide: updated *Saving and loading parameters* section to document the
+    new File menu, Recent Files, and JSON Editor.
+  - Developer guide: updated Signal Analyzer design notes with ``EditorFrame``
+    architecture, bidirectional sync pattern, and the ``Application`` file-management API.
 
 **Fixed**
 

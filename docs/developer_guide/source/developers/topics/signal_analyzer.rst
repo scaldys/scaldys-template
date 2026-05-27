@@ -28,7 +28,9 @@ The signal analyzer spans three existing packages:
     │   ├── signal_engine.py      # generate_signal / compute_fft / compute_metrics
     │   └── parameter_store.py    # JSON save / load via AppLocation
     ├── tk/
+    │   ├── app.py                # Application, MenuBar, SideBar, ToolBar
     │   └── ui/
+    │       ├── editor_frame.py          # JSON Editor view
     │       └── analyzer/
     │           ├── analyzer_frame.py        # top-level GUI layout + async run wiring
     │           ├── signal_parameters_frame.py  # parameter entry widgets
@@ -254,11 +256,115 @@ demonstrates.  Its three design goals are:
    at render time so they match the application's dark/light colour scheme.
 
 
+``Application`` — state and file management
+--------------------------------------------
+
+``Application`` is the root ``tb.Window`` subclass that owns all shared state
+and orchestrates the interaction between views.
+
+Key attributes
+^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    current_file: Path | None   # last opened/saved file (None until first save/open)
+    _recent_files: list[Path]   # up to 10 most-recently used paths
+
+Recent Files persistence
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+``_load_recent_files()`` and ``_save_recent_files()`` use a plain JSON list
+stored at ``AppLocation.AppDataDir / "recent_files.json"`` — the same directory
+used by ``parameter_store.default_parameters_path()``, keeping all application
+data co-located.  ``add_recent_file(path)`` prepends the new path, removes any
+duplicate, and trims to 10 entries, then calls
+``menubar.rebuild_recent_files_menu()`` to refresh the cascade.
+
+File operations
+^^^^^^^^^^^^^^^
+
+All file I/O is handled by three ``Application`` methods:
+
+* ``app_open_file()`` / ``app_open_recent_file(path)`` — load a JSON file,
+  update ``current_file``, add to recent list, call ``update_parameters``.
+* ``app_save_file()`` — save to ``current_file`` (falls back to Save As… if
+  none is set).
+* ``app_save_file_as()`` — show a save dialog, then call ``_do_save(path)``.
+
+``_do_save(path)`` calls ``analyzer_frame.get_parameters()`` to obtain the
+current validated model, then delegates to ``core.parameter_store.save_parameters``.
+
+Parameter synchronisation
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``update_parameters(params, source)`` broadcasts a ``SignalParameters`` change
+to all views while suppressing the originating view to avoid feedback loops:
+
+.. code-block:: python
+
+    def update_parameters(self, params: SignalParameters, source: str) -> None:
+        if source != "analyzer":
+            self.analyzer_frame.set_parameters(params)
+        if source != "editor":
+            self.editor_frame.set_json(params.model_dump_json(indent=2))
+
+The ``source`` values used are ``"analyzer"`` (widget edit / reset),
+``"editor"`` (Apply button result), and ``"file"`` (Open / Recent — updates
+both views).  The :ref:`sync flow <sync_flow>` diagram below summarises the
+data-flow for each trigger.
+
+.. _sync_flow:
+
+.. code-block:: text
+
+    ┌───────────────────────────────────────────────────────────────┐
+    │  Widget edit (FocusOut / ComboboxSelected)                     │
+    │    SignalParametersFrame._notify_change()                      │
+    │      → AnalyzerFrame._handle_params_changed(params)            │
+    │          → Application.update_parameters(params, "analyzer")   │
+    │              → editor_frame.set_json(...)          [editor only]│
+    └───────────────────────────────────────────────────────────────┘
+    ┌───────────────────────────────────────────────────────────────┐
+    │  Apply button (EditorFrame)                                    │
+    │    Application._apply_editor_json(json_text)                  │
+    │      → analyzer_frame.set_parameters(params)  [analyzer only] │
+    │      → editor_frame.set_json(canonical JSON)  [editor — norm] │
+    └───────────────────────────────────────────────────────────────┘
+    ┌───────────────────────────────────────────────────────────────┐
+    │  File Open / Recent / Reset                                    │
+    │    Application.update_parameters(params, "file")              │
+    │      → analyzer_frame.set_parameters(params)  [both views]    │
+    │      → editor_frame.set_json(...)                             │
+    └───────────────────────────────────────────────────────────────┘
+
+``_apply_editor_json`` re-populates the editor with the *canonical* (normalised)
+JSON after a successful Apply — this confirms acceptance to the user and
+standardises the format.
+
+
 ``SideBar`` and Navigation
 --------------------------
 
 The ``SideBar`` on the left edge of the window manages top-level navigation. It
 is expanded by default to show labels but can be collapsed to icons-only.
+
+Registered buttons
+^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Button
+     - Callback / view
+   * - Signal Analyzer (``square-poll-vertical`` icon)
+     - ``Application.show_analyzer_frame()``
+   * - JSON Editor (``file-lines-regular`` icon)
+     - ``Application.show_editor_frame()``
+   * - UI Examples (``cubes`` icon)
+     - ``Application.show_ui_examples_frame()``
+   * - Navigation (``folder-tree`` icon)
+     - ``Application.show_navigation_frame()``
 
 **Selection synchronization**
     The sidebar maintains an "active" button state. When the user switches
@@ -267,12 +373,105 @@ is expanded by default to show labels but can be collapsed to icons-only.
     color. This provides a clear visual cue of the current application state.
 
 
+``MenuBar`` — File menu
+-----------------------
+
+``MenuBar`` is constructed with an ``Application`` reference (``app: Application``)
+so all commands route through ``Application`` rather than reaching into
+``AnalyzerFrame`` directly:
+
+.. code-block:: python
+
+    class MenuBar(tb.Frame):
+        def __init__(self, master, app: "Application", **kwargs):
+            self._app = app
+            ...
+
+        def _cmd_open(self)    -> None: self._app.app_open_file()
+        def _cmd_save(self)    -> None: self._app.app_save_file()
+        def _cmd_save_as(self) -> None: self._app.app_save_file_as()
+
+The Recent Files cascade menu is held as ``_recent_menu_nt`` (Windows custom
+menubar) and ``_recent_menu_std`` (standard ``tk.Menu``).
+``rebuild_recent_files_menu()`` repopulates both when the list changes:
+
+.. code-block:: python
+
+    def _populate_recent_menu(self, menu: tk.Menu) -> None:
+        menu.delete(0, "end")
+        for path in self._app._recent_files:
+            menu.add_command(
+                label=str(path),
+                command=lambda p=path: self._app.app_open_recent_file(p),
+            )
+
+
+``EditorFrame`` — JSON parameter editing
+-----------------------------------------
+
+``EditorFrame`` is a thin view: it owns the text widget and the Apply button but
+contains no business logic.  All JSON parsing and state synchronisation live in
+``Application._apply_editor_json()``.
+
+Public API
+^^^^^^^^^^
+
+.. code-block:: python
+
+    frame.set_json(text: str)     # replace content, clear error label
+    frame.get_json() -> str       # return current content (trailing newline stripped)
+    frame.show_error(msg: str)    # set / clear the status label
+
+The ``on_apply`` constructor parameter accepts a ``Callable[[str], None]``.
+``Application`` wires it to ``_apply_editor_json``:
+
+.. code-block:: python
+
+    self.editor_frame = EditorFrame(content, on_apply=self._apply_editor_json)
+
+Apply validation
+^^^^^^^^^^^^^^^^
+
+``_apply_editor_json`` does two-phase validation:
+
+1. ``json.loads(text)`` — ensures the text is valid JSON (catches syntax errors).
+2. ``SignalParameters.model_validate(data)`` — applies all Pydantic field and
+   cross-field validators.
+
+On success both views are refreshed with the canonically serialised form of the
+validated model, confirming acceptance to the user and normalising whitespace /
+key ordering.  On failure the error message is shown in ``EditorFrame``'s status
+label and no state changes.
+
+
 ``AnalyzerFrame`` — layout and run wiring
 ------------------------------------------
 
-``AnalyzerFrame`` is the single top-level content widget registered with
-``Application``.  It owns the layout (left/right columns, vertical sash) and
-the run flow.
+``AnalyzerFrame`` is a content widget registered with ``Application``.  It owns
+the layout (left/right columns, vertical sash) and the run flow.
+
+Change notification
+^^^^^^^^^^^^^^^^^^^
+
+``AnalyzerFrame`` accepts an optional ``on_params_changed`` callback.  It
+forwards change notifications from ``SignalParametersFrame`` (user widget edits)
+and from its own ``_on_reset()`` method so ``Application`` can stay in sync
+without the frame importing ``Application`` directly:
+
+.. code-block:: python
+
+    self.analyzer_frame = AnalyzerFrame(
+        content,
+        on_params_changed=lambda p: self.update_parameters(p, "analyzer"),
+    )
+
+``get_parameters() -> SignalParameters | None`` and
+``set_parameters(params)`` are the public API for reading and writing the
+parameter panel from outside the frame.
+
+The *Save parameters…* and *Load parameters…* buttons that previously lived in
+the left panel have been removed; file operations are handled exclusively through
+the File menu (owned by ``Application`` / ``MenuBar``).
 
 Async run pattern
 ^^^^^^^^^^^^^^^^^
@@ -364,6 +563,42 @@ failure.
 ``set_parameters(params)`` is the reverse: it writes every widget without
 triggering validation callbacks, then calls ``_on_noise_type_changed()`` to
 restore the correct enable/disable state of the SNR field.
+**Calling ``set_parameters`` does not fire ``on_change``**; only genuine user
+interactions do.
+
+Change notification callback
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An optional ``on_change: Callable[[SignalParameters | None], None]`` constructor
+parameter allows callers to react to user edits without polling.  The callback
+fires on:
+
+* ``<FocusOut>`` for all numeric ``tb.Spinbox`` / ``tb.Entry`` widgets.
+* ``<<ComboboxSelected>>`` for all ``tb.Combobox`` widgets.
+
+These are the right events to use for sync because they fire *after* the user
+has committed a change, not on every keystroke.  Using raw ``StringVar`` traces
+would fire on every key press and trigger redundant JSON serialisations during
+numeric entry.
+
+The callback receives the result of ``_parse_parameters()``:
+
+.. code-block:: python
+
+    def _parse_parameters(self) -> SignalParameters | None:
+        """Parse current widget state silently without updating the UI."""
+        try:
+            return SignalParameters(
+                signal_type=...,
+                frequency=float(self._vars["frequency"].get()),
+                ...
+            )
+        except (ValueError, IndexError, ValidationError):
+            return None
+
+Using a silent helper keeps the change-notification path free of side effects:
+the existing per-field validation and status-label update logic in
+``get_parameters()`` is not disturbed.
 
 Noise-type gating
 ^^^^^^^^^^^^^^^^^

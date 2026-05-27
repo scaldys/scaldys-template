@@ -7,7 +7,7 @@ It wires together the three sub-frames into a two-column layout:
     │  SignalParameters   │  PlotFrame (tabs: Time / Spectrum / Phase)   │
     │  Frame              │                                              │
     │                     ├──────────────────────────────────────────────┤
-    │  [Run] [Save] [Load]│  ResultsTableFrame (Time / Freq tabs)        │
+    │  [Run] [Reset]      │  ResultsTableFrame (Time / Freq tabs)        │
     └─────────────────────┴──────────────────────────────────────────────┘
 
 Run is executed in a background ``threading.Thread`` so the UI remains
@@ -21,15 +21,12 @@ import logging
 import queue
 import threading
 import tkinter as tk
-from pathlib import Path
-from tkinter import filedialog, messagebox
-from typing import Any, Literal
+from typing import Any, Callable, Literal
 
 import ttkbootstrap as tb
 from ttkbootstrap.constants import BOTH, LEFT, X, YES  # BOTH, BOTTOM, LEFT, RIGHT, TOP, X, YES
 
 from scaldys_template.__about__ import PACKAGE_NAME
-from scaldys_template.core.parameter_store import load_parameters, save_parameters
 from scaldys_template.core.signal_engine import (
     FFTResult,
     SignalData,
@@ -59,12 +56,22 @@ class AnalyzerFrame(tb.Frame):
     ----------
     master:
         Parent widget (typically the ``Application`` window content area).
+    on_params_changed:
+        Optional callback invoked whenever the active ``SignalParameters``
+        change — either because the user edited a widget or clicked "Reset to
+        defaults".  The argument is the new (valid) parameter set.
     **kwargs:
         Passed to ``tb.Frame``.
     """
 
-    def __init__(self, master: tk.Misc, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        master: tk.Misc,
+        on_params_changed: Callable[[SignalParameters], None] | None = None,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(master, **kwargs)
+        self._on_params_changed = on_params_changed
         self._result_queue: queue.Queue[_ResultOk | _ResultErr] = queue.Queue()
         self._is_running = False
         self._last_params: SignalParameters | None = None
@@ -79,7 +86,7 @@ class AnalyzerFrame(tb.Frame):
         left = tb.Frame(self, padding=(6, 6, 3, 6))
         left.pack(side=LEFT, fill="y")
 
-        self._params_frame = SignalParametersFrame(left)
+        self._params_frame = SignalParametersFrame(left, on_change=self._handle_params_changed)
         self._params_frame.pack(fill=X)
         # Populate defaults
         self._params_frame.set_parameters(SignalParameters())
@@ -136,22 +143,6 @@ class AnalyzerFrame(tb.Frame):
             btn_frame, mode="indeterminate", bootstyle="success-striped"
         )
         self._progress.pack(fill=X, pady=(0, 6))
-
-        save_btn = tb.Button(
-            btn_frame,
-            text="Save parameters…",
-            bootstyle="secondary-outline",
-            command=self._on_save,
-        )
-        save_btn.pack(fill=X, pady=2)
-
-        load_btn = tb.Button(
-            btn_frame,
-            text="Load parameters…",
-            bootstyle="secondary-outline",
-            command=self._on_load,
-        )
-        load_btn.pack(fill=X, pady=2)
 
         tb.Separator(btn_frame).pack(fill=X, pady=6)
 
@@ -214,46 +205,23 @@ class AnalyzerFrame(tb.Frame):
             logger.error("Analysis failed: %s", msg)
             messagebox.showerror("Analysis Error", msg)
 
-    def _on_save(self) -> None:
-        path_str = filedialog.asksaveasfilename(
-            title="Save Parameters",
-            defaultextension=".json",
-            filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
-        )
-        if not path_str:
-            return
-        params = self._params_frame.get_parameters()
-        if params is None:
-            return
-        try:
-            save_parameters(params, Path(path_str))
-        except OSError as exc:
-            messagebox.showerror("Save Error", str(exc))
-
-    def _on_load(self) -> None:
-        path_str = filedialog.askopenfilename(
-            title="Load Parameters",
-            filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
-        )
-        if not path_str:
-            return
-        try:
-            params = load_parameters(Path(path_str))
-            self._params_frame.set_parameters(params)
-        except Exception as exc:  # noqa: BLE001
-            messagebox.showerror("Load Error", str(exc))
-
     def _on_reset(self) -> None:
-        self._params_frame.set_parameters(SignalParameters())
+        params = SignalParameters()
+        self._params_frame.set_parameters(params)
         self._table_frame.clear()
         self._plot_frame.clear()
+        if self._on_params_changed:
+            self._on_params_changed(params)
+
+    def get_parameters(self) -> SignalParameters | None:
+        """Return the current parameters from the UI, or ``None`` if validation fails."""
+        return self._params_frame.get_parameters()
 
     def set_parameters(self, params: SignalParameters) -> None:
-        """Update the UI with new signal parameters.
-
-        Parameters
-        ----------
-        params : SignalParameters
-            The parameters to load into the UI.
-        """
+        """Update the UI with new signal parameters."""
         self._params_frame.set_parameters(params)
+
+    def _handle_params_changed(self, params: SignalParameters | None) -> None:
+        """Receive change notifications from ``SignalParametersFrame`` and forward upward."""
+        if params is not None and self._on_params_changed:
+            self._on_params_changed(params)

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import tkinter as tk
 from tkinter import ttk
-from typing import Any
+from typing import Any, Callable
 
 import ttkbootstrap as tb
 from ttkbootstrap.constants import (
@@ -52,14 +52,27 @@ class SignalParametersFrame(ttk.LabelFrame):
     ----------
     master:
         Parent widget.
+    on_change:
+        Optional callback invoked when the user finishes editing a field
+        (on ``FocusOut`` for numeric widgets, on ``<<ComboboxSelected>>`` for
+        dropdowns).  The argument is the current ``SignalParameters`` if all
+        fields are valid, or ``None`` if the current state is invalid.  The
+        callback is **not** triggered by programmatic calls to
+        ``set_parameters()``.
     **kwargs:
         Passed to ``tb.LabelFrame``.
     """
 
-    def __init__(self, master: tk.Misc, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        master: tk.Misc,
+        on_change: Callable[[SignalParameters | None], None] | None = None,
+        **kwargs: Any,
+    ) -> None:
         kwargs.setdefault("text", "Signal Parameters")
         super().__init__(master, **kwargs)
 
+        self._on_change = on_change
         self._vars: dict[str, tk.Variable] = {}
         self._widgets: dict[str, Any] = {}
         self._error_labels: dict[str, tb.Label] = {}
@@ -196,7 +209,7 @@ class SignalParametersFrame(ttk.LabelFrame):
         self._vars["noise_type"].trace_add("write", self._on_noise_type_changed)
         self._on_noise_type_changed()  # apply initial state
 
-        # Validate float fields on focus-out
+        # Validate float/int fields on focus-out and notify change callback
         for field in (
             "frequency",
             "amplitude",
@@ -208,13 +221,55 @@ class SignalParametersFrame(ttk.LabelFrame):
             "fft_size",
         ):
             widget = self._widgets[field]
-            widget.bind("<FocusOut>", lambda _e, f=field: self._validate_field(f))
+            widget.bind("<FocusOut>", lambda _e, f=field: self._on_field_focusout(f))
+
+        # Combobox selections are instant — notify change immediately
+        for field in ("signal_type", "noise_type", "fft_window"):
+            self._widgets[field].bind("<<ComboboxSelected>>", lambda _e: self._notify_change())
 
     def _on_noise_type_changed(self, *_: Any) -> None:
         label = self._vars["noise_type"].get()
         noise = _NOISE_TYPE_VALUES[_NOISE_TYPE_LABELS.index(label)]
         state = "normal" if noise != NoiseType.NONE else "disabled"
         self._widgets["snr_db"].configure(state=state)
+
+    def _on_field_focusout(self, field: str) -> None:
+        """Validate *field* and notify the change callback (silent parse)."""
+        self._validate_field(field)
+        self._notify_change()
+
+    def _notify_change(self) -> None:
+        """Fire ``on_change`` with the current (silently parsed) parameters."""
+        if self._on_change is not None:
+            self._on_change(self._parse_parameters())
+
+    def _parse_parameters(self) -> SignalParameters | None:
+        """Parse current widget state silently without updating the UI."""
+        try:
+            signal_type = _SIGNAL_TYPE_VALUES[
+                _SIGNAL_TYPE_LABELS.index(self._vars["signal_type"].get())
+            ]
+            noise_type = _NOISE_TYPE_VALUES[
+                _NOISE_TYPE_LABELS.index(self._vars["noise_type"].get())
+            ]
+            fft_window = _WINDOW_TYPE_VALUES[
+                _WINDOW_TYPE_LABELS.index(self._vars["fft_window"].get())
+            ]
+            return SignalParameters(
+                signal_type=signal_type,
+                frequency=float(self._vars["frequency"].get()),
+                amplitude=float(self._vars["amplitude"].get()),
+                duration=float(self._vars["duration"].get()),
+                sampling_rate=float(self._vars["sampling_rate"].get()),
+                phase_deg=float(self._vars["phase_deg"].get()),
+                dc_offset=float(self._vars["dc_offset"].get()),
+                noise_type=noise_type,
+                snr_db=float(self._vars["snr_db"].get()),
+                fft_window=fft_window,
+                fft_size=int(self._vars["fft_size"].get()),
+            )
+        except (ValueError, IndexError, ValidationError):
+            return None
 
     def _validate_field(self, field: str) -> bool:
         """Validate a single field in isolation.  Returns True if valid."""
