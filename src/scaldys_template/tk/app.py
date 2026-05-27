@@ -25,7 +25,13 @@ from scaldys_template.common.app_location import AppLocation
 from scaldys_template.core.parameter_store import load_parameters, save_parameters
 from scaldys_template.core.signal_model import SignalParameters
 from scaldys_template.tk.styles import Styles
-from scaldys_template.tk.ui import navigation_frame, EditorFrame, UiExamplesFrame, NavigationFrame, NavigationPanel
+from scaldys_template.tk.ui import (
+    navigation_frame,
+    EditorFrame,
+    UiExamplesFrame,
+    NavigationFrame,
+    NavigationPanel,
+)
 from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.ui.about_dialog import AboutDialog
 from scaldys_template.tk.utils import set_dpi_awareness
@@ -60,7 +66,8 @@ class MenuBar(tb.Frame):
 
     def _initialize(self) -> None:
         if os.name == "nt":
-            self._build_windows_menubar()
+            # self._build_windows_menubar()
+            self._build_standard_menubar()
         else:
             self._build_standard_menubar()
 
@@ -85,12 +92,8 @@ class MenuBar(tb.Frame):
         file_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
         file_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
-        file_menu.add_command(
-            label="Open…", accelerator="Ctrl+O", command=self._cmd_open
-        )
-        file_menu.add_command(
-            label="Save", accelerator="Ctrl+S", command=self._cmd_save
-        )
+        file_menu.add_command(label="Open…", accelerator="Ctrl+O", command=self._cmd_open)
+        file_menu.add_command(label="Save", accelerator="Ctrl+S", command=self._cmd_save)
         file_menu.add_command(label="Save As…", command=self._cmd_save_as)
         file_menu.add_separator()
 
@@ -220,6 +223,7 @@ class ToolBar(tb.Frame):
 
     def __init__(self, master: tk.Misc, fg_color: str, bg_color: str, **kwargs: Any) -> None:
         super().__init__(master, **kwargs)
+        self._app = master  # Added reference to app
         self._fg_color = fg_color
         self._bg_color = bg_color
         self._load_icons()
@@ -227,49 +231,127 @@ class ToolBar(tb.Frame):
 
     def _load_icons(self) -> None:
         size = 24
-        self._img_navigation = faw.icon_to_image(
+        self._img_open = faw.icon_to_image(
+            faw.Icons.folder_open_regular, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_save = faw.icon_to_image(
+            faw.Icons.floppy_disk_regular, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_run = faw.icon_to_image(
             faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
         )
-        self._img_stop = faw.icon_to_image(
+        self._img_defaults = faw.icon_to_image(
             faw.Icons.circle_stop_solid, fill=self._fg_color, scale_to_width=size
         )
-        self._img_settings = faw.icon_to_image(
-            faw.Icons.gear_solid, fill=self._fg_color, scale_to_width=size
+        self._img_apply = faw.icon_to_image(
+            faw.Icons.check_solid, fill=self._fg_color, scale_to_width=size
         )
 
     def _initialize(self) -> None:
-        buttonbar = tb.Frame(self)
-        buttonbar.pack(fill="x", side="left")
+        self._buttonbar = tb.Frame(self)
+        self._buttonbar.pack(fill="x", side="left")
 
-        self._navigation_btn = tb.Button(
-            buttonbar,
-            text=_indent("Navigation"),
-            image=self._img_navigation,
+        self._open_btn = tb.Button(
+            self._buttonbar,
+            text=_indent("Open"),
+            image=self._img_open,
             compound="left",
             style=Styles.BARS_BUTTON,
-            command=lambda: showinfo(message="Navigation — wire up your command here"),
+            command=lambda: self._app.app_open_file(),  # type: ignore[attr-defined]
         )
-        self._navigation_btn.pack(side="left", ipadx=5, ipady=5)
+        self._open_btn.pack(side="left", ipadx=5, ipady=5)
 
-        self._stop_btn = tb.Button(
-            buttonbar,
-            text=_indent("Stop"),
-            image=self._img_stop,
+        self._save_btn = tb.Button(
+            self._buttonbar,
+            text=_indent("Save"),
+            image=self._img_save,
             compound="left",
             style=Styles.BARS_BUTTON,
-            command=lambda: showinfo(message="Stop — wire up your command here"),
+            command=lambda: self._app.app_save_file(),  # type: ignore[attr-defined]
         )
-        self._stop_btn.pack(side="left", ipadx=5, ipady=5)
+        self._save_btn.pack(side="left", ipadx=5, ipady=5)
 
-        self._settings_btn = tb.Button(
-            buttonbar,
-            text=_indent("Settings"),
-            image=self._img_settings,
+        self._sep = tb.Separator(self._buttonbar, orient="vertical")
+        self._sep.pack(side="left", fill="y", padx=10, pady=5)
+
+        self._run_btn = tb.Button(
+            self._buttonbar,
+            text=_indent("Run"),
+            image=self._img_run,
             compound="left",
             style=Styles.BARS_BUTTON,
-            command=lambda: showinfo(message="Settings — wire up your command here"),
+            command=lambda: self._app.analyzer_frame._on_run(),  # type: ignore[attr-defined]
         )
-        self._settings_btn.pack(side="left", ipadx=5, ipady=5)
+        self._run_btn.pack(side="left", ipadx=5, ipady=5)
+
+        self._defaults_btn = tb.Button(
+            self._buttonbar,
+            text=_indent("Defaults"),
+            image=self._img_defaults,
+            compound="left",
+            style=Styles.BARS_BUTTON,
+            command=lambda: self._app.analyzer_frame._on_reset(),  # type: ignore[attr-defined]
+        )
+        self._defaults_btn.pack(side="left", ipadx=5, ipady=5)
+
+        self._apply_sep = tb.Separator(self._buttonbar, orient="vertical")
+        # packed only in editor context
+
+        self._apply_btn = tb.Button(
+            self._buttonbar,
+            text=_indent("Apply"),
+            image=self._img_apply,
+            compound="left",
+            style=Styles.BARS_BUTTON,
+            command=lambda: self._app.editor_frame._handle_apply(),  # type: ignore[attr-defined]
+        )
+        # packed only in editor context
+
+    def set_context(self, context: str) -> None:
+        """Update button visibility and state based on the application context.
+
+        Parameters
+        ----------
+        context:
+            One of "analyzer", "editor", or "other".
+        """
+        if context == "analyzer":
+            # Re-show toolbar if it was hidden (packed below menubar)
+            self.pack(side="top", fill="x", after=self._app.menubar)  # type: ignore[attr-defined]
+
+            # Enable and show all analyzer buttons
+            self._open_btn.configure(state="normal")
+            self._save_btn.configure(state="normal")
+            self._run_btn.configure(state="normal")
+            self._defaults_btn.configure(state="normal")
+
+            self._sep.pack(side="left", fill="y", padx=10, pady=5)
+            self._run_btn.pack(side="left", ipadx=5, ipady=5)
+            self._defaults_btn.pack(side="left", ipadx=5, ipady=5)
+
+            # Hide Editor group
+            self._apply_sep.pack_forget()
+            self._apply_btn.pack_forget()
+
+        elif context == "editor":
+            # Re-show toolbar if it was hidden
+            self.pack(side="top", fill="x", after=self._app.menubar)  # type: ignore[attr-defined]
+
+            # Show Open/Save
+            self._open_btn.configure(state="normal")
+            self._save_btn.configure(state="normal")
+
+            # Hide Analyzer group
+            self._sep.pack_forget()
+            self._run_btn.pack_forget()
+            self._defaults_btn.pack_forget()
+
+            # Show Editor group
+            self._apply_sep.pack(side="left", fill="y", padx=10, pady=5)
+            self._apply_btn.pack(side="left", ipadx=5, ipady=5)
+        else:
+            # Hide the entire toolbar
+            self.pack_forget()
 
 
 # ---------------------------------------------------------------------------
@@ -343,11 +425,17 @@ class SideBar(tb.Frame):
         self._img_navigation = faw.icon_to_image(
             faw.Icons.folder_tree_solid, fill=self._fg_color, scale_to_width=size
         )
-        self._img_ui_examples = faw.icon_to_image(
-            faw.Icons.cubes_solid, fill=self._fg_color, scale_to_width=size
+        self._img_open_file = faw.icon_to_image(
+            faw.Icons.folder_open_regular, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_save_file = faw.icon_to_image(
+            faw.Icons.floppy_disk_regular, fill=self._fg_color, scale_to_width=size
         )
         self._img_settings = faw.icon_to_image(
             faw.Icons.gear_solid, fill=self._fg_color, scale_to_width=size
+        )
+        self._img_ui_examples = faw.icon_to_image(
+            faw.Icons.cubes_solid, fill=self._fg_color, scale_to_width=size
         )
 
     def _initialize(self) -> None:
@@ -608,6 +696,7 @@ class Application(tb.Window):
         self.main_content = self.analyzer_frame
         self.menubar.main_content = self.main_content
         self.sidebar.select_analyzer()
+        self.toolbar.set_context("analyzer")
 
         # Populate editor with the initial default parameters
         self.editor_frame.set_json(SignalParameters().model_dump_json(indent=2))
@@ -752,6 +841,7 @@ class Application(tb.Window):
     def show_analyzer_frame(self) -> None:
         """Switch the main content area to the AnalyzerFrame."""
         self.sidebar.select_analyzer()
+        self.toolbar.set_context("analyzer")
         self._hide_all_content_frames()
         self.analyzer_frame.grid()
         self.main_content = self.analyzer_frame  # type: ignore[assignment]
@@ -760,6 +850,7 @@ class Application(tb.Window):
     def show_editor_frame(self) -> None:
         """Switch the main content area to the EditorFrame."""
         self.sidebar.select_editor()
+        self.toolbar.set_context("editor")
         self._hide_all_content_frames()
         self.editor_frame.grid()
         self.main_content = self.editor_frame  # type: ignore[assignment]
@@ -768,6 +859,7 @@ class Application(tb.Window):
     def show_ui_examples_frame(self) -> None:
         """Switch the main content area to the UiExamplesFrame."""
         self.sidebar.select_ui_examples()
+        self.toolbar.set_context("other")
         self._hide_all_content_frames()
         self.ui_examples_frame.grid()
         self.main_content = self.ui_examples_frame  # type: ignore[assignment]
@@ -776,6 +868,7 @@ class Application(tb.Window):
     def show_navigation_frame(self) -> None:
         """Switch the main content area to the NavigationFrame."""
         self.sidebar.select_navigation()
+        self.toolbar.set_context("other")
         if self.main_content != self.navigation_frame:
             self._hide_all_content_frames()
             self.navigation_frame.grid()
@@ -815,7 +908,7 @@ class Application(tb.Window):
             first = exc.errors()[0]
             msg = first.get("msg", str(exc))
             if msg.startswith("Value error, "):
-                msg = msg[len("Value error, "):]
+                msg = msg[len("Value error, ") :]
             self.editor_frame.show_error(msg)
             return
         # Re-populate both views with canonical params (normalizes formatting in editor)

@@ -54,8 +54,8 @@ The GUI application
 Layout overview
 ---------------
 
-The window is structured with a navigation sidebar on the far left and the main
-content area occupying the rest of the space.
+The window is structured with a navigation sidebar on the far left, a toolbar
+at the top, and the main content area occupying the rest of the space.
 
 * **Sidebar** — provides navigation between application frames.  It is expanded
   by default to show labels but can be collapsed to icons-only using the
@@ -67,6 +67,10 @@ content area occupying the rest of the space.
   * **UI Examples** — widget showcase.
   * **Navigation** — tree navigator example.
 
+* **Toolbar** — provides quick access to file operations and analyzer controls.
+  The toolbar is context-sensitive: it shows relevant buttons based on the
+  active frame (see `Toolbar` below).
+
 * **Main area** — shows the currently selected frame.  For the Signal Analyzer,
   this is further divided into:
 
@@ -76,6 +80,45 @@ content area occupying the rest of the space.
 
 A resizable splitter separates the plots from the table in the main area; drag
 it vertically to give more space to whichever panel you need.
+
+
+Toolbar
+-------
+
+The toolbar is located below the menu bar and provides buttons for common
+actions.
+
+.. list-table::
+   :widths: 20 80
+   :header-rows: 1
+
+   * - Button
+     - Description
+   * - **Open**
+     - Open a JSON parameter file. Same as *File → Open…*.
+   * - **Save**
+     - Save current parameters. Same as *File → Save*.
+   * - **Run**
+     - Execute the signal analysis. Same as **F5** or the **Run** button in
+       the parameter panel.
+   * - **Defaults**
+     - Restore factory default parameters. Same as **Reset to defaults** in
+       the parameter panel.
+   * - **Apply**
+     - Parse and validate the JSON text in the editor and synchronize it with
+       the Analyzer. Only visible in the **JSON Editor**.
+
+Contextual availability
+^^^^^^^^^^^^^^^^^^^^^^^
+
+To reduce clutter, the toolbar automatically adjusts its content based on the
+active frame:
+
+* **Signal Analyzer**: All buttons (Open, Save, Run, Defaults) are visible.
+* **JSON Editor**: The **Open**, **Save**, and **Apply** buttons are visible.
+  Analyzer controls (Run, Defaults) are hidden.
+* **UI Examples / Navigation**: The entire toolbar is hidden as these frames
+  do not support file or analyzer operations.
 
 
 Parameter panel
@@ -156,7 +199,7 @@ Parameters are validated before any computation begins:
 Running an analysis
 -------------------
 
-Click **▶ Run** or press **F5**.
+Click **▶ Run** (in the parameter panel or the toolbar) or press **F5**.
 
 While the engine is running (typically a few milliseconds), the progress bar
 below the button animates.  The button is disabled for the duration of the run.
@@ -270,16 +313,17 @@ The **File** menu (menu bar at the top) provides all parameter file operations.
 Open…
 -----
 
-*File → Open…* (or **Ctrl+O**) opens a file-picker dialog.  Select any
-previously saved ``.json`` parameter file.  Both the Analyzer widgets and the
-JSON Editor update immediately.  The analysis does not run automatically —
-press **▶ Run** when ready.
+*File → Open…* (or **Ctrl+O**, or the **Open** toolbar button) opens a
+file-picker dialog.  Select any previously saved ``.json`` parameter file.
+Both the Analyzer widgets and the JSON Editor update immediately.  The
+analysis does not run automatically — press **▶ Run** when ready.
 
 Save / Save As…
 ---------------
 
-*File → Save* (or **Ctrl+S**) writes the current parameters to the last-opened
-file.  If no file has been opened yet, it behaves like *Save As…*.
+*File → Save* (or **Ctrl+S**, or the **Save** toolbar button) writes the
+current parameters to the last-opened file.  If no file has been opened yet,
+it behaves like *Save As…*.
 
 *File → Save As…* opens a save dialog and writes a new ``.json`` file.
 
@@ -306,9 +350,10 @@ entry to reload it immediately.  The list persists across application restarts.
 Reset to defaults
 -----------------
 
-Click **Reset to defaults** (in the Analyzer's left panel) to restore the
-factory default parameter values (440 Hz sine, 44 100 Hz, 0.1 s, Hanning
-window, 1 024-point FFT).  Both the Analyzer widgets and the JSON Editor reset.
+Click **Defaults** in the toolbar or **Reset to defaults** (in the Analyzer's
+left panel) to restore the factory default parameter values (440 Hz sine,
+44 100 Hz, 0.1 s, Hanning window, 1 024-point FFT).  Both the Analyzer widgets
+and the JSON Editor reset.
 
 
 JSON Editor
@@ -323,10 +368,10 @@ Bidirectional sync
 * **Analyzer → Editor**: whenever you finish editing a widget in the Analyzer
   (on focus-out for numeric fields, or on selection for dropdowns) the JSON
   Editor updates automatically.
-* **Editor → Analyzer**: edit the JSON text directly, then click **Apply**.
-  The text is parsed and validated; if successful, the Analyzer widgets update.
-  If the JSON is invalid or a value fails validation, an error message is shown
-  below the text area and no state is changed.
+* **Editor → Analyzer**: edit the JSON text directly, then click **Apply**
+  in the toolbar.  The text is parsed and validated; if successful, the Analyzer
+  widgets update.  If the JSON is invalid or a value fails validation, an error
+  message is shown below the text area and no state is changed.
 
 Typical use cases
 -----------------

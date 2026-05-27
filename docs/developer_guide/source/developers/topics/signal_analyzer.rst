@@ -406,11 +406,38 @@ menubar) and ``_recent_menu_std`` (standard ``tk.Menu``).
             )
 
 
+``ToolBar`` — Quick actions
+---------------------------
+
+The ``ToolBar`` provides a horizontal row of buttons for file operations and
+analyzer controls. Like the ``MenuBar``, it routes all actions through the
+``Application`` instance.
+
+**Context-sensitive layout**
+    The toolbar implements ``set_context(context)`` to show or hide buttons
+    based on the active frame. This logic is triggered by the ``Application``
+    view-switching methods (e.g., ``show_analyzer_frame()``).
+
+    * ``"analyzer"``: Shows Open, Save, Run, and Defaults buttons.
+    * ``"editor"``: Shows Open, Save, and Apply buttons.
+    * ``"other"``: Hides the entire toolbar.
+
+**Button wiring**
+    * **Open / Save**: Wired to ``Application.app_open_file()`` and
+      ``Application.app_save_file()``.
+    * **Run / Defaults**: Wired to ``AnalyzerFrame._on_run()`` and
+      ``AnalyzerFrame._on_reset()`` respectively.
+    * **Apply**: Wired to ``EditorFrame._handle_apply()`` (which triggers the
+      ``on_apply`` callback).
+
+
 ``EditorFrame`` — JSON parameter editing
 -----------------------------------------
 
-``EditorFrame`` is a thin view: it owns the text widget and the Apply button but
-contains no business logic.  All JSON parsing and state synchronisation live in
+``EditorFrame`` is a thin view: it owns the text widget but contains no business
+logic.  The **Apply** button, which previously lived in the header of this frame,
+has been moved to the application toolbar for consistency with other frames.
+All JSON parsing and state synchronisation live in
 ``Application._apply_editor_json()``.
 
 Public API
@@ -470,8 +497,8 @@ without the frame importing ``Application`` directly:
 parameter panel from outside the frame.
 
 The *Save parameters…* and *Load parameters…* buttons that previously lived in
-the left panel have been removed; file operations are handled exclusively through
-the File menu (owned by ``Application`` / ``MenuBar``).
+the left panel have been removed; file operations are handled through the
+File menu and the application toolbar.
 
 Async run pattern
 ^^^^^^^^^^^^^^^^^

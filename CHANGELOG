@@ -30,6 +30,10 @@
 
 **Added**
 
+  - ``ToolBar`` component (``tk/app.py``): provides quick access to File
+    operations (Open, Save) and Analyzer controls (Run, Defaults).  The toolbar
+    automatically adjusts its visibility and content based on the active frame.
+
   - Signal Analyzer GUI: full feature implementation including core model, engine,
     and persistence logic.  GUI components (frames, plots, table) moved into a
     dedicated ``gui/signal_analyzer/`` directory.  User and developer guides
@@ -44,12 +48,15 @@
 
   - GUI: unit tests for the ``Application`` state and ``SideBar`` navigation logic.
 
+  - GUI: unit tests for the ``ToolBar`` functionality and contextual behavior
+    (``tests/unit/tk/test_toolbar.py``).
+
   - **JSON Editor view** (``tk/ui/editor_frame.py``): a new sidebar frame that
     displays the current ``SignalParameters`` as formatted JSON in an editable
-    text widget.  An "Apply" button parses and validates the JSON and pushes the
-    result back to the Analyzer.  Bidirectional sync keeps both views consistent:
-    widget edits in the Analyzer update the editor in real time (on ``FocusOut``
-    / ``<<ComboboxSelected>>``), and "Apply" updates the Analyzer widgets.
+    text widget.  Bidirectional sync keeps both views consistent: widget edits
+    in the Analyzer update the editor in real time (on ``FocusOut`` /
+    ``<<ComboboxSelected>>``), and "Apply" (from the toolbar) updates the
+    Analyzer widgets.
 
   - **Enhanced File menu**: the File menu now contains *Open…*, *Save*,
     *Save As…*, and a *Recent Files* cascade (up to 10 entries, persisted to
@@ -62,6 +69,19 @@
     and the Editor, skipping the originating view to avoid feedback loops.
 
 **Changed**
+
+  - Reconfigured the application toolbar to follow standard Windows patterns.
+    Navigation-switching buttons were replaced with action buttons: "Play"
+    became "Run", "Stop" became "Defaults", and the redundant "Settings" button
+    was removed.  New "Open" and "Save" buttons were added.
+
+  - Toolbar visibility management: the toolbar is fully visible in the Signal
+    Analyzer, shows file operations and an "Apply" button in the JSON Editor,
+    and is hidden entirely for UI Examples and Navigation frames.
+
+  - Reconfigured the ``EditorFrame``: the "Apply" button was moved from the
+    frame header to the application toolbar for better integration and visual
+    consistency across frames.
 
   - Renamed "Play" view to "Navigation" throughout the application.
 
@@ -95,6 +115,12 @@
     commands route through ``Application`` instead of ``AnalyzerFrame``.
 
 **Docs**
+
+  - User guide: updated Signal Analyzer documentation (Layout, Toolbar,
+    Running, File management) to reflect the new toolbar functionality.
+
+  - Developer guide: updated Signal Analyzer design notes to include
+    ``ToolBar`` architecture and context management.
 
   - User guide: updated Signal Analyzer layout overview to include the SideBar.
   - Developer guide: updated Signal Analyzer design notes to document the new GUI testing strategy.

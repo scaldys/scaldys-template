@@ -20,7 +20,9 @@ class NavigationPanel(tb.Frame):
     :py:meth:`~scaldys_template.tk.app.Application.toggle_navigation_frame`.
     """
 
-    def __init__(self, master: tk.Misc, on_node_select: Callable[[str], None] | None = None, **kwargs: Any) -> None:
+    def __init__(
+        self, master: tk.Misc, on_node_select: Callable[[str], None] | None = None, **kwargs: Any
+    ) -> None:
         """Initialize the NavigationPanel.
 
         Args:

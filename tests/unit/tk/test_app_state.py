@@ -15,7 +15,9 @@ from scaldys_template.common.app_location import AppLocation
 @pytest.mark.unit
 class TestApplicationState:
     @pytest.fixture
-    def app(self, isolated_app_location: dict[int, Path], monkeypatch: pytest.MonkeyPatch) -> Generator[Application, None, None]:
+    def app(
+        self, isolated_app_location: dict[int, Path], monkeypatch: pytest.MonkeyPatch
+    ) -> Generator[Application, None, None]:
         # Application calls user_data_dir(APP_NAME)
         # We want to ensure it uses a temporary directory.
         monkeypatch.setattr(
@@ -56,17 +58,23 @@ class TestApplicationState:
         assert app.sidebar._analyzer_btn.cget("style") == Styles.BARS_BUTTON_LEFT_TEXT, (
             "Analyzer button should be unselected"
         )
+        assert app.toolbar.winfo_manager() == "", "Toolbar should be hidden in UI Examples"
 
         # 3. Switch to Navigation
         app.show_navigation_frame()
-        assert app.sidebar._active_button == app.sidebar._navigation_btn, "Navigation should be selected"
+        assert app.sidebar._active_button == app.sidebar._navigation_btn, (
+            "Navigation should be selected"
+        )
         assert app.sidebar._navigation_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT
         assert app.sidebar._ui_examples_btn.cget("style") == Styles.BARS_BUTTON_LEFT_TEXT
+        assert app.toolbar.winfo_manager() == "", "Toolbar should be hidden in Navigation"
 
         # 4. Toggle Labels (Hide)
         app.sidebar._toggle_labels()
         assert app.sidebar._has_labels is False
-        assert app.sidebar._navigation_btn.cget("text") == "", "Button text should be empty when hidden"
+        assert app.sidebar._navigation_btn.cget("text") == "", (
+            "Button text should be empty when hidden"
+        )
         assert app.sidebar._navigation_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT, (
             "Style should be preserved when labels are hidden"
         )
@@ -74,5 +82,7 @@ class TestApplicationState:
         # 5. Toggle Labels (Show)
         app.sidebar._toggle_labels()
         assert app.sidebar._has_labels is True
-        assert "Navigation" in app.sidebar._navigation_btn.cget("text"), "Button text should be restored"
+        assert "Navigation" in app.sidebar._navigation_btn.cget("text"), (
+            "Button text should be restored"
+        )
         assert app.sidebar._navigation_btn.cget("style") == Styles.BARS_BUTTON_SELECTED_LEFT_TEXT

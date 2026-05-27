@@ -40,14 +40,10 @@ class EditorFrame(tb.Frame):
     # ------------------------------------------------------------------
 
     def _build(self) -> None:
-        # Header row: title + Apply button
+        # Header row: title
         header = tb.Frame(self, padding=(8, 8, 8, 4))
         header.pack(fill="x")
         tb.Label(header, text="JSON Editor", font=("TkDefaultFont", 10, "bold")).pack(side="left")
-        self._apply_btn = tb.Button(
-            header, text="Apply", bootstyle="primary", command=self._handle_apply
-        )
-        self._apply_btn.pack(side="right")
 
         # Text widget with scrollbars (grid-based to allow both axes)
         text_frame = tb.Frame(self, padding=(8, 0, 8, 0))
