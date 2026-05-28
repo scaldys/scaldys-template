@@ -5,6 +5,8 @@ ttkbootstrap.  It is intended as a living reference: delete sections that are
 not relevant to your project and replace them with your own content.
 """
 
+from __future__ import annotations
+
 import tkinter as tk
 from typing import Any, Callable
 
@@ -137,7 +139,7 @@ class UiExamplesFrame(tb.Frame):
         theme_cbo.pack(padx=10, side=RIGHT)
         theme_cbo.current(theme_names.index(current_theme.name))
 
-        def on_theme_selected(_event: tk.Event) -> None:  # type: ignore[type-arg]
+        def on_theme_selected(_event: tk.Event[tk.Misc] | None = None) -> None:
             new_theme = theme_cbo.get()
             style.theme_use(new_theme)
             self._theme_var.set(new_theme)

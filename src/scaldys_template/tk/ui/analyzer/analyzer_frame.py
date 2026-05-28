@@ -21,6 +21,7 @@ import logging
 import queue
 import threading
 import tkinter as tk
+from tkinter import messagebox
 from typing import Any, Callable, Literal
 
 import ttkbootstrap as tb

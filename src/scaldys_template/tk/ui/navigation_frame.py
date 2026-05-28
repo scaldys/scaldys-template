@@ -3,6 +3,8 @@
 The Navigation view consists of a NavigationPanel on the left and a main content area.
 """
 
+from __future__ import annotations
+
 import tkinter as tk
 from typing import Any, Callable
 
@@ -54,7 +56,7 @@ class NavigationPanel(tb.Frame):
 
         self.tree.bind("<<TreeviewSelect>>", self._handle_selection)
 
-    def _handle_selection(self, _event: tk.Event) -> None:
+    def _handle_selection(self, _event: tk.Event[tk.Misc] | None = None) -> None:
         if not self._on_node_select:
             return
 
