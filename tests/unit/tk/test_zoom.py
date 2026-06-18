@@ -1,6 +1,9 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
+# Skip these tests if tkinter is not available (e.g. headless CI)
+pytest.importorskip("tkinter")
+
 from scaldys_template.tk import utils
 
 

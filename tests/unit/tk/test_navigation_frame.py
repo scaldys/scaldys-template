@@ -1,13 +1,13 @@
 import pytest
 from typing import Generator
 from pathlib import Path
-import ttkbootstrap as tb
 from unittest.mock import patch
 
 # Skip these tests if ttkbootstrap or tkinter is not available
 pytest.importorskip("ttkbootstrap")
 pytest.importorskip("tkinter")
 
+import ttkbootstrap as tb
 from scaldys_template.tk.app import Application
 from scaldys_template.common.app_location import AppLocation
 
