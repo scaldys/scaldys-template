@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import logging
 import os
-import platform
 import subprocess
 import sys
 from pathlib import Path
@@ -103,8 +102,10 @@ def gui(
         "stdout": subprocess.DEVNULL,
         "stderr": subprocess.DEVNULL,
     }
-    if platform.system() == "Windows":
-        kwargs["creationflags"] = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+    if sys.platform == "win32":
+        kwargs["creationflags"] = (
+            subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore
+        )
         # pythonw.exe suppresses the brief console flash on Windows.
         pythonw = Path(sys.executable).with_name("pythonw.exe")
         if pythonw.exists():

@@ -15,7 +15,7 @@ from tkinter import PhotoImage
 # because its installer raises a RuntimeError. We make it optional and
 # fall back to native Tk 8.7+ SVG support in svg_to_image().
 try:
-    import tksvg
+    import tksvg  # type: ignore[import-not-found]
 except ImportError:
     tksvg = None
 
