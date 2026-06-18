@@ -7,6 +7,13 @@ from unittest.mock import patch
 pytest.importorskip("ttkbootstrap")
 pytest.importorskip("tkinter")
 
+import tkinter
+try:
+    root = tkinter.Tk()
+    root.destroy()
+except (tkinter.TclError, Exception):
+    pytest.skip("Tkinter display not available", allow_module_level=True)
+
 import ttkbootstrap as tb
 from scaldys_template.tk.app import Application
 from scaldys_template.common.app_location import AppLocation

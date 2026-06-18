@@ -51,4 +51,10 @@ jobs:
           python-version: "3.13"
       - uses: astral-sh/setup-uv@v6
 
-      - run: uv run pytest -v --durations=0 --cov --cov-report=xml
+      - name: Run tests (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a uv run pytest -v --durations=0 --cov --cov-report=xml
+
+      - name: Run tests (Non-Linux)
+        if: runner.os != 'Linux'
+        run: uv run pytest -v --durations=0 --cov --cov-report=xml
