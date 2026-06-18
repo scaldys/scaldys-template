@@ -1307,9 +1307,14 @@ dependencies = [
     { name = "platformdirs" },
     { name = "pydantic" },
     { name = "rich" },
-    { name = "tksvg" },
+    { name = "tksvg", marker = "sys_platform == 'win32'" },
     { name = "ttkbootstrap" },
     { name = "typer" },
+]
+
+[package.optional-dependencies]
+svg = [
+    { name = "tksvg" },
 ]
 
 [package.dev-dependencies]
@@ -1339,10 +1344,12 @@ requires-dist = [
     { name = "platformdirs", specifier = ">=4.9.6" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "rich", specifier = ">=13.0" },
-    { name = "tksvg", specifier = ">=0.7.4" },
+    { name = "tksvg", marker = "sys_platform == 'win32'", specifier = ">=0.7.4" },
+    { name = "tksvg", marker = "extra == 'svg'", specifier = ">=0.7.4" },
     { name = "ttkbootstrap", specifier = ">=1.20.3" },
     { name = "typer", specifier = ">=0.25.0" },
 ]
+provides-extras = ["svg"]
 
 [package.metadata.requires-dev]
 dev = [

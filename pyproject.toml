@@ -25,10 +25,13 @@ dependencies = [
     "platformdirs>=4.9.6",
     "pydantic>=2.0",
     "rich>=13.0",
-    "tksvg>=0.7.4",
+    "tksvg>=0.7.4; sys_platform == 'win32'",
     "ttkbootstrap>=1.20.3",
     "typer>=0.25.0",
 ]
+
+[project.optional-dependencies]
+svg = ["tksvg>=0.7.4"]
 
 [project.scripts]
 scaldys-template = "scaldys_template.__main__:main"
