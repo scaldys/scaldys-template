@@ -8,6 +8,7 @@ pytest.importorskip("ttkbootstrap")
 pytest.importorskip("tkinter")
 
 import tkinter
+
 try:
     root = tkinter.Tk()
     root.destroy()
