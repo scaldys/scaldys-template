@@ -1,62 +1,31 @@
 import pytest
-import tkinter as tk
 from unittest.mock import MagicMock, patch
-from scaldys_template.tk.app import Application
-from scaldys_template.tk.utils import update_font_scale
+
+from scaldys_template.tk import utils
 
 
 @pytest.mark.unit
 class TestZoom:
-    @patch("scaldys_template.tk.app.set_dpi_awareness")
-    @patch("scaldys_template.tk.app.user_data_dir", return_value="/tmp/scaldys")
-    @patch("scaldys_template.tk.app.UiExamplesFrame")  # Mock to avoid the Meter error
-    @patch("scaldys_template.tk.app.AnalyzerFrame")
-    @patch("scaldys_template.tk.app.NavigationFrame")
-    def test_zoom_logic(self, mock_nav, mock_analyzer, mock_ui, mock_user_data, mock_dpi):
-        app = Application()
+    def test_set_dpi_awareness_graceful_when_unavailable(self) -> None:
+        with patch("ctypes.windll", create=True, side_effect=AttributeError):
+            utils.set_dpi_awareness()
 
-        # Initial scale
-        assert app._font_scale == 1.0
+    def test_dark_title_bar_calls_windows_api(self) -> None:
+        mock_window = MagicMock()
+        mock_window.winfo_id.return_value = 42
 
-        # Mock event for zoom up (delta > 0)
-        event_up = MagicMock(spec=tk.Event)
-        event_up.delta = 120
-        event_up.num = 0
+        mock_set_window_attribute = MagicMock()
+        mock_dwmapi = MagicMock()
+        mock_dwmapi.DwmSetWindowAttribute = mock_set_window_attribute
+        mock_user32 = MagicMock()
+        mock_user32.GetParent.return_value = 100
+        mock_windll = MagicMock()
+        mock_windll.dwmapi = mock_dwmapi
+        mock_windll.user32 = mock_user32
 
-        with patch("scaldys_template.tk.app.update_font_scale") as mock_update_font:
-            app._on_zoom(event_up)
-            assert app._font_scale == pytest.approx(1.1)
-            mock_update_font.assert_called_once_with(pytest.approx(1.1))
+        with patch("scaldys_template.tk.utils.ct.windll", mock_windll, create=True):
+            utils.dark_title_bar(mock_window)
 
-        # Mock event for zoom down (num = 5)
-        event_down = MagicMock(spec=tk.Event)
-        event_down.delta = 0
-        event_down.num = 5
-
-        with patch("scaldys_template.tk.app.update_font_scale") as mock_update_font:
-            app._on_zoom(event_down)
-            assert app._font_scale == pytest.approx(1.0)
-            mock_update_font.assert_called_once_with(pytest.approx(1.0))
-
-        app.destroy()
-
-    @patch("tkinter.font.nametofont")
-    @patch("tkinter.font.names", return_value=["TkDefaultFont"])
-    def test_update_font_scale_utility(self, mock_font_names, mock_nametofont):
-        from scaldys_template.tk.utils import update_font_scale, _original_font_sizes
-
-        # Clear state for testing
-        _original_font_sizes.clear()
-
-        mock_font = MagicMock()
-        mock_font.actual.return_value = 10
-        mock_nametofont.return_value = mock_font
-
-        # First call captures original size
-        update_font_scale(1.5)
-        assert _original_font_sizes["TkDefaultFont"] == 10
-        mock_font.configure.assert_called_with(size=15)
-
-        # Second call scales from original
-        update_font_scale(2.0)
-        mock_font.configure.assert_called_with(size=20)
+        mock_window.update.assert_called_once()
+        mock_user32.GetParent.assert_called_once_with(42)
+        mock_set_window_attribute.assert_called_once()

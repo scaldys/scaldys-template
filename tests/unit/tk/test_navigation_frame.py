@@ -1,15 +1,13 @@
 import pytest
-import tkinter as tk
 from typing import Generator
 from pathlib import Path
 import ttkbootstrap as tb
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 # Skip these tests if ttkbootstrap or tkinter is not available
 pytest.importorskip("ttkbootstrap")
 pytest.importorskip("tkinter")
 
-from scaldys_template.tk.ui.navigation_frame import NavigationFrame, NavigationPanel
 from scaldys_template.tk.app import Application
 from scaldys_template.common.app_location import AppLocation
 

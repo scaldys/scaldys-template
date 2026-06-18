@@ -3,7 +3,6 @@
 
 import typer
 from typer.core import TyperGroup
-from click import Context
 from art import text2art
 from rich.console import Console
 
@@ -30,7 +29,7 @@ def version_callback(value: bool) -> None:
 
 
 class HeaderGroup(TyperGroup):
-    def format_help(self, ctx: Context, formatter) -> None:
+    def format_help(self, ctx: typer.Context, formatter) -> None:
         # With rich_markup_mode="rich", Typer bypasses the formatter and renders
         # options/commands via Rich directly, so formatter.write() ends up after the
         # panels. Instead, print the art straight to the console before the parent

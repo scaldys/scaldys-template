@@ -37,8 +37,12 @@ class TestToolBar:
         assert app.toolbar._run_btn.winfo_manager() == "pack"
         assert app.toolbar._defaults_btn.winfo_manager() == "pack"
         assert app.toolbar._sep.winfo_manager() == "pack"
-        assert app.toolbar._apply_btn.winfo_manager() == "", "Apply button should be hidden in analyzer"
-        assert app.toolbar._apply_sep.winfo_manager() == "", "Apply separator should be hidden in analyzer"
+        assert app.toolbar._apply_btn.winfo_manager() == "", (
+            "Apply button should be hidden in analyzer"
+        )
+        assert app.toolbar._apply_sep.winfo_manager() == "", (
+            "Apply separator should be hidden in analyzer"
+        )
 
         assert str(app.toolbar._open_btn.cget("state")) == "normal"
         assert str(app.toolbar._run_btn.cget("state")) == "normal"
@@ -55,10 +59,14 @@ class TestToolBar:
             "Defaults button should be hidden in editor"
         )
         assert app.toolbar._sep.winfo_manager() == "", "Separator should be hidden in editor"
-        
+
         # Apply group should be shown
-        assert app.toolbar._apply_btn.winfo_manager() == "pack", "Apply button should be shown in editor"
-        assert app.toolbar._apply_sep.winfo_manager() == "pack", "Apply separator should be shown in editor"
+        assert app.toolbar._apply_btn.winfo_manager() == "pack", (
+            "Apply button should be shown in editor"
+        )
+        assert app.toolbar._apply_sep.winfo_manager() == "pack", (
+            "Apply separator should be shown in editor"
+        )
 
         assert str(app.toolbar._open_btn.cget("state")) == "normal"
 
