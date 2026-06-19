@@ -90,6 +90,9 @@ venvPath = "."
 venv = ".venv"
 typeCheckingMode = "basic"
 
+[tool.uv.extra-build-dependencies]
+tksvg = ["scikit-build"]
+
 #[[tool.uv.index]]
 #name = "testpypi"
 #url = "https://test.pypi.org/simple/"
