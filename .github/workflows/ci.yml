@@ -19,6 +19,12 @@ jobs:
           python-version: "3.13"
       - uses: astral-sh/setup-uv@v6
 
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tcl-dev tk-dev
+
       - name: UV verify lock file
         run: uv lock --locked
 
@@ -50,6 +56,12 @@ jobs:
         with:
           python-version: "3.13"
       - uses: astral-sh/setup-uv@v6
+
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tcl-dev tk-dev
 
       - name: Run tests (Linux)
         if: runner.os == 'Linux'
