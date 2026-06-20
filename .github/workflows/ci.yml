@@ -63,6 +63,23 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y tcl-dev tk-dev
 
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake tcl-tk ninja
+
+      - name: Pre-build tksvg without build isolation (macOS)
+        # tksvg 0.7.4's setup.py invokes `pacman` to install cmake when it
+        # cannot find it on PATH, which fails on macOS runners even though
+        # cmake is available via Homebrew.  Pre-installing tksvg into the
+        # project venv with --no-build-isolation lets the build use the
+        # system cmake/tcl-tk directly and avoids the pacman fallback.
+        if: runner.os == 'macOS'
+        run: |
+          uv venv
+          uv pip install --python .venv/bin/python scikit-build "cmake<3.31" setuptools wheel ninja
+          uv pip install --python .venv/bin/python --no-build-isolation tksvg==0.7.4
+
       - name: Run tests (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a uv run pytest -v --durations=0 --cov --cov-report=xml
