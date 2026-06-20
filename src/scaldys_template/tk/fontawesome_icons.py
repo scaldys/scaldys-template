@@ -62,6 +62,7 @@ def icon_to_image(
     scale_to_width: int | None = None,
     scale_to_height: int | None = None,
     scale: float = 1,
+    master: tkinter.Misc | None = None,
 ) -> PhotoImage:
     """Load a bundled FontAwesome SVG icon and return it as a ``PhotoImage``.
 
@@ -78,6 +79,10 @@ def icon_to_image(
         Scale the image to this pixel height, preserving aspect ratio.
     scale:
         Uniform scale factor applied on top of any ``scale_to_*`` setting.
+    master:
+        Optional Tkinter widget that will own this image.  If not provided,
+        the default root is used.  Providing a master is recommended in
+        multi-window or test environments to avoid ``TclError``.
 
     Returns
     -------
@@ -91,7 +96,7 @@ def icon_to_image(
     """
     svg_path = _ICONS_DIR / f"{name}.svg"
     xml_data = svg_path.read_text(encoding="utf-8")
-    return svg_to_image(xml_data, fill, scale_to_width, scale_to_height, scale)
+    return svg_to_image(xml_data, fill, scale_to_width, scale_to_height, scale, master=master)
 
 
 def svg_to_image(
@@ -100,6 +105,7 @@ def svg_to_image(
     scale_to_width: int | None = None,
     scale_to_height: int | None = None,
     scale: float = 1,
+    master: tkinter.Misc | None = None,
 ) -> PhotoImage:
     """Convert SVG source data into a Tkinter-compatible ``PhotoImage``.
 
@@ -115,6 +121,8 @@ def svg_to_image(
         Scale to this pixel height while preserving aspect ratio.
     scale:
         Uniform scale factor.
+    master:
+        Optional Tkinter widget that will own this image.
 
     Returns
     -------
@@ -131,6 +139,8 @@ def svg_to_image(
 
     if tksvg:
         kwargs: dict[str, object] = {"data": buf.getvalue()}
+        if master:
+            kwargs["master"] = master
         if scale_to_width:
             kwargs["scaletowidth"] = scale_to_width
         if scale_to_height:
@@ -150,7 +160,7 @@ def svg_to_image(
         format_parts.append(f"-scaleto {w} {h}")
 
     try:
-        return PhotoImage(data=buf.getvalue(), format=" ".join(format_parts))
+        return PhotoImage(master=master, data=buf.getvalue(), format=" ".join(format_parts))
     except tkinter.TclError as e:
         if "svg" in str(e).lower() or "format" in str(e).lower():
             raise ImportError(

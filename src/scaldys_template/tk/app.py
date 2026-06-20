@@ -232,19 +232,34 @@ class ToolBar(tb.Frame):
     def _load_icons(self) -> None:
         size = 24
         self._img_open = faw.icon_to_image(
-            faw.Icons.folder_open_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.folder_open_regular,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_save = faw.icon_to_image(
-            faw.Icons.floppy_disk_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.floppy_disk_regular,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_run = faw.icon_to_image(
-            faw.Icons.circle_play_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.circle_play_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_defaults = faw.icon_to_image(
-            faw.Icons.circle_stop_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.circle_stop_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_apply = faw.icon_to_image(
-            faw.Icons.check_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.check_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
 
     def _initialize(self) -> None:
@@ -408,34 +423,64 @@ class SideBar(tb.Frame):
     def _load_icons(self) -> None:
         size = 20
         self._img_analyzer = faw.icon_to_image(
-            faw.Icons.square_poll_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.square_poll_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_left_arrow = faw.icon_to_image(
-            faw.Icons.angle_left_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.angle_left_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_right_arrow = faw.icon_to_image(
-            faw.Icons.angle_right_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.angle_right_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_file = faw.icon_to_image(
-            faw.Icons.file_lines_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.file_lines_regular,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_hamburger = faw.icon_to_image(
-            faw.Icons.bars_solid_full, fill=self._fg_color, scale_to_width=size
+            faw.Icons.bars_solid_full,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_navigation = faw.icon_to_image(
-            faw.Icons.folder_tree_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.folder_tree_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_open_file = faw.icon_to_image(
-            faw.Icons.folder_open_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.folder_open_regular,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_save_file = faw.icon_to_image(
-            faw.Icons.floppy_disk_regular, fill=self._fg_color, scale_to_width=size
+            faw.Icons.floppy_disk_regular,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_settings = faw.icon_to_image(
-            faw.Icons.gear_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.gear_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
         self._img_ui_examples = faw.icon_to_image(
-            faw.Icons.cubes_solid, fill=self._fg_color, scale_to_width=size
+            faw.Icons.cubes_solid,
+            fill=self._fg_color,
+            scale_to_width=size,
+            master=self,
         )
 
     def _initialize(self) -> None:
@@ -595,6 +640,7 @@ class Application(tb.Window):
         self._recent_files: list[Path] = []
 
         self.apply_custom_styling()
+        self.update_idletasks()
         self._setup_layout()
         self._load_recent_files()
         self._bind_shortcuts()
@@ -623,8 +669,12 @@ class Application(tb.Window):
         # Casting them to Any locally is the clean fix.
         colors: Any = self.style.colors
         theme: Any = self.style.theme
-        fg: str = colors.get("fg") if theme.type == "dark" else colors.get("bg")
-        dark: str = colors.get("dark")
+
+        # Fallback to hardcoded defaults if the theme failed to load (e.g. in some CI environments)
+        primary = colors.get("primary") or "#375a7f"
+        fg = colors.get("fg") if theme.type == "dark" else colors.get("bg")
+        fg = fg or "#ffffff"
+        dark = colors.get("dark") or "#303030"
 
         self.bars_fg_color: str = fg
         self.bars_bg_color: str = dark
@@ -638,14 +688,14 @@ class Application(tb.Window):
         self.style.configure(
             Styles.BARS_BUTTON_SELECTED,
             borderwidth=0,
-            background=colors.get("primary"),
+            background=primary,
             foreground=fg,
         )
         self.style.configure(Styles.BARS_BUTTON_LEFT_TEXT, anchor="w")
         self.style.configure(
             Styles.BARS_BUTTON_SELECTED_LEFT_TEXT,
             anchor="w",
-            background=colors.get("primary"),
+            background=primary,
             foreground=fg,
         )
         self.style.configure(Styles.BARS_BUTTON_RIGHT_TEXT, anchor="e")

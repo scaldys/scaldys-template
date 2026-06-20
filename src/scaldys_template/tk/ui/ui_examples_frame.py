@@ -239,14 +239,23 @@ class UiExamplesFrame(tb.Frame):
             fill=X, pady=5, expand=YES
         )
 
-        tb.Meter(
-            container,
-            metersize=150,
-            amountused=45,
-            subtext="meter widget",
-            bootstyle=INFO,
-            interactive=True,
-        ).pack(pady=10)
+        # On some Linux CI environments, ttkbootstrap's Meter can fail to resolve
+        # theme colors if they aren't fully loaded yet, leading to a PIL ValueError.
+        style = tb.Style()
+        if style.colors.get(INFO):
+            tb.Meter(
+                container,
+                metersize=150,
+                amountused=45,
+                subtext="meter widget",
+                bootstyle=INFO,
+                interactive=True,
+            ).pack(pady=10)
+        else:
+            # Fallback for headless/CI environments where themes might not load fully
+            tb.Label(container, text="(Meter widget omitted: theme colors not loaded)").pack(
+                pady=10
+            )
 
         sb1 = tb.Scrollbar(container, orient=HORIZONTAL)
         sb1.set(0.1, 0.9)
