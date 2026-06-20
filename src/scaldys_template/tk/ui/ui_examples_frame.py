@@ -242,7 +242,8 @@ class UiExamplesFrame(tb.Frame):
         # On some Linux CI environments, ttkbootstrap's Meter can fail to resolve
         # theme colors if they aren't fully loaded yet, leading to a PIL ValueError.
         style = tb.Style()
-        if style.colors.get(INFO):
+        colors: Any = style.colors
+        if colors.get(INFO):
             tb.Meter(
                 container,
                 metersize=150,
