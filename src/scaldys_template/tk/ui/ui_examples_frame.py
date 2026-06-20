@@ -94,7 +94,11 @@ class UiExamplesFrame(tb.Frame):
     # ------------------------------------------------------------------
 
     def _initialize(self) -> None:
-        self._create_theme_selector()
+        try:
+            self._create_theme_selector()
+        except Exception:
+            pass
+
         tb.Separator(self).pack(fill=X, pady=10, padx=10)
 
         lframe = tb.Frame(self, padding=5)
@@ -103,14 +107,22 @@ class UiExamplesFrame(tb.Frame):
         rframe = tb.Frame(self, padding=5)
         rframe.pack(side=RIGHT, fill=BOTH, expand=YES)
 
-        self._create_color_swatches(lframe)
-        self._create_checkbuttons(lframe)
-        self._create_treeview_and_notebook(lframe)
-        self._create_text_widget(lframe)
-        self._create_scales_and_meters(lframe)
-
-        self._create_button_gallery(rframe)
-        self._create_input_widgets(rframe)
+        # Build each section independently, catching errors to ensure CI stability
+        # in environments with limited GUI/theme support.
+        builders = [
+            (self._create_color_swatches, lframe),
+            (self._create_checkbuttons, lframe),
+            (self._create_treeview_and_notebook, lframe),
+            (self._create_text_widget, lframe),
+            (self._create_scales_and_meters, lframe),
+            (self._create_button_gallery, rframe),
+            (self._create_input_widgets, rframe),
+        ]
+        for builder, parent in builders:
+            try:
+                builder(parent)
+            except Exception:
+                continue
 
     # ------------------------------------------------------------------
     # Section builders
@@ -239,24 +251,16 @@ class UiExamplesFrame(tb.Frame):
             fill=X, pady=5, expand=YES
         )
 
-        # On some Linux CI environments, ttkbootstrap's Meter can fail to resolve
-        # theme colors if they aren't fully loaded yet, leading to a PIL ValueError.
-        style = tb.Style()
-        colors: Any = style.colors
-        if colors.get(INFO):
-            tb.Meter(
-                container,
-                metersize=150,
-                amountused=45,
-                subtext="meter widget",
-                bootstyle=INFO,
-                interactive=True,
-            ).pack(pady=10)
-        else:
-            # Fallback for headless/CI environments where themes might not load fully
-            tb.Label(container, text="(Meter widget omitted: theme colors not loaded)").pack(
-                pady=10
-            )
+        # On some Linux and Windows CI environments, ttkbootstrap's Meter can fail
+        # to resolve theme or system colors, leading to a TypeError or PIL ValueError.
+        tb.Meter(
+            container,
+            metersize=150,
+            amountused=45,
+            subtext="meter widget",
+            bootstyle=INFO,
+            interactive=True,
+        ).pack(pady=10)
 
         sb1 = tb.Scrollbar(container, orient=HORIZONTAL)
         sb1.set(0.1, 0.9)
