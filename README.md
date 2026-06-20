@@ -12,6 +12,8 @@ https://github.com/scaldys/scaldys-template
 ## Features
 
 - Modern Python development with Python 3.13+
+- **Tkinter-based GUI** built with `ttkbootstrap` — includes a Signal Analyzer,
+  real-time JSON Editor, and a widget showcase (**Windows only**)
 - Command-line interface (CLI) built with Typer — global flags (`--log`,
   `--verbose`) resolved once before any subcommand runs
 - Application lifecycle entry point (`__main__.py`) covering freeze support,
@@ -28,37 +30,46 @@ https://github.com/scaldys/scaldys-template
   on the deployment mode — `PyInstaller`, `Inno Setup`, or wheel-only packaging
 - GitHub Actions workflows for CI/CD and PyPI publishing
 
+## Release Notes
+
+For high-level highlights of each release, see [RELEASES.md](./RELEASES.md). For
+a technical list of all changes, see the [CHANGELOG](./CHANGELOG).
+
 ## Project Structure
 
 ```
 src/scaldys_template/
-├── __main__.py          ← lifecycle entry point (freeze_support, crash hook,
-│                           signal handlers, asyncio policy, env validation)
+├── __main__.py             ← lifecycle entry point (freeze_support, crash hook,
+│                             signal handlers, asyncio policy, env validation)
 ├── cli/
-│   ├── cli.py           ← Typer app; owns the single setup_logging() call
-│   ├── settings.py      ← AppSettings: persisted log level (INI + Pydantic)
+│   ├── cli.py              ← Typer app; owns the single setup_logging() call
+│   ├── settings.py         ← AppSettings: persisted log level (INI + Pydantic)
 │   └── commands/
-│       ├── arg_types.py ← shared Annotated type definitions
+│       ├── arg_types.py    ← shared Annotated type definitions
 │       ├── cmd_export.py
 │       ├── cmd_process.py  ← demonstrates async pipeline + DB connection
 │       └── cmd_settings.py
 ├── common/
-│   ├── app_location.py  ← OS-aware path resolution (Windows/macOS/Linux,
-│   │                       source vs installed vs frozen)
-│   └── logging.py       ← QueueHandler-based JSON logging setup
-└── core/
-    ├── export.py
-    ├── async_processor.py  ← async pipeline pattern + sync wrapper
-    └── database.py         ← connection, transaction, pool scaffold
+│   ├── app_location.py     ← OS-aware path resolution (Windows/macOS/Linux,
+│   │                         source vs installed vs frozen)
+│   └── logging.py          ← QueueHandler-based JSON logging setup
+├── core/
+│   ├── export.py
+│   ├── async_processor.py  ← async pipeline pattern + sync wrapper
+│   └── database.py         ← connection, transaction, pool scaffold
+└── tk/
+    ├── app.py              ← Main Application (Tkinter)
+    └── ui/                 ← GUI frames (Analyzer, Editor, UI Examples)
 
 tests/
-├── conftest.py              ← isolated_app_location keystone fixture
+├── conftest.py             ← isolated_app_location keystone fixture
 ├── unit/
-│   ├── conftest.py          ← reset_scaldys_template_logger autouse fixture
-│   ├── common/              ← mirrors src/scaldys_template/common/
-│   ├── cli/                 ← mirrors src/scaldys_template/cli/
-│   └── core/                ← mirrors src/scaldys_template/core/
-└── integration/             ← full CLI invocations via CliRunner
+│   ├── conftest.py         ← reset_scaldys_template_logger autouse fixture
+│   ├── common/             ← mirrors src/scaldys_template/common/
+│   ├── cli/                ← mirrors src/scaldys_template/cli/
+│   ├── core/               ← mirrors src/scaldys_template/core/
+│   └── tk/                 ← mirrors src/scaldys_template/tk/
+└── integration/            ← full CLI invocations via CliRunner
 ```
 
 ## Getting Started
@@ -140,6 +151,9 @@ uv run python -m scaldys_template --log info export config.yml
 # Manage the persisted log level
 uv run scaldys-template settings log warning
 uv run scaldys-template settings          # show current level
+
+# Launch the Tkinter GUI (Windows only)
+uv run scaldys-template gui
 ```
 
 You can also run directly from the source directory:

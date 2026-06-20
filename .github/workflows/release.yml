@@ -27,6 +27,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" \
-            --title "${{ github.ref_name }}" \
-            --generate-notes
+          # Extract notes for the current version from RELEASES.md
+          # It looks for the section starting with ## [version] and ends at the next '---'
+          VERSION="${{ github.ref_name }}"
+          VERSION_CLEAN="${VERSION#v}" # remove 'v' prefix if present
+          
+          sed -n "/## \[$VERSION_CLEAN\]/,/---/p" RELEASES.md | sed '1d;$d' > release_notes.md
+          
+          # If extraction failed or file is empty, use auto-generated notes as fallback
+          if [ -s release_notes.md ]; then
+            gh release create "$VERSION" \
+              --title "$VERSION" \
+              --notes-file release_notes.md
+          else
+            gh release create "$VERSION" \
+              --title "$VERSION" \
+              --generate-notes
+          fi

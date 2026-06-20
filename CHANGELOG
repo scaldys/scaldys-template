@@ -25,22 +25,13 @@
     !
 
 
-[0.11.0] - 2026-05-27
+[0.11.0] - 2026-06-20
 =====================
 
 **Added**
 
-  - ``ToolBar`` component (``tk/app.py``): provides quick access to File
-    operations (Open, Save) and Analyzer controls (Run, Defaults).  The toolbar
-    automatically adjusts its visibility and content based on the active frame.
-
-  - Signal Analyzer GUI: full feature implementation including core model, engine,
-    and persistence logic.  GUI components (frames, plots, table) moved into a
-    dedicated ``gui/signal_analyzer/`` directory.  User and developer guides
-    updated accordingly; unit tests added for model, engine, and persistence.
-
-  - ``About`` dialog exposing application metadata (version, author, licence).
-    ``Help`` menu updated to surface the dialog.
+  - ``__future__.annotations`` added to various modules for improved type hint
+    support and forward reference handling.
 
   - ``WindowsSafeRotatingFileHandler``: a ``RotatingFileHandler`` subclass that
     gracefully handles Windows file-lock errors during log rollover, preventing
@@ -51,24 +42,34 @@
   - GUI: unit tests for the ``ToolBar`` functionality and contextual behavior
     (``tests/unit/tk/test_toolbar.py``).
 
-  - **JSON Editor view** (``tk/ui/editor_frame.py``): a new sidebar frame that
-    displays the current ``SignalParameters`` as formatted JSON in an editable
-    text widget.  Bidirectional sync keeps both views consistent: widget edits
-    in the Analyzer update the editor in real time (on ``FocusOut`` /
-    ``<<ComboboxSelected>>``), and "Apply" (from the toolbar) updates the
-    Analyzer widgets.
-
-  - **Enhanced File menu**: the File menu now contains *Open…*, *Save*,
-    *Save As…*, and a *Recent Files* cascade (up to 10 entries, persisted to
-    ``recent_files.json`` in the application data directory).  All file
-    operations are centralised in ``Application``; the ``MenuBar`` delegates to
-    it via an injected reference.
-
   - ``Application.update_parameters(params, source)``: central synchronisation
     method that broadcasts a ``SignalParameters`` change to both the Analyzer
     and the Editor, skipping the originating view to avoid feedback loops.
 
 **Changed**
+
+  - ``tksvg`` made an optional dependency; added fallback to native Tk 8.7+ SVG
+    support for platforms where the binary extension is unavailable.
+
+  - Standardized ``messagebox`` usage across GUI frames for consistent user
+    interaction.
+
+  - CI: separated Linux and non-Linux test runs; ensured tkinter-dependent
+    tests are skipped in headless environments.
+
+  - CI: improved robustness of UI example initialization and SVG handling in
+    automated tests.
+
+  - Updated ``certifi`` and ``coverage`` dependencies.
+
+  - Refactored sash placement logic in ``AnalyzerFrame`` to ensure reliable
+    layout initialization.
+
+  - Improved FontAwesome image utilities with an explicit ``master`` parameter
+    for better widget ownership control and CI environment compatibility.
+
+  - Updated GUI test suite with support for DPI awareness and dark title bar
+    logic.
 
   - Reconfigured the application toolbar to follow standard Windows patterns.
     Navigation-switching buttons were replaced with action buttons: "Play"
@@ -86,9 +87,6 @@
   - Renamed "Play" view to "Navigation" throughout the application.
 
   - Renamed "Example" view to "UI Examples" throughout the application.
-
-  - Font Awesome icons replaced with updated "full" versions (v7.2.0).  Widget
-    styles and button layouts adjusted for visual consistency.
 
   - ``scaldys-project`` dependency bumped to v0.13.0.
 
@@ -130,6 +128,14 @@
     architecture, bidirectional sync pattern, and the ``Application`` file-management API.
 
 **Fixed**
+
+  - Resolved color loading issues for ``ttkbootstrap`` Meter on Linux CI
+    environments.
+
+  - Fixed Windows-specific menubar initialization in test fixtures.
+
+  - Improved Windows subprocess handling by using ``sys.platform`` for more
+    reliable platform detection.
 
   - Pyright type-checking feedback resolved across several modules.
 
