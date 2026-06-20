@@ -37,11 +37,11 @@ This template is designed to work in tandem with
 toolset for managing Python project lifecycles, build pipelines, and
 distribution.
 
-`scaldys-template` serves as the **reference example** for all
-`scaldys-project` compatible projects. It demonstrates the standard directory
-structure, configuration patterns (via `scaldys-project.toml`), and integration
-points—such as Cython compilation, Windows installer generation, and automated
-documentation builds—that the ecosystem supports.
+`scaldys-template` serves as the **reference example** for all `scaldys-project`
+compatible projects. It demonstrates the standard directory structure,
+configuration patterns (via `scaldys-project.toml`), and integration points—such
+as Cython compilation, Windows installer generation, and automated documentation
+builds—that the ecosystem supports.
 
 ## Release Notes
 
