@@ -17,7 +17,7 @@ import csv
 import logging
 import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, ttk
 from typing import Any
 
 import ttkbootstrap as tb
@@ -258,4 +258,4 @@ class ResultsTableFrame(ttk.LabelFrame):
             logger.info("Results exported to %s", path)
         except OSError as exc:
             logger.error("CSV export failed: %s", exc)
-            messagebox.showerror("Export Error", str(exc))
+            tk.messagebox.showerror("Export Error", str(exc))  # type: ignore[attr-defined]

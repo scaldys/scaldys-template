@@ -19,24 +19,6 @@ jobs:
           python-version: "3.13"
       - uses: astral-sh/setup-uv@v6
 
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y tcl-dev tk-dev
-
-      - name: Install system dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install tcl-tk cmake
-
-      - name: Install system dependencies (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          if (!(Get-Command cmake -ErrorAction SilentlyContinue)) {
-            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-          }
-
       - name: UV verify lock file
         run: uv lock --locked
 
@@ -68,24 +50,6 @@ jobs:
         with:
           python-version: "3.13"
       - uses: astral-sh/setup-uv@v6
-
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y tcl-dev tk-dev
-
-      - name: Install system dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install tcl-tk cmake
-
-      - name: Install system dependencies (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          if (!(Get-Command cmake -ErrorAction SilentlyContinue)) {
-            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-          }
 
       - name: Run tests (Linux)
         if: runner.os == 'Linux'

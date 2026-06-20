@@ -21,6 +21,7 @@ from scaldys_template.common.app_location import AppLocation
 
 
 @pytest.mark.unit
+@pytest.mark.svg
 class TestApplicationState:
     @pytest.fixture
     def app(

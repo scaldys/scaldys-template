@@ -46,6 +46,54 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers", "integration: Tests that use the filesystem or invoke the CLI"
     )
     config.addinivalue_line("markers", "slow: Tests that take significant time")
+    config.addinivalue_line(
+        "markers", "svg: Tests that require tksvg or native Tk 8.7+ SVG support"
+    )
+
+
+_SVG_SUPPORT_CACHE: bool | None = None
+
+
+def has_svg_support() -> bool:
+    """Check if the environment supports SVG images (tksvg or Tk 8.7+)."""
+    global _SVG_SUPPORT_CACHE
+    if _SVG_SUPPORT_CACHE is not None:
+        return _SVG_SUPPORT_CACHE
+
+    try:
+        import tksvg  # type: ignore[import-not-found]
+
+        if tksvg is not None:
+            _SVG_SUPPORT_CACHE = True
+            return True
+    except ImportError:
+        pass
+
+    # No tksvg. Check for native Tk 8.7+ SVG support
+    try:
+        import tkinter
+
+        root = tkinter.Tk()
+        root.withdraw()
+        # Try to create a small dummy SVG image
+        dummy_svg = (
+            '<svg width="1" height="1" xmlns="http://www.w3.org/2000/svg">'
+            '<rect width="1" height="1" fill="black"/></svg>'
+        )
+        tkinter.PhotoImage(master=root, data=dummy_svg, format="svg")
+        root.destroy()
+        _SVG_SUPPORT_CACHE = True
+        return True
+    except (tkinter.TclError, Exception):
+        _SVG_SUPPORT_CACHE = False
+        return False
+
+
+def pytest_runtest_setup(item: pytest.Item) -> None:
+    """Skip tests marked with 'svg' if SVG support is missing."""
+    if any(mark.name == "svg" for mark in item.iter_markers()):
+        if not has_svg_support():
+            pytest.skip("SVG support (tksvg or Tk 8.7+) is not available")
 
 
 # ---------------------------------------------------------------------------

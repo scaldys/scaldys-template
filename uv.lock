@@ -1307,7 +1307,7 @@ dependencies = [
     { name = "platformdirs" },
     { name = "pydantic" },
     { name = "rich" },
-    { name = "tksvg" },
+    { name = "tksvg", marker = "sys_platform == 'win32'" },
     { name = "ttkbootstrap" },
     { name = "typer" },
 ]
@@ -1331,7 +1331,6 @@ dev = [
     { name = "sphinx" },
     { name = "sphinx-lint" },
     { name = "sphinx-rtd-theme" },
-    { name = "tksvg" },
 ]
 
 [package.metadata]
@@ -1345,7 +1344,7 @@ requires-dist = [
     { name = "platformdirs", specifier = ">=4.9.6" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "rich", specifier = ">=13.0" },
-    { name = "tksvg", specifier = ">=0.7.4" },
+    { name = "tksvg", marker = "sys_platform == 'win32'", specifier = ">=0.7.4" },
     { name = "tksvg", marker = "extra == 'svg'", specifier = ">=0.7.4" },
     { name = "ttkbootstrap", specifier = ">=1.20.3" },
     { name = "typer", specifier = ">=0.25.0" },
@@ -1366,7 +1365,6 @@ dev = [
     { name = "sphinx", specifier = ">=9.1.0" },
     { name = "sphinx-lint", specifier = ">=1.0.2" },
     { name = "sphinx-rtd-theme", specifier = ">=3.1.0" },
-    { name = "tksvg", specifier = ">=0.7.4" },
 ]
 
 [[package]]
