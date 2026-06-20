@@ -30,6 +30,19 @@ https://github.com/scaldys/scaldys-template
   on the deployment mode — `PyInstaller`, `Inno Setup`, or wheel-only packaging
 - GitHub Actions workflows for CI/CD and PyPI publishing
 
+## Relationship with scaldys-project
+
+This template is designed to work in tandem with
+[scaldys-project](https://github.com/scaldys/scaldys-project), a specialized
+toolset for managing Python project lifecycles, build pipelines, and
+distribution.
+
+`scaldys-template` serves as the **reference example** for all
+`scaldys-project` compatible projects. It demonstrates the standard directory
+structure, configuration patterns (via `scaldys-project.toml`), and integration
+points—such as Cython compilation, Windows installer generation, and automated
+documentation builds—that the ecosystem supports.
+
 ## Release Notes
 
 For high-level highlights of each release, see [RELEASES.md](./RELEASES.md). For
