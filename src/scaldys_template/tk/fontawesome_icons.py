@@ -14,10 +14,12 @@ from tkinter import PhotoImage
 # tksvg 0.7.4 fails to install on systems with Tk 8.7+ (like GitHub CI runners)
 # because its installer raises a RuntimeError. We make it optional and
 # fall back to native Tk 8.7+ SVG support in svg_to_image().
+_tksvg_import_error: Exception | None = None
 try:
     import tksvg  # type: ignore[import-not-found]
-except ImportError:
+except Exception as e:
     tksvg = None
+    _tksvg_import_error = e
 
 from lxml import etree
 
@@ -163,7 +165,8 @@ def svg_to_image(
         return PhotoImage(master=master, data=buf.getvalue(), format=" ".join(format_parts))
     except tkinter.TclError as e:
         if "svg" in str(e).lower() or "format" in str(e).lower():
-            raise ImportError(
-                "SVG support is not available. Please install 'tksvg' or upgrade to Tk 8.7+."
-            ) from e
+            msg = "SVG support is not available. Please install 'tksvg' or upgrade to Tk 8.7+."
+            if _tksvg_import_error:
+                msg += f" (tksvg import failed: {_tksvg_import_error})"
+            raise ImportError(msg) from e
         raise
