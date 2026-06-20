@@ -63,34 +63,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y tcl-dev tk-dev
 
-      - name: Install system dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install cmake tcl-tk ninja
-
-      - name: Pre-build tksvg without build isolation (macOS)
-        # tksvg 0.7.4's setup.py invokes `pacman` to install cmake when its
-        # own detection (shutil.which('cmake')) fails, which breaks on macOS
-        # even when cmake is provided via Homebrew or the `cmake` PyPI
-        # package.  We explicitly add brew's bin and the venv's bin to PATH
-        # so tksvg's setup.py finds a working cmake and skips the pacman
-        # fallback entirely.
-        if: runner.os == 'macOS'
-        run: |
-          uv venv
-          uv pip install --python .venv/bin/python scikit-build "cmake<3.31" setuptools wheel ninja
-          BREW_PREFIX="$(brew --prefix)"
-          export PATH="$PWD/.venv/bin:$BREW_PREFIX/bin:$BREW_PREFIX/opt/tcl-tk/bin:$PATH"
-          export CMAKE_PREFIX_PATH="$BREW_PREFIX/opt/tcl-tk"
-          echo "Using cmake at: $(which cmake)"
-          echo "cmake version: $(cmake --version | head -n1)"
-          uv pip install --python .venv/bin/python --no-build-isolation tksvg==0.7.4
-          # Persist PATH/env for subsequent steps so `uv run pytest` reuses
-          # the prebuilt tksvg without rebuilding from sdist.
-          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
-          echo "$BREW_PREFIX/bin" >> "$GITHUB_PATH"
-          echo "CMAKE_PREFIX_PATH=$BREW_PREFIX/opt/tcl-tk" >> "$GITHUB_ENV"
-
       - name: Run tests (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a uv run pytest -v --durations=0 --cov --cov-report=xml

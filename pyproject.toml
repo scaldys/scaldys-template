@@ -25,13 +25,13 @@ dependencies = [
     "platformdirs>=4.9.6",
     "pydantic>=2.0",
     "rich>=13.0",
-    "tksvg>=0.7.4; sys_platform == 'win32' or sys_platform == 'linux' or sys_platform == 'darwin'",
+    "tksvg>=0.7.4; sys_platform == 'win32' or sys_platform == 'linux'",
     "ttkbootstrap>=1.20.3",
     "typer>=0.25.0",
 ]
 
 [project.optional-dependencies]
-svg = ["tksvg>=0.7.4"]
+svg = ["tksvg>=0.7.4; sys_platform == 'win32' or sys_platform == 'linux'"]
 
 [project.scripts]
 scaldys-template = "scaldys_template.__main__:main"
@@ -57,7 +57,7 @@ dev = [
     "pytest-asyncio>=0.25.0",
     "pytest-cov>=7.1.0",
     "pytest-mock>=3.14.0",
-    "tksvg>=0.7.4",
+    "tksvg>=0.7.4; sys_platform == 'win32' or sys_platform == 'linux'",
     "ruff>=0.15.12",
     "sphinx>=9.1.0",
     "sphinx-rtd-theme>=3.1.0",
