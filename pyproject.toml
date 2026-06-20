@@ -92,7 +92,7 @@ typeCheckingMode = "basic"
 
 # Added for environment on GitHub to run actions
 [tool.uv.extra-build-dependencies]
-tksvg = ["scikit-build", "cmake"]
+tksvg = ["scikit-build", "cmake<3.31"]
 
 #[[tool.uv.index]]
 #name = "testpypi"
