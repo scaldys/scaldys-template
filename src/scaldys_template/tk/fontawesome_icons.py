@@ -9,6 +9,7 @@ import tkinter
 from enum import StrEnum
 from pathlib import Path
 from tkinter import PhotoImage
+from lxml import etree
 
 
 # tksvg 0.7.4 fails to install on systems with Tk 8.7+ (like GitHub CI runners)
@@ -20,8 +21,6 @@ try:
 except Exception as e:
     tksvg = None
     _tksvg_import_error = e
-
-from lxml import etree
 
 
 _ICONS_DIR = Path(__file__).parent / "assets" / "fa"
