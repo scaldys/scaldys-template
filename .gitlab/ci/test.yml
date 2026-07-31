@@ -1,0 +1,48 @@
+.test_base:
+  stage: test
+  needs: ["code_quality"]
+  variables:
+    UV_CACHE_DIR: .uv-cache
+  cache:
+    key:
+      files:
+        - uv.lock
+    paths:
+      - .uv-cache
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - coverage.xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+
+test:linux:
+  extends: .test_base
+  image: python:3.13
+  before_script:
+    - apt-get update && apt-get install -y xvfb
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.cargo/bin:$PATH"
+  script:
+    - xvfb-run -a uv run pytest -v --durations=0 --cov --cov-report=xml
+
+test:macos:
+  extends: .test_base
+  tags:
+    - saas-macos-medium-m1
+  before_script:
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.cargo/bin:$PATH"
+  script:
+    - uv run pytest -v --durations=0 --cov --cov-report=xml
+
+test:windows:
+  extends: .test_base
+  tags:
+    - saas-windows-medium-amd64
+  before_script:
+    - powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  script:
+    - powershell -c "$env:Path += ';$env:USERPROFILE\.cargo\bin'; uv run pytest -v --durations=0 --cov --cov-report=xml"

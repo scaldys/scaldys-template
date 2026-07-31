@@ -1,0 +1,21 @@
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v/
+  script:
+    - |
+      VERSION="$CI_COMMIT_TAG"
+      VERSION_CLEAN=$(echo "$VERSION" | sed 's/^v//')
+      
+      # Extract notes for the current version from RELEASES.md
+      # It looks for the section starting with ## [version] and ends at the next '---'
+      sed -n "/## \[$VERSION_CLEAN\]/,/---/p" RELEASES.md | sed '1d;$d' > release_notes.md
+      
+      if [ -s release_notes.md ]; then
+        echo "Creating release for $VERSION with extracted notes"
+        release-cli create --name "$VERSION" --description "$(cat release_notes.md)" --tag-name "$VERSION"
+      else
+        echo "Creating release for $VERSION with generic notes"
+        release-cli create --name "$VERSION" --description "Release $VERSION" --tag-name "$VERSION"
+      fi

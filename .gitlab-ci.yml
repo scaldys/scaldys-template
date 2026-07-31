@@ -1,0 +1,12 @@
+# GitLab CI/CD configuration
+# Equivalent to .github/workflows/ci.yml
+
+stages:
+  - quality
+  - test
+  - release
+
+include:
+  - local: .gitlab/ci/code_quality.yml
+  - local: .gitlab/ci/test.yml
+  - local: .gitlab/ci/release.yml
