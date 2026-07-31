@@ -6,11 +6,13 @@ code_quality:
     PRE_COMMIT_HOME: .pre-commit-cache
   before_script:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
-    - export PATH="$HOME/.cargo/bin:$PATH"
+    - export PATH="$HOME/.local/bin:$PATH"
   script:
+    - pwd
+    - uv --version
     - uv lock --locked
-    - uv run ruff check .
-    - uv run ruff format --diff .
+    - uv run ruff check src tests
+    - uv run ruff format --diff src tests
     - uv run pre-commit run prettier --all-files
     - uv sync
     - uv run pyright ./src

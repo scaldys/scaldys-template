@@ -24,6 +24,7 @@ dependencies = [
     "pillow>=12.2.0",
     "platformdirs>=4.9.6",
     "pydantic>=2.0",
+#    "PySide6>=6.8.0",
     "rich>=13.0",
     "tksvg>=0.7.4; sys_platform == 'win32'",
     "ttkbootstrap>=1.20.3",
@@ -52,7 +53,7 @@ dev = [
     "scaldys-project[cython,windows,docs]>=0.14.0",
     "pre-commit>=4.5.0",
     "lxml-stubs>=0.5.1",
-    "pyright>=1.1.409",
+    "pyright>=1.1.411",
     "pytest>=9.0.3",
     "pytest-asyncio>=0.25.0",
     "pytest-cov>=7.1.0",
@@ -79,12 +80,13 @@ markers = [
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+extend-exclude = [".uv-cache", ".pre-commit-cache", "artifacts"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
 
 [tool.pyright]
-exclude = [".venv", "build"]
+exclude = [".venv", "build", "dist", ".uv-cache", ".pre-commit-cache", "artifacts"]
 pythonVersion = "3.13"
 venvPath = "."
 venv = ".venv"
