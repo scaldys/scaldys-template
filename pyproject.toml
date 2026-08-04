@@ -27,7 +27,7 @@ dependencies = [
     "rich>=13.0",
     "tksvg>=0.7.4; sys_platform == 'win32'",
     "ttkbootstrap>=1.20.3",
-    "typer>=0.25.0",
+    "typer>=0.27.1",
 ]
 
 [project.optional-dependencies]
@@ -45,11 +45,13 @@ where = ["src"]
 include = ["scaldys_template*"]
 
 [tool.setuptools.package-data]
-scaldys_template = ["py.typed"]
+# Without tk/assets/..., the assets will not be included in the Python environment's site-packages,
+# and the GUI will fail when launched via python -m scaldys_template gui or the installed script.
+scaldys_template = ["py.typed", "tk/assets/fa/*.svg"]
 
 [dependency-groups]
 dev = [
-    "scaldys-project[cython,windows,docs]>=0.14.0",
+    "scaldys-project[cython,windows,docs]>=0.15.0",
     "pre-commit>=4.5.0",
     "lxml-stubs>=0.5.1",
     "pyright>=1.1.409",

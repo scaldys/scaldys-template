@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-from PyInstaller.utils.hooks import collect_submodules, copy_metadata
+from PyInstaller.utils.hooks import collect_submodules, copy_metadata, collect_data_files
 
-# Automatically collect all submodules and dist-info metadata for the package.
+# Automatically collect all submodules, dist-info metadata and data files for the package.
 # This hook is generic and derives the package name from its own filename,
 # which is expected to be 'hook-<package_name>.py' after being renamed by the builder.
 # The dist-info metadata is required so that importlib.metadata.version() works
@@ -15,7 +15,7 @@ try:
     if "-" in _filename:
         _package_name = _filename.split("-", 1)[1].rsplit(".", 1)[0]
         hiddenimports = collect_submodules(_package_name)
-        datas = copy_metadata(_package_name)
+        datas = copy_metadata(_package_name) + collect_data_files(_package_name)
     else:
         hiddenimports = []
         datas = []
