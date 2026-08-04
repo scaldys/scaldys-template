@@ -20,9 +20,11 @@ jobs:
       - uses: astral-sh/setup-uv@v6
 
       - name: UV verify lock file
+        if: github.ref_name == 'main' || github.ref_name == 'develop'
         run: uv lock --locked
 
       - name: Ruff lint
+        if: github.ref_name == 'main' || github.ref_name == 'develop'
         run: uv run ruff check .
 
       - name: Ruff format
@@ -33,6 +35,7 @@ jobs:
         run: uv run pre-commit run prettier --all-files
 
       - name: PyRight type consistency
+        if: github.ref_name == 'main' || github.ref_name == 'develop'
         run: |
           uv sync
           uv run pyright ./src

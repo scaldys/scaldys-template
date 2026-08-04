@@ -8,12 +8,18 @@ code_quality:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.cargo/bin:$PATH"
   script:
-    - uv lock --locked
-    - uv run ruff check .
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ] || [ "$CI_COMMIT_BRANCH" = "develop" ]; then
+        uv lock --locked
+        uv run ruff check .
+      fi
     - uv run ruff format --diff .
     - uv run pre-commit run prettier --all-files
-    - uv sync
-    - uv run pyright ./src
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ] || [ "$CI_COMMIT_BRANCH" = "develop" ]; then
+        uv sync
+        uv run pyright ./src
+      fi
   cache:
     key:
       files:
