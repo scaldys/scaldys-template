@@ -79,7 +79,9 @@ def gui(
                         app.analyzer_frame.set_parameters(params)
                         logger.info("Pre-loaded parameters from %s", params_file)
                     except Exception as exc:  # noqa: BLE001
-                        logger.warning("Could not pre-load parameters from %s: %s", params_file, exc)
+                        logger.warning(
+                            "Could not pre-load parameters from %s: %s", params_file, exc
+                        )
 
                 app.after(200, _load_on_startup)
 
