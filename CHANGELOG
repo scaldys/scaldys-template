@@ -25,6 +25,43 @@
     !
 
 
+[0.12.0] - 2026-08-04
+=====================
+
+**Added**
+
+  - GitLab CI/CD configuration: added ``.gitlab-ci.yml`` and supporting workflow
+    definitions in ``.gitlab/ci/`` for quality gates, testing, and release
+    automation.
+
+  - PyInstaller hooks: added ``hook-tksvg.py`` and ``hook-ttkbootstrap.py`` to
+    ``src/extra_hooks/`` for reliable asset collection in frozen builds; updated
+    the generic ``hook_package.py`` to automatically collect package data files.
+
+  - GUI assets: included FontAwesome SVG icons in the ``scaldys_template``
+    package data to ensure they are available in installed environments.
+
+**Changed**
+
+  - GUI: enhanced the ``gui`` command with explicit exception handling and
+    critical error logging during application startup.
+
+  - GUI: improved support for frozen environments and added a mechanism to
+    preserve stdout/stderr output when the ``--verbose`` flag is used.
+
+  - CI: restricted heavy quality gates (lock file check, linting, type checking)
+    to ``main`` and ``develop`` branches to optimize pipeline usage.
+
+  - Dependencies: bumped ``typer`` to v0.27.1 and ``scaldys-project`` to v0.15.0.
+
+  - Formatting: standardized codebase using ``ruff format``.
+
+**Docs**
+
+  - User guide: added troubleshooting section to the Signal Analyzer guide covering
+    startup failures and the new global ``--verbose`` flag.
+
+
 [0.11.0] - 2026-06-20
 =====================
 

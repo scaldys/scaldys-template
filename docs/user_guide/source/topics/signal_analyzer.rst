@@ -34,6 +34,22 @@ To open the GUI with a previously saved parameter file loaded automatically:
 
     scaldys-template gui --params my_params.json
 
+Troubleshooting startup
+-----------------------
+
+If the application fails to start or closes immediately, you can use the global
+``--verbose`` flag to see detailed logs in the terminal. Note that global flags
+must appear *before* the ``gui`` command:
+
+.. code-block:: console
+
+    scaldys-template --verbose gui
+
+When running with ``--verbose``, the application preserves its standard output
+and error streams (which are normally suppressed for the detached GUI process),
+allowing you to see critical error messages and tracebacks.
+
+
 Headless CLI (no window)
 ------------------------
 

@@ -104,11 +104,13 @@ Linting and Type Checking
     uv run ruff check src tests
     uv run ruff format src tests
     uv run pyright
+    uv lock --check
 
 ``ruff`` is configured in ``pyproject.toml`` with ``line-length = 100`` and
-``target-version = "py313"``.  The ``__init__.py`` files are exempt from
-``F403`` (wildcard imports) because re-exporting via ``*`` is intentional
-there.
+``target-version = "py313"``.  The ``uv lock --check`` command ensures the
+lock file is in sync with ``pyproject.toml``.  The ``__init__.py`` files are
+exempt from ``F403`` (wildcard imports) because re-exporting via ``*`` is
+intentional there.
 
 ``pyright`` is configured to use the ``.venv`` virtual environment
 (``venvPath = "."``; ``venv = ".venv"``).
@@ -163,10 +165,10 @@ Build a wheel and source distribution::
 
     uv build
 
-Releases are published to PyPI automatically by the ``release.yml`` GitHub
-Actions workflow when a version tag (``v*``) is pushed.  The workflow uses
-OIDC Trusted Publishing — no API tokens or secrets are stored in the
-repository.
+Releases are published to PyPI manually via ``scaldys-project publish``
+to ensure only binary wheels with compiled extensions are uploaded.
+GitHub Actions and GitLab CI/CD handle only the creation of the
+GitHub/GitLab Release and auto-generating/extracting release notes.
 
 For a full walkthrough covering PyPI setup, the GitHub ``release`` environment,
 version bumping, tag pushing, and a TestPyPI dry run, see
@@ -174,23 +176,17 @@ version bumping, tag pushing, and a TestPyPI dry run, see
 
 
 CI/CD Workflows
-================
+===============
 
-Three GitHub Actions workflows are included:
+GitHub Actions and GitLab CI/CD workflows are included:
 
-``ci.yml``
-    Runs on every push and pull request.  Executes ruff, pyright, and
-    ``pytest``.
+``ci.yml`` / ``.gitlab-ci.yml``
+    Runs on every push and pull request (GitHub) or merge request (GitLab).
+    Executes ruff, pyright, and ``pytest``.
 
-``release.yml``
-    Triggered by a version tag push (``v*``).  Builds the wheel and publishes
-    to PyPI using OIDC trusted publishing (no stored secrets required).
-    See :ref:`publishing_guide` for setup instructions.
-
-``python-publish.yml``
-    An alternative workflow triggered when a GitHub Release is published.
-    Uses ``pypa/gh-action-pypi-publish`` instead of ``uv publish``.
-    Not required if ``release.yml`` is used.
+``release.yml`` / ``.gitlab/ci/release.yml``
+    Triggered by a version tag push (``v*``).  Creates a GitHub/GitLab
+    Release with release notes. See :ref:`publishing_guide` for details.
 
 To adapt the workflows to a renamed project, update the ``name`` field in
 ``pyproject.toml`` and the ``scaldys_template`` references in the workflow files.
@@ -217,7 +213,8 @@ changes to make it your own:
    and this developer guide under ``docs/developer_guide/``.
 
 5. **Update CI workflows**: change the package name references in
-   ``.github/workflows/`` and verify the PyPI publishing configuration.
+   ``.github/workflows/`` and ``.gitlab/ci/`` and verify the release
+   configuration.
 
 6. **Configure scaldys-project.toml**: update the ``[cython]`` and ``[windows]``
    sections if you plan to use the scaldys-project Windows distribution

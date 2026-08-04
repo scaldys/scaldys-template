@@ -6,6 +6,26 @@ please see the [CHANGELOG](./CHANGELOG).
 
 ---
 
+## [0.12.0] - 2026-08-04
+
+This release focuses on **CI/CD automation**, **GUI stability**, and
+**troubleshooting tools**. It introduces GitLab CI/CD support alongside the
+existing GitHub Actions workflows.
+
+- **GitLab CI/CD Integration**: Full pipeline configuration for quality gates,
+  testing, and automated releases on GitLab.
+- **GUI Troubleshooting**: Added a global `--verbose` flag to preserve console
+  output when launching the GUI, making it easier to diagnose startup issues.
+- **Improved Error Handling**: Enhanced the GUI command with explicit exception
+  handling and critical error logging.
+- **Packaging Reliability**: New PyInstaller hooks and improved asset collection
+  to ensure FontAwesome icons and themes are correctly bundled in frozen
+  executables.
+- **Maintenance**: Updated dependencies and standardized the codebase using
+  `ruff`.
+
+---
+
 ## [0.11.0] - 2026-06-20
 
 This release introduces a major focus on the **graphical user interface** based

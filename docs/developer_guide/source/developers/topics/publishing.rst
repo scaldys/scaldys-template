@@ -8,7 +8,7 @@ This guide explains how to publish a project derived from this template to
 PyPI.  Because the template uses Cython-compiled extensions, the release
 process is intentionally manual: the binary wheel is built locally with
 ``scaldys-project build all`` and uploaded with ``scaldys-project publish``.
-GitHub Actions handles only CI quality gates and GitHub Release creation.
+GitHub Actions and GitLab CI/CD handle only CI quality gates and Release creation.
 
 .. important::
    **This is a template guide.**  Every occurrence of ``scaldys-template``
@@ -57,7 +57,7 @@ Release workflow at a glance::
 
     scaldys-project build all           # 1. compile + package
     scaldys-project publish             # 2. upload binary wheel to PyPI
-    git tag v1.0.0 && git push --tags   # 3. trigger GitHub Release
+    git tag v1.0.0 && git push origin v1.0.0 # 3. trigger GitHub/GitLab Release
 
 CI (``ci.yml``) runs on every push and pull request: lint, format check, type
 checking, and tests across platforms.  The build and publish steps are
@@ -162,49 +162,53 @@ Before a release:
        git commit -am "Release v1.0.0"
 
 4. Run Steps 2 and 3 above to build and publish the wheel.
-5. Push a version tag to trigger the GitHub Release::
+5. Push a version tag to trigger the GitHub/GitLab Release::
 
        git tag v1.0.0
        git push origin v1.0.0
 
-The tag push creates a GitHub Release with auto-generated notes from the
-commit history.  PyPI has already been updated in the previous step.
+The tag push creates a GitHub/GitLab Release with auto-generated notes from the
+commit history (or extracted from ``RELEASES.md`` on GitLab).  PyPI has already
+been updated in the previous step.
 
 
 Workflow files
 ==============
 
-ci.yml
-------
+ci.yml / .gitlab-ci.yml
+---------------------------
 
-Runs on every push and pull request::
+GitHub Actions (``ci.yml``) and GitLab CI/CD (``.gitlab-ci.yml``) run on every
+push and pull request (GitHub) or merge request (GitLab)::
 
     .github/workflows/ci.yml
+    .gitlab/ci/code_quality.yml
 
 Jobs:
 
-- **code_quality** — ``ruff check``, ``ruff format --diff``, Prettier,
-  ``pyright``
-- **test** — ``pytest --cov`` on Ubuntu, macOS, and Windows
+- **code_quality** — ``ruff check``, ``ruff format --diff`` (on GitHub), Prettier,
+  ``pyright``, and lock file check.
+- **test** — ``pytest --cov`` on Ubuntu, macOS, and Windows (GitHub only).
 
-No build or publish step is present.  The binary wheel requires the local
+No build or publish step is present in CI.  The binary wheel requires the local
 ``scaldys-project`` pipeline and cannot be reproduced in CI.
 
-release.yml
------------
+release.yml / .gitlab/ci/release.yml
+------------------------------------
 
 Runs when a ``v*`` tag is pushed::
 
     .github/workflows/release.yml
+    .gitlab/ci/release.yml
 
 .. code-block:: yaml
 
+    # GitHub
     on:
       push:
         tags:
           - v*
-
-    jobs:
+   jobs:
       github_release:
         name: Create GitHub Release
         runs-on: ubuntu-latest
@@ -220,8 +224,15 @@ Runs when a ``v*`` tag is pushed::
                 --title "${{ github.ref_name }}" \
                 --generate-notes
 
-This workflow creates a GitHub Release with auto-generated release notes.
-It does **not** build or publish to PyPI.
+.. code-block:: yaml
+
+    # GitLab
+    release:
+      rules:
+        - if: $CI_COMMIT_TAG =~ /^v/
+
+These workflows create a GitHub/GitLab Release with release notes.
+They do **not** build or publish to PyPI.
 
 
 .. _testpypi_dry_run_template:

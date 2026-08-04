@@ -194,12 +194,11 @@ executable and installer:
 Step 7 — Update CI/CD workflows
 =================================
 
-Edit ``.github/workflows/`` to use your package name:
+Edit ``.github/workflows/`` and ``.gitlab/ci/`` to use your package name:
 
-* ``ci.yml`` — update the coverage path (``--cov=<yourpackage>``).
-* ``python-publish.yml`` — verify the trusted publishing configuration
-  matches your PyPI project name.
-* ``release.yml`` — update any name references.
+* ``ci.yml`` / ``.gitlab-ci.yml`` — update any coverage paths or test filters.
+* ``release.yml`` / ``.gitlab/ci/release.yml`` — update any name references
+  and verify the release notes extraction / creation.
 
 
 Step 8 — Clean up template artefacts

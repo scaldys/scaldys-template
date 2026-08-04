@@ -18,44 +18,46 @@ The module layout mirrors this split:
 
 .. code-block:: text
 
-    src/scaldys_template/
-    ├── __about__.py            # APP_NAME, PACKAGE_NAME, VERSION constants
-    ├── __init__.py             # re-exports cli.* and common.*
-    ├── __main__.py             # lifecycle entry point (freeze_support → app())
-    ├── py.typed                # PEP 561 marker — package ships type stubs
-    ├── cli/
-    │   ├── cli.py              # Typer app, HeaderGroup, app callback
-    │   ├── settings.py         # AppSettings — INI persistence + Pydantic validation
-    │   └── commands/
-    │       ├── arg_types.py    # Shared Annotated type aliases (ARG_TYPE_VERBOSE, …)
-    │       ├── cmd_analyze.py  # analyze command — headless CSV/PNG output
-    │       ├── cmd_export.py   # export command
-    │       ├── cmd_gui.py      # gui command — launches the Tkinter window
-    │       ├── cmd_process.py  # process command (async demo)
-    │       └── cmd_settings.py # settings sub-app
-    ├── common/
-    │   ├── app_location.py     # AppLocation — cross-platform directory resolution
-    │   └── logging.py          # setup_logging(), JsonFormatter, NonErrorFilter
-    ├── core/
-    │   ├── async_processor.py  # process_items() — async pipeline template
-    │   ├── database.py         # DatabaseConnection, ConnectionPool, transaction()
-    │   ├── export.py           # export_data() — data serialisation stub
-    │   ├── signal_engine.py    # generate_signal / compute_fft / compute_metrics
-    │   ├── signal_model.py     # SignalParameters — Pydantic model + validators
-    │   └── parameter_store.py  # JSON save/load via AppLocation
-    └── tk/
-        ├── app.py              # Application window, MenuBar, ToolBar, SideBar
-        ├── fontawesome_icons.py
-        ├── styles.py
-        ├── utils.py
-        └── ui/
-            ├── analyzer/
-            │   ├── analyzer_frame.py        # top-level Signal Analyzer layout
-            │   ├── plot_frame.py            # embedded matplotlib figures
-            │   ├── results_table_frame.py   # Treeview + metrics bar + CSV export
-            │   └── signal_parameters_frame.py  # parameter entry widgets
-            ├── ui_examples_frame.py     # ttkbootstrap widget showcase
-            └── navigation_frame.py      # navigation/demo panel
+    src/
+    ├── extra_hooks/                # PyInstaller hooks for tksvg, ttkbootstrap, etc.
+    └── scaldys_template/
+        ├── __about__.py            # APP_NAME, PACKAGE_NAME, VERSION constants
+        ├── __init__.py             # re-exports cli.* and common.*
+        ├── __main__.py             # lifecycle entry point (freeze_support → app())
+        ├── py.typed                # PEP 561 marker — package ships type stubs
+        ├── cli/
+        │   ├── cli.py              # Typer app, HeaderGroup, app callback
+        │   ├── settings.py         # AppSettings — INI persistence + Pydantic validation
+        │   └── commands/
+        │       ├── arg_types.py    # Shared Annotated type aliases (ARG_TYPE_VERBOSE, …)
+        │       ├── cmd_analyze.py  # analyze command — headless CSV/PNG output
+        │       ├── cmd_export.py   # export command
+        │       ├── cmd_gui.py      # gui command — launches the Tkinter window
+        │       ├── cmd_process.py  # process command (async demo)
+        │       └── cmd_settings.py # settings sub-app
+        ├── common/
+        │   ├── app_location.py     # AppLocation — cross-platform directory resolution
+        │   └── logging.py          # setup_logging(), JsonFormatter, NonErrorFilter
+        ├── core/
+        │   ├── async_processor.py  # process_items() — async pipeline template
+        │   ├── database.py         # DatabaseConnection, ConnectionPool, transaction()
+        │   ├── export.py           # export_data() — data serialisation stub
+        │   ├── signal_engine.py    # generate_signal / compute_fft / compute_metrics
+        │   ├── signal_model.py     # SignalParameters — Pydantic model + validators
+        │   └── parameter_store.py  # JSON save/load via AppLocation
+        └── tk/
+            ├── app.py              # Application window, MenuBar, ToolBar, SideBar
+            ├── fontawesome_icons.py
+            ├── styles.py
+            ├── utils.py
+            └── ui/
+                ├── analyzer/
+                │   ├── analyzer_frame.py           # top-level Signal Analyzer layout
+                │   ├── plot_frame.py               # embedded matplotlib figures
+                │   ├── results_table_frame.py      # Treeview + metrics bar + CSV export
+                │   └── signal_parameters_frame.py  # parameter entry widgets
+                ├── ui_examples_frame.py            # ttkbootstrap widget showcase
+                └── navigation_frame.py             # navigation/demo panel
 
 .. contents:: On this page
    :local:

@@ -18,8 +18,8 @@ Repository root
 .. code-block:: text
 
     scaldys-template/
-    ├── .claude/                # Claude Code local settings
     ├── .github/workflows/      # CI/CD GitHub Actions workflows
+    ├── .gitlab/ci/             # CI/CD GitLab workflow definitions
     ├── .junie/                 # Junie AI assistant memory (not tracked in output)
     ├── docs/
     │   ├── developer_guide/    # This documentation (Sphinx)
@@ -30,6 +30,7 @@ Repository root
     ├── src/                    # All Python source code
     ├── tests/                  # Pytest test suite
     ├── .gitignore
+    ├── .gitlab-ci.yml          # CI/CD GitLab configuration
     ├── .pre-commit-config.yaml # Pre-commit hooks (Prettier for Markdown)
     ├── .prettierrc             # Prettier config for Markdown formatting
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
@@ -46,6 +47,7 @@ Source tree (``src/``)
 
     src/
     ├── scaldys_template.py          # Convenience alias: `python src/scaldys_template.py`
+    ├── extra_hooks/                 # PyInstaller hooks for tksvg, ttkbootstrap, etc.
     └── scaldys_template/
         ├── __about__.py        # APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME, VERSION
         ├── __init__.py         # Re-exports: from scaldys_template.cli import *; from scaldys_template.common import *
@@ -74,6 +76,12 @@ Source tree (``src/``)
 ``src/scaldys_template.py`` is a one-liner (``from scaldys_template.cli.cli import app``) that
 makes ``python src/scaldys_template.py`` work without installing the package.  It is
 not part of the installed distribution.
+
+The ``src/extra_hooks/`` directory contains PyInstaller hooks for libraries
+that do not ship their own (like ``tksvg`` and ``ttkbootstrap``).  It also
+includes a generic ``hook_package.py`` that ensures all package data files
+inside ``scaldys_template/`` are automatically collected into the frozen
+executable.
 
 
 Test tree (``tests/``)
