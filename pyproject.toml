@@ -75,8 +75,8 @@ markers = [
     "svg: Tests that require tksvg or native Tk 8.7+ SVG support",
 ]
 
-[tool.uv.sources]
-scaldys-project = { path = "../../scaldys-project", editable = true }
+#[tool.uv.sources]
+#scaldys-project = { path = "../../scaldys-project", editable = true }
 
 [tool.ruff]
 line-length = 100
