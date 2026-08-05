@@ -19,7 +19,7 @@ The module layout mirrors this split:
 .. code-block:: text
 
     src/
-    ├── extra_hooks/                # PyInstaller hooks for tksvg, ttkbootstrap, etc.
+    ├── extra_hooks/                # PyInstaller hooks (hook-scaldys_template.py, etc.)
     └── scaldys_template/
         ├── __about__.py            # APP_NAME, PACKAGE_NAME, VERSION constants
         ├── __init__.py             # re-exports cli.* and common.*

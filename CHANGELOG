@@ -25,6 +25,23 @@
     !
 
 
+[0.20.0] - 2026-08-05
+=====================
+
+**Changed**
+
+  - PyInstaller hooks: renamed ``src/extra_hooks/hook_package.py`` to
+    ``src/extra_hooks/hook-scaldys_template.py`` and simplified its content.
+    This change aligns with the updated hook handling in ``scaldys-project``
+    v0.20.0.
+
+    .. note::
+       **Breaking change.** This version requires ``scaldys-project >= 0.20.0``
+       for Windows builds due to the change in hook file naming conventions.
+
+  - Dependencies: bumped ``scaldys-project`` to v0.20.0.
+
+
 [0.12.0] - 2026-08-04
 =====================
 

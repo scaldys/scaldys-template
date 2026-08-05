@@ -47,7 +47,7 @@ Source tree (``src/``)
 
     src/
     ├── scaldys_template.py          # Convenience alias: `python src/scaldys_template.py`
-    ├── extra_hooks/                 # PyInstaller hooks for tksvg, ttkbootstrap, etc.
+    ├── extra_hooks/                 # PyInstaller hooks (hook-scaldys_template.py, etc.)
     └── scaldys_template/
         ├── __about__.py        # APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME, VERSION
         ├── __init__.py         # Re-exports: from scaldys_template.cli import *; from scaldys_template.common import *
@@ -79,9 +79,10 @@ not part of the installed distribution.
 
 The ``src/extra_hooks/`` directory contains PyInstaller hooks for libraries
 that do not ship their own (like ``tksvg`` and ``ttkbootstrap``).  It also
-includes a generic ``hook_package.py`` that ensures all package data files
+includes ``hook-scaldys_template.py``, which ensures all package data files
 inside ``scaldys_template/`` are automatically collected into the frozen
-executable.
+executable.  This file is project-specific and must be named correctly for
+PyInstaller to discover it.
 
 
 Test tree (``tests/``)

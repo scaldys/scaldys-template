@@ -1,6 +1,6 @@
 [project]
 name = "scaldys-template"
-version = "0.12.0"
+version = "0.20.0"
 authors = [
   { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
@@ -51,7 +51,7 @@ scaldys_template = ["py.typed", "tk/assets/fa/*.svg"]
 
 [dependency-groups]
 dev = [
-    "scaldys-project[cython,windows,docs]>=0.15.0",
+    "scaldys-project[cython,windows,docs]>=0.20.0",
     "pre-commit>=4.5.0",
     "lxml-stubs>=0.5.1",
     "pyright>=1.1.409",
@@ -75,8 +75,8 @@ markers = [
     "svg: Tests that require tksvg or native Tk 8.7+ SVG support",
 ]
 
-#[tool.uv.sources]
-#scaldys-project = { path = "../scaldys-project", editable = true }
+[tool.uv.sources]
+scaldys-project = { path = "../../scaldys-project", editable = true }
 
 [tool.ruff]
 line-length = 100

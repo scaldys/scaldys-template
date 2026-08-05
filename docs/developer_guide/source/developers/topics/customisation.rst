@@ -32,6 +32,15 @@ Then rename the package directory::
 
     mv src/scaldys_template src/<yourpackage>
 
+Then rename the PyInstaller hook file:
+
+.. code-block:: text
+
+    mv src/extra_hooks/hook-scaldys_template.py src/extra_hooks/hook-<yourpackage>.py
+
+And update the ``_package_name`` variable inside it to match your new
+package name.
+
 Update ``pyproject.toml``:
 
 * ``[project] name`` — the distribution name (can differ from PACKAGE_NAME,
