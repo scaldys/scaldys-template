@@ -32,6 +32,15 @@ Then rename the package directory::
 
     mv src/scaldys_template src/<yourpackage>
 
+Then rename the PyInstaller hook file:
+
+.. code-block:: text
+
+    mv src/extra_hooks/hook-scaldys_template.py src/extra_hooks/hook-<yourpackage>.py
+
+And update the ``_package_name`` variable inside it to match your new
+package name.
+
 Update ``pyproject.toml``:
 
 * ``[project] name`` — the distribution name (can differ from PACKAGE_NAME,
@@ -194,12 +203,11 @@ executable and installer:
 Step 7 — Update CI/CD workflows
 =================================
 
-Edit ``.github/workflows/`` to use your package name:
+Edit ``.github/workflows/`` and ``.gitlab/ci/`` to use your package name:
 
-* ``ci.yml`` — update the coverage path (``--cov=<yourpackage>``).
-* ``python-publish.yml`` — verify the trusted publishing configuration
-  matches your PyPI project name.
-* ``release.yml`` — update any name references.
+* ``ci.yml`` / ``.gitlab-ci.yml`` — update any coverage paths or test filters.
+* ``release.yml`` / ``.gitlab/ci/release.yml`` — update any name references
+  and verify the release notes extraction / creation.
 
 
 Step 8 — Clean up template artefacts

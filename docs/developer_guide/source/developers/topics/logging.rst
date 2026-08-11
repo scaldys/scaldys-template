@@ -124,6 +124,20 @@ persisted ``AppSettings.log_level``, so a previously saved default applies
 even when the user does not pass ``--log`` on the command line.
 
 
+GUI Detached Process Logging
+============================
+
+When the ``gui`` command is used, the application spawns itself as a detached
+background process.  Normally, this detached process has its ``stdout`` and
+``stderr`` redirected to ``DEVNULL`` to avoid leaving a "zombie" console window
+on Windows.
+
+If the global ``--verbose`` flag is passed, the ``gui`` launcher preserves the
+inheritance of ``stdout`` and ``stderr`` for the worker process.  This allows
+developers to see real-time log output and any unhandled exceptions in the
+terminal while the GUI is running.
+
+
 Pre-init fallback
 =================
 

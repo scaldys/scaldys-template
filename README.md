@@ -28,7 +28,7 @@ https://github.com/scaldys/scaldys-template
 - Documentation with reStructuredText and `sphinx` using ReadTheDocs theme
 - Windows build infrastructure with `Cython`, `scaldys-project`, and — depending
   on the deployment mode — `PyInstaller`, `Inno Setup`, or wheel-only packaging
-- GitHub Actions workflows for CI/CD and PyPI publishing
+- GitHub Actions and GitLab CI/CD workflows for CI/CD and automated releases
 
 ## Relationship with scaldys-project
 

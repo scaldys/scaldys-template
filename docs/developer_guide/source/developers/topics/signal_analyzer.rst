@@ -762,6 +762,11 @@ to defer the parameter load until after the window's first render cycle.  This
 avoids a race condition where ``_params_frame`` is not yet fully constructed
 when the load fires.
 
+The command also supports the global ``--verbose`` flag. When passed, the
+launcher preserves the standard output and error streams of the worker process,
+allowing critical errors and tracebacks to be visible in the terminal during
+startup.
+
 
 ``cmd_analyze.py`` — ``analyze`` command
 -----------------------------------------

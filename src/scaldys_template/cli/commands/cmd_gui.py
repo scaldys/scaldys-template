@@ -62,45 +62,64 @@ def gui(
     # Worker branch — runs inside the spawned background process.
     # -----------------------------------------------------------------------
     if os.environ.get(_WORKER_ENV) == "1":
-        from scaldys_template.tk.app import Application
+        exit_code = 0
+        try:
+            from scaldys_template.tk.app import Application
 
-        logger.info("Launching %s GUI", APP_NAME)
-        app = Application()
+            logger.info("Launching %s GUI", APP_NAME)
+            app = Application()
 
-        if params_file is not None:
+            if params_file is not None:
 
-            def _load_on_startup() -> None:
-                from scaldys_template.core.parameter_store import load_parameters
+                def _load_on_startup() -> None:
+                    from scaldys_template.core.parameter_store import load_parameters
 
-                try:
-                    params = load_parameters(params_file)
-                    app.analyzer_frame.set_parameters(params)
-                    logger.info("Pre-loaded parameters from %s", params_file)
-                except Exception as exc:  # noqa: BLE001
-                    logger.warning("Could not pre-load parameters from %s: %s", params_file, exc)
+                    try:
+                        params = load_parameters(params_file)
+                        app.analyzer_frame.set_parameters(params)
+                        logger.info("Pre-loaded parameters from %s", params_file)
+                    except Exception as exc:  # noqa: BLE001
+                        logger.warning(
+                            "Could not pre-load parameters from %s: %s", params_file, exc
+                        )
 
-            app.after(200, _load_on_startup)
+                app.after(200, _load_on_startup)
 
-        app.mainloop()
-        # Force-exit so lingering library threads don't block the worker process.
-        os._exit(0)
-        return
+            app.mainloop()
+        except Exception:
+            logger.critical("GUI application failed to start", exc_info=True)
+            exit_code = 1
+            raise
+        finally:
+            # Force-exit so lingering library threads don't block the worker process.
+            os._exit(exit_code)
 
     # -----------------------------------------------------------------------
     # Launcher branch — spawns the worker and returns immediately.
     # -----------------------------------------------------------------------
-    cmd = [sys.executable, "-m", PACKAGE_NAME, "gui"]
+    if getattr(sys, "frozen", False):
+        # In a frozen environment (e.g. PyInstaller), sys.executable is the
+        # path to the application binary itself.
+        cmd = [sys.executable, "gui"]
+    else:
+        # In a standard environment, use the Python interpreter to run the
+        # package as a module.
+        cmd = [sys.executable, "-m", PACKAGE_NAME, "gui"]
+
     if params_file is not None:
         cmd += ["--params", str(params_file)]
 
     env = os.environ.copy()
     env[_WORKER_ENV] = "1"
 
+    # If --verbose is passed to the main CLI, don't redirect output so errors are visible.
+    verbose = ctx.parent.params.get("verbose", False) if ctx.parent else False
+
     kwargs: dict = {
         "env": env,
         "stdin": subprocess.DEVNULL,
-        "stdout": subprocess.DEVNULL,
-        "stderr": subprocess.DEVNULL,
+        "stdout": None if verbose else subprocess.DEVNULL,
+        "stderr": None if verbose else subprocess.DEVNULL,
     }
     if sys.platform == "win32":
         kwargs["creationflags"] = getattr(subprocess, "DETACHED_PROCESS", 0) | getattr(
