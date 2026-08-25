@@ -1,0 +1,24 @@
+pages:
+  stage: pages
+  image: python:3.13
+  variables:
+    UV_CACHE_DIR: .uv-cache
+  before_script:
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+  script:
+    - uv sync --only-group dev
+    - uv run sphinx-build -b html docs/user_guide/source build/user_guide/html
+    - mv build/user_guide/html public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v/
+    - if: $CI_PIPELINE_SOURCE == "web"
+  cache:
+    key:
+      files:
+        - uv.lock
+    paths:
+      - .uv-cache

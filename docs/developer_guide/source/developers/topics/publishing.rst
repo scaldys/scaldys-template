@@ -1,14 +1,14 @@
 .. _publishing_guide:
 
-*********
+**********
 Publishing
-*********
+**********
 
 This guide explains how to publish a project derived from this template to
 PyPI.  Because the template uses Cython-compiled extensions, the release
 process is intentionally manual: the binary wheel is built locally with
 ``scaldys-project build all`` and uploaded with ``scaldys-project publish``.
-GitHub Actions and GitLab CI/CD handle only CI quality gates and Release creation.
+GitHub Actions and GitLab CI/CD handle only CI quality gates, documentation deployment, and Release creation.
 
 .. important::
    **This is a template guide.**  Every occurrence of ``scaldys-template``
@@ -57,7 +57,7 @@ Release workflow at a glance::
 
     scaldys-project build all           # 1. compile + package
     scaldys-project publish             # 2. upload binary wheel to PyPI
-    git tag v1.0.0 && git push origin v1.0.0 # 3. trigger GitHub/GitLab Release
+    git tag v1.0.0 && git push origin v1.0.0 # 3. trigger Release and Pages documentation deployment
 
 CI (``ci.yml``) runs on every push and pull request: lint, format check, type
 checking, and tests across platforms.  The build and publish steps are
@@ -162,27 +162,29 @@ Before a release:
        git commit -am "Release v1.0.0"
 
 4. Run Steps 2 and 3 above to build and publish the wheel.
-5. Push a version tag to trigger the GitHub/GitLab Release::
+5. Push a version tag to trigger the GitHub/GitLab Release and Pages documentation deployment::
 
        git tag v1.0.0
        git push origin v1.0.0
 
 The tag push creates a GitHub/GitLab Release with auto-generated notes from the
-commit history (or extracted from ``RELEASES.md`` on GitLab).  PyPI has already
-been updated in the previous step.
+commit history (or extracted from ``RELEASES.md`` on GitLab), and deploys the
+User Guide to GitHub Pages or GitLab Pages.  PyPI has already been updated in the
+previous step.
 
 
 Workflow files
 ==============
 
 ci.yml / .gitlab-ci.yml
----------------------------
+-----------------------
 
 GitHub Actions (``ci.yml``) and GitLab CI/CD (``.gitlab-ci.yml``) run on every
 push and pull request (GitHub) or merge request (GitLab)::
 
     .github/workflows/ci.yml
     .gitlab/ci/code_quality.yml
+    .gitlab/ci/test.yml
 
 Jobs:
 
@@ -208,7 +210,7 @@ Runs when a ``v*`` tag is pushed::
       push:
         tags:
           - v*
-   jobs:
+    jobs:
       github_release:
         name: Create GitHub Release
         runs-on: ubuntu-latest
@@ -233,6 +235,24 @@ Runs when a ``v*`` tag is pushed::
 
 These workflows create a GitHub/GitLab Release with release notes.
 They do **not** build or publish to PyPI.
+
+docs.yml / .gitlab/ci/pages.yml
+-------------------------------
+
+Runs when a ``v*`` tag is pushed or triggered manually (``workflow_dispatch`` on
+GitHub Actions or ``web`` on GitLab CI/CD)::
+
+    .github/workflows/docs.yml
+    .gitlab/ci/pages.yml
+
+Jobs:
+
+- **deploy-docs** (GitHub Actions) — builds the User Guide (``docs/user_guide/source``)
+  with Sphinx into ``build/user_guide/html``, packages the artifact, and deploys it to
+  GitHub Pages.
+- **pages** (GitLab CI/CD) — builds the User Guide into ``build/user_guide/html``,
+  moves the output into the reserved ``public/`` directory, and automatically publishes it
+  to GitLab Pages.
 
 
 .. _testpypi_dry_run_template:

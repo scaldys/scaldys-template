@@ -28,6 +28,12 @@
 [0.30.0] - 2026-08-25
 =====================
 
+**Added**
+
+  - Documentation deployment: added GitHub Actions (``.github/workflows/docs.yml``)
+    and GitLab CI/CD (``.gitlab/ci/pages.yml``) workflows to build and publish the
+    User Guide to GitHub Pages and GitLab Pages on release tags and manual triggers.
+
 **Changed**
 
   - Replaced the Node.js-based ``prettier`` markdown formatter and ``pre-commit``
@@ -37,14 +43,6 @@
   - Updated GitHub Actions CI (``.github/workflows/ci.yml``) and GitLab CI/CD
     (``.gitlab/ci/code_quality.yml``) workflows to verify Markdown formatting
     directly via ``uv run mdformat --check README.md``.
-
-  - Updated ``pyproject.toml`` dev dependencies to include ``mdformat`` and
-    removed ``pre-commit`` and ``.pre-commit-cache``.
-
-**Removed**
-
-  - Removed ``.pre-commit-config.yaml`` and ``.prettierrc``.
-  - Removed ``licenses/pre_commit.md`` and ``licenses/prettier.md``.
 
 **Docs**
 
@@ -229,7 +227,7 @@
 
 
 [0.10.0] - 2026-05-20
-====================
+=====================
 
 **Changed**
 

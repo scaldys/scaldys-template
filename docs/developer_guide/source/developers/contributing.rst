@@ -161,10 +161,11 @@ Build a wheel and source distribution::
 Releases are published to PyPI manually via ``scaldys-project publish``
 to ensure only binary wheels with compiled extensions are uploaded.
 GitHub Actions and GitLab CI/CD handle only the creation of the
-GitHub/GitLab Release and auto-generating/extracting release notes.
+GitHub/GitLab Release, auto-generating/extracting release notes, and
+deploying the User Guide to GitHub Pages and GitLab Pages.
 
 For a full walkthrough covering PyPI setup, the GitHub ``release`` environment,
-version bumping, tag pushing, and a TestPyPI dry run, see
+version bumping, tag pushing, Pages documentation deployment, and a TestPyPI dry run, see
 :ref:`publishing_guide`.
 
 
@@ -180,6 +181,11 @@ GitHub Actions and GitLab CI/CD workflows are included:
 ``release.yml`` / ``.gitlab/ci/release.yml``
     Triggered by a version tag push (``v*``).  Creates a GitHub/GitLab
     Release with release notes. See :ref:`publishing_guide` for details.
+
+``docs.yml`` / ``.gitlab/ci/pages.yml``
+    Triggered by a version tag push (``v*``) or manual workflow dispatch / web trigger.
+    Builds the User Guide with Sphinx and publishes it to GitHub Pages or GitLab Pages.
+    See :ref:`publishing_guide` for details.
 
 To adapt the workflows to a renamed project, update the ``name`` field in
 ``pyproject.toml`` and the ``scaldys_template`` references in the workflow files.
@@ -206,8 +212,8 @@ changes to make it your own:
    and this developer guide under ``docs/developer_guide/``.
 
 5. **Update CI workflows**: change the package name references in
-   ``.github/workflows/`` and ``.gitlab/ci/`` and verify the release
-   configuration.
+   ``.github/workflows/`` and ``.gitlab/ci/`` and verify the release and
+   documentation deployment configuration.
 
 6. **Configure scaldys-project.toml**: update the ``[cython]`` and ``[windows]``
    sections if you plan to use the scaldys-project Windows distribution

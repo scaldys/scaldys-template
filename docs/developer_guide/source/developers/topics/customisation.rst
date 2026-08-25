@@ -208,6 +208,8 @@ Edit ``.github/workflows/`` and ``.gitlab/ci/`` to use your package name:
 * ``ci.yml`` / ``.gitlab-ci.yml`` — update any coverage paths or test filters.
 * ``release.yml`` / ``.gitlab/ci/release.yml`` — update any name references
   and verify the release notes extraction / creation.
+* ``docs.yml`` / ``.gitlab/ci/pages.yml`` — update documentation source paths
+  if renamed and verify GitHub Pages or GitLab Pages deployment settings.
 
 
 Step 8 — Clean up template artefacts

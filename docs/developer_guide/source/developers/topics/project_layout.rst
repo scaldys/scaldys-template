@@ -18,8 +18,8 @@ Repository root
 .. code-block:: text
 
     scaldys-template/
-    ├── .github/workflows/      # CI/CD GitHub Actions workflows
-    ├── .gitlab/ci/             # CI/CD GitLab workflow definitions
+    ├── .github/workflows/      # CI/CD GitHub Actions workflows (ci.yml, docs.yml, release.yml)
+    ├── .gitlab/ci/             # CI/CD GitLab workflow definitions (code_quality.yml, test.yml, release.yml, pages.yml)
     ├── .junie/                 # Junie AI assistant memory (not tracked in output)
     ├── docs/
     │   ├── developer_guide/    # This documentation (Sphinx)
@@ -30,7 +30,7 @@ Repository root
     ├── src/                    # All Python source code
     ├── tests/                  # Pytest test suite
     ├── .gitignore
-    ├── .gitlab-ci.yml          # CI/CD GitLab configuration
+    ├── .gitlab-ci.yml          # CI/CD GitLab configuration (includes .gitlab/ci/*.yml)
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
     ├── scaldys-project.toml    # scaldys-project pipeline configuration
     ├── pyproject.toml          # Project metadata, dependencies, tool config

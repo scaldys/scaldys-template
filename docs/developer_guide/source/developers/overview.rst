@@ -64,7 +64,7 @@ ships with:
 * A ``scaldys-project.toml`` wiring the Windows build pipeline.
 * ``packaging/windows/`` scripts for Inno Setup.
 * Sphinx documentation trees (``docs/user_guide/``, ``docs/developer_guide/``).
-* GitHub Actions and GitLab CI/CD workflows for CI and automated releases.
+* GitHub Actions and GitLab CI/CD workflows for CI, automated documentation deployment to Pages, and automated releases.
 
 The ``pyproject.toml`` ``[tool.uv.sources]`` section points ``scaldys-project``
 at a local editable checkout during development so the two projects stay in
