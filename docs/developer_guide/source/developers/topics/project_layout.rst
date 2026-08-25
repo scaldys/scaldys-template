@@ -18,8 +18,8 @@ Repository root
 .. code-block:: text
 
     scaldys-template/
-    ├── .github/workflows/      # CI/CD GitHub Actions workflows
-    ├── .gitlab/ci/             # CI/CD GitLab workflow definitions
+    ├── .github/workflows/      # CI/CD GitHub Actions workflows (ci.yml, docs.yml, release.yml)
+    ├── .gitlab/ci/             # CI/CD GitLab workflow definitions (code_quality.yml, test.yml, release.yml, pages.yml)
     ├── .junie/                 # Junie AI assistant memory (not tracked in output)
     ├── docs/
     │   ├── developer_guide/    # This documentation (Sphinx)
@@ -30,12 +30,9 @@ Repository root
     ├── src/                    # All Python source code
     ├── tests/                  # Pytest test suite
     ├── .gitignore
-    ├── .gitlab-ci.yml          # CI/CD GitLab configuration
-    ├── .pre-commit-config.yaml # Pre-commit hooks (Prettier for Markdown)
-    ├── .prettierrc             # Prettier config for Markdown formatting
+    ├── .gitlab-ci.yml          # CI/CD GitLab configuration (includes .gitlab/ci/*.yml)
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
-    ├── scaldys-project.toml            # scaldys-project pipeline configuration
-    ├── package.json            # Node.js dependency for prettier
+    ├── scaldys-project.toml    # scaldys-project pipeline configuration
     ├── pyproject.toml          # Project metadata, dependencies, tool config
     └── README.md               # Project overview and quick-start
 
@@ -175,11 +172,3 @@ Configuration files
 
 ``.python-version``
     Pins the Python version for ``uv``; currently ``>=3.13,<3.14``.
-
-``.pre-commit-config.yaml``
-    Git hook configuration.  Runs Prettier on staged Markdown files before
-    every commit.  See :ref:`markdown_formatting_guide`.
-
-``.prettierrc``
-    Prettier options: ``printWidth: 80``, ``proseWrap: "always"``,
-    ``endOfLine: "auto"``.  See :ref:`markdown_formatting_guide`.

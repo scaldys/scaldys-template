@@ -10,14 +10,18 @@ set "SCRIPT_DIR=%~dp0"
 ::     from the PythonRuntime virtual environment.  Activate the venv so
 ::     that the 'scaldys-template' console script is on PATH, then call it.
 
+:: Use passed arguments if any, otherwise default to --help
+set "ARGS=%*"
+if "%ARGS%"=="" set "ARGS=--help"
+
 if exist "%SCRIPT_DIR%scaldys-template.exe" (
     set "PATH=%SCRIPT_DIR%;%PATH%"
-    cmd /k "scaldys-template.exe --help"
+    cmd /k "scaldys-template.exe %ARGS%"
 ) else (
     set "PYRUNTIME_ACTIVATE=%SCRIPT_DIR%..\PythonRuntime\Scripts\activate.bat"
     if exist "%PYRUNTIME_ACTIVATE%" (
         call "%PYRUNTIME_ACTIVATE%"
-        cmd /k "scaldys-template --help"
+        cmd /k "scaldys-template %ARGS%"
     ) else (
         echo ERROR: Application not found. Check your installation or run setup_pyruntime.ps1 as administrator.
         pause

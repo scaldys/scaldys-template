@@ -1,6 +1,9 @@
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Clear-Host
 
+# Use passed arguments if any, otherwise default to --help
+$Command = if ($args.Count -gt 0) { $args } else { "--help" }
+
 # Detect deployment mode based on what is present in the installation.
 #
 #   Mode 1 (PyInstaller): scaldys-template.exe is in bin/ alongside this script.
@@ -15,10 +18,10 @@ $pyruntimeActivate = Join-Path (Split-Path -Parent $scriptDir) 'PythonRuntime\Sc
 
 if (Test-Path $pyinstallerExe) {
     $env:Path += ";$scriptDir"
-    scaldys-template.exe --help
+    scaldys-template.exe $Command
 } elseif (Test-Path $pyruntimeActivate) {
     & $pyruntimeActivate
-    scaldys-template --help
+    scaldys-template $Command
 } else {
     Write-Warning "Application not found. Check your installation or run setup_pyruntime.ps1 as administrator."
 }

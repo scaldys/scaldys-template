@@ -34,6 +34,7 @@
 #define MyAppBatName "scaldys-template_commandline.bat"
 #define MyAppPs1Name "scaldys-template_powershell.ps1"
 #define MyAppHelpName "manual"
+#define MyAppIconName "scaldys-template.ico"
 
 #ifndef SourceDir
   #define SourceDir "..\..\artifacts\portable"
@@ -92,6 +93,7 @@ Name: "pyruntime"; Description: "{#PythonRuntimeDesc}"; GroupDescription: "Optio
 ; The SourceDir tree contains bin/ (Mode 1: PyInstaller exe; Mode 2: scripts only),
 ; documentation/, examples/, logs/, and in Mode 2 also wheels/.
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: createallsubdirs recursesubdirs ignoreversion
+Source: "{#MyAppIconName}"; DestDir: "{app}\bin"; Flags: ignoreversion
 
 ; Offline mode (Mode 2 only): include the pre-built PythonRuntime environment.
 ; This section is only compiled when the builder passes /DPythonRuntimeDir=<path>.
@@ -107,7 +109,8 @@ Name: "{group}\{#MyAppName} CMD"; Filename: "{app}\bin\{#MyAppBatName}"
 ; PS launcher (ps1 file -- works for both modes; content differs per mode)
 Name: "{group}\{#MyAppName} PS"; Filename: "{code:GetLauncher}"; Parameters: "{code:GetLauncherParameters}"
 Name: "{group}\{#MyAppName} Help"; Filename: "{app}\documentation\{#MyAppHelpName}\index.html"; Check: FileExists(ExpandConstant('{app}\documentation\{#MyAppHelpName}\index.html'))
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{code:GetLauncher}"; Parameters: "{code:GetLauncherParameters}"; Tasks: desktopicon
+; Desktop shortcuts
+Name: "{commondesktop}\{#MyAppName} Terminal"; Filename: "{code:GetLauncher}"; Parameters: "{code:GetLauncherParameters}"; IconFilename: "{app}\bin\{#MyAppIconName}"; Tasks: desktopicon
 
 ; Online mode (Mode 2 only): run the PythonRuntime setup script during installation
 ; while the installer is still elevated, so it can create PythonRuntime without a
