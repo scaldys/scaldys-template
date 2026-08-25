@@ -186,7 +186,7 @@ push and pull request (GitHub) or merge request (GitLab)::
 
 Jobs:
 
-- **code_quality** — ``ruff check``, ``ruff format --diff`` (on GitHub), Prettier,
+- **code_quality** — ``ruff check``, ``ruff format --diff`` (on GitHub), mdformat,
   ``pyright``, and lock file check.
 - **test** — ``pytest --cov`` on Ubuntu, macOS, and Windows (GitHub only).
 

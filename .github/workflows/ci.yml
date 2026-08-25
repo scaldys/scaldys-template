@@ -30,9 +30,8 @@ jobs:
       - name: Ruff format
         run: uv run ruff format --diff .
 
-      # This isn't a general Python lint, this style is just used in this repository
-      - name: Prettier format
-        run: uv run pre-commit run prettier --all-files
+      - name: Markdown format check
+        run: uv run mdformat --check README.md
 
       - name: PyRight type consistency
         if: github.ref_name == 'main' || github.ref_name == 'develop'

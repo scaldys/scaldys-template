@@ -3,7 +3,6 @@ code_quality:
   image: python:3.13
   variables:
     UV_CACHE_DIR: .uv-cache
-    PRE_COMMIT_HOME: .pre-commit-cache
   before_script:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.cargo/bin:$PATH"
@@ -14,7 +13,7 @@ code_quality:
         uv run ruff check .
       fi
     - uv run ruff format --diff .
-    - uv run pre-commit run prettier --all-files
+    - uv run mdformat --check README.md
     - |
       if [ "$CI_COMMIT_BRANCH" = "main" ] || [ "$CI_COMMIT_BRANCH" = "develop" ]; then
         uv sync
@@ -24,7 +23,5 @@ code_quality:
     key:
       files:
         - uv.lock
-        - .pre-commit-config.yaml
     paths:
       - .uv-cache
-      - .pre-commit-cache

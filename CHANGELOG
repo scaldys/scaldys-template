@@ -25,6 +25,40 @@
     !
 
 
+[0.30.0] - 2026-08-25
+=====================
+
+**Changed**
+
+  - Replaced the Node.js-based ``prettier`` markdown formatter and ``pre-commit``
+    framework with ``mdformat``, a pure-Python CommonMark formatter invoked
+    directly via ``uv run mdformat``.
+
+  - Updated GitHub Actions CI (``.github/workflows/ci.yml``) and GitLab CI/CD
+    (``.gitlab/ci/code_quality.yml``) workflows to verify Markdown formatting
+    directly via ``uv run mdformat --check README.md``.
+
+  - Updated ``pyproject.toml`` dev dependencies to include ``mdformat`` and
+    removed ``pre-commit`` and ``.pre-commit-cache``.
+
+**Removed**
+
+  - Removed ``.pre-commit-config.yaml`` and ``.prettierrc``.
+  - Removed ``licenses/pre_commit.md`` and ``licenses/prettier.md``.
+
+**Docs**
+
+  - Rewrote ``docs/developer_guide/source/developers/topics/markdown_formatting.rst``
+    to document direct ``mdformat`` execution, CommonMark compliance, target
+    scoping, and developer workflows.
+  - Updated ``docs/developer_guide/source/developers/contributing.rst``,
+    ``docs/developer_guide/source/developers/topics/project_layout.rst``,
+    ``docs/developer_guide/source/developers/topics/publishing.rst``, and
+    ``docs/developer_guide/source/developers/topics/index.rst`` to reflect
+    ``mdformat`` usage.
+  - Added ``licenses/mdformat.md`` (MIT License) and updated ``licenses/README.md``.
+
+
 [0.20.0] - 2026-08-05
 =====================
 

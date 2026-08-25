@@ -1,25 +1,266 @@
+# scaldys-project.toml — scaldys-project project configuration
+#
+# This file is read by scaldys-project at build time.  Every setting has a
+# default, so the file is entirely optional.  It is provided here with all
+# available options documented so that the complete configuration surface is
+# visible without consulting the manual.
+#
+# Options that are not applicable to *this* project (scaldys-project itself)
+# are shown but commented out, with a note explaining why they are inactive.
+#
+# Reference: docs/manual/source/users/topics/configuration.rst
+# ──────────────────────────────────────────────────────────────────────────
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# [cython] — Cython compilation settings
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Controls whether selected Python modules are compiled to native Windows
+# extension (.pyd) files before PyInstaller bundles the application.
+# Cython compilation serves two purposes:
+#
+#   1. Performance  — tight inner loops and numerical code can be 2–10× faster
+#                     than the equivalent pure-Python bytecode.
+#   2. Obfuscation  — compiled .pyd files do not expose Python source, making
+#                     proprietary algorithms harder to reverse-engineer.
+#
+# If the [cython] section is omitted entirely, all defaults below apply and
+# no Cython compilation is performed.
+
 [cython]
+
+# compiled_modules
+#
+# A list of fully-qualified, dotted module paths to compile with Cython.
+# Each entry must resolve to a .py file under `source_root`.  The builder
+# runs cythonize() on each listed module, produces a .pyd extension, and
+# stages everything (compiled and uncompiled alike) under build/compiled/
+# before handing the tree to PyInstaller.
+#
+# Example:
+#   compiled_modules = [
+#       "myapp.core.engine",   # performance-critical inner loop
+#       "myapp.core.crypto",   # obfuscation: hide algorithm details
+#   ]
+#
+# Default: [] — Cython is disabled; all source files are staged as-is.
+#
+# scaldys-project is a pure-Python package; no modules require compilation.
 compiled_modules = [
     "scaldys_template.core.export",
 ]
 
+# source_root
+#
+# Directory (relative to the project root) that contains the top-level
+# Python source packages.
+#
+#   src-layout project  →  source_root = "src"   (default)
+#   flat-layout project →  source_root = "."  or  source_root = "mypackage"
+#
+# Default: "src"
+source_root = "src"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# [docs] — Documentation build settings
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Controls which documentation units are processed by `build docs` and
+# which of those are distributed alongside the Windows application.
+#
+# A "documentation unit" is a subdirectory of docs/ that contains its own
+# Sphinx source tree (i.e. a source/conf.py file), for example:
+#   docs/manual/
+#   docs/developer_guide/
+#
+# If the [docs] section is omitted entirely, all defaults below apply.
+
 [docs]
+
+# public_doc_dirs
+#
+# A list of subdirectory names under docs/ whose built HTML output is copied
+# into the distribution artefacts after a successful `build windows installer`
+# (or `build windows all`) run.  These are the documentation units destined
+# for end users of the program.
+#
+# For each name listed, the builder copies:
+#   build/<name>/html/  →  artifacts/portable/documentation/<name>/
+#   build/<name>/html/  →  artifacts/documentation/<name>/
+#
+# That tree is then picked up by the Inno Setup script and bundled inside
+# the Windows setup.exe, making the documentation available to end-users
+# offline after installation.  An empty list builds all documentation units
+# but ships none of them with the installer.
+#
+# Example:
+#   public_doc_dirs = ["user_guide"]
+#
+# Default: [] — no documentation is distributed with the installer.
+#
+# Not applicable to scaldys-project: this project is distributed via PyPI,
+# not as a Windows end-user installer, so no docs are ever bundled into
+# dist artefacts.
 public_doc_dirs = ["user_guide"]
 
+# ══════════════════════════════════════════════════════════════════════════════
+# [windows] — Windows packaging settings
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Controls the Windows distribution pipeline: where the packaging files live,
+# which deployment mode is used, and whether the installer targets offline or
+# online deployment.
+#
+# This section is consumed by `build windows installer` and `build windows all`.
+# It expects the following files to exist inside script_dir, named after the
+# project (hyphens in the project name are replaced by underscores):
+#
+#   {project_name}.iss                 Inno Setup script (required)
+#   {project_name}_commandline.bat     command-line launcher  (required)
+#   {project_name}_powershell.ps1      PowerShell launcher    (required)
+#   {project_name}.ico                 application icon       (optional)
+#   setup_pyruntime.ps1                runtime setup script   (required for pyruntime mode)
+#
+# scaldys-project is a developer tool installed via pip/uv, not distributed
+# as a Windows end-user installer.  No .iss or launcher scripts are needed.
+# deployment_mode = "wheel_only" below disables those compliance requirements.
+
 [windows]
-script_dir = "packaging/windows"
-# Deployment mode controls how the application is packaged:
-#   "pyinstaller" (default) -- frozen standalone executable via PyInstaller + Inno Setup installer.
-#                             No Python runtime required on the end-user's machine.
-#   "pyruntime"             -- no PyInstaller; a managed Python venv (PythonRuntime) is deployed
-#                             alongside the app via Inno Setup. Use when the application must
-#                             coexist with Quarto, Jupyter, or another real Python interpreter.
-#                             Requires .python-version at the project root.
-#   "wheel_only"            -- binary wheel only, no installer. Use for packages distributed
-#                             via pip or uv. The .iss and launcher files are not required.
+
+# script_dir
+#
+# Directory (relative to the project root) containing the Windows packaging
+# files listed above.  The builder reads launcher scripts from here, copies
+# them into the distribution staging tree, and passes the .iss script to
+# Inno Setup's ISCC compiler.
+#
+# Default: "packaging/windows"
+#
+# script_dir = "packaging/windows"
+#
+#
+# deployment_mode
+#
+# Controls how the application is packaged and deployed to end-user machines.
+# Two modes are available:
+#
+# "pyinstaller" — PYINSTALLER MODE
+#   The application is frozen into a standalone executable by PyInstaller.
+#   No Python runtime is deployed alongside it.  This is the right choice
+#   for most applications: it produces a self-contained, fast-starting
+#   executable that does not require Python on the target machine.
+#
+#   Build pipeline:  Cython → PyInstaller → wheel
+#   Distribution:
+#     artifacts/portable/bin/         PyInstaller output (exe + _internal/)
+#     artifacts/portable/documentation/
+#     artifacts/portable/examples/
+#     dist/                      binary wheel (for users with their own venv)
+#     artifacts/installer/setup.exe
+#
+#   The .iss script receives NO /DPyruntimeMode define.
+#   PyInstaller must be installed in the build environment.
+#
+# "pyruntime" — PYTHONRUNTIME MODE
+#   PyInstaller is skipped entirely.  Instead, a binary wheel is built from
+#   the Cython-compiled sources and the Inno Setup installer deploys a managed
+#   Python virtual environment (PythonRuntime) into the installation directory.
+#   Launcher scripts activate that environment rather than calling a frozen exe.
+#
+#   Use this mode when the application must share a Python interpreter with an
+#   external tool such as Quarto (which drives Jupyter notebooks).  In that
+#   case using PyInstaller would result in two separate Python runtimes on the
+#   user's machine — one inside the frozen exe and one for Quarto — which is
+#   wasteful and can cause version conflicts.
+#
+#   Build pipeline:  Cython → wheel only
+#   Distribution:
+#     artifacts/portable/bin/         scripts only (uv.exe, setup_pyruntime.ps1, launchers)
+#     artifacts/portable/wheels/      wheel staged for the installer
+#     artifacts/portable/documentation/
+#     artifacts/portable/examples/
+#     dist/                      binary wheel (for users with their own venv)
+#     artifacts/installer/setup.exe
+#
+#   The .iss script receives /DPyruntimeMode=1.
+#   PyInstaller is NOT required in the build environment.
+#   Within pyruntime mode, online vs. offline deployment is controlled by
+#   the bundle_pyruntime key below.
+#
+# "wheel_only" (default) — WHEEL-ONLY MODE
+#   Neither PyInstaller nor Inno Setup is used.  A binary wheel is built
+#   from the Cython-compiled sources and placed in dist/wheels/.  No
+#   installer is produced.
+#
+#   Use this mode when end users install the application into their own
+#   Python environment via pip/uv, rather than through a Windows installer
+#   wizard.  This is the lightest-weight deployment option and requires no
+#   Windows packaging files (.iss, .bat, .ps1) in script_dir.
+#
+#   Build pipeline:  Cython → wheel only
+#   Distribution:
+#     dist/                      binary wheel
+#     artifacts/documentation/   (if public_doc_dirs is non-empty)
+#
+#   PyInstaller and Inno Setup are NOT required in the build environment.
+#   The bundle_pyruntime key is ignored in this mode.
+#   Compliance check does NOT require .iss / launcher scripts.
+#
+# Default: "wheel_only"
+#
 deployment_mode = "pyinstaller"
-# bundle_pyruntime: only relevant when deployment_mode = "pyruntime".
-#   false (default) -- online installer: uv downloads Python at install time.
-#   true            -- offline installer: a pre-built venv is bundled inside setup.exe.
-#                     Requires .python-version at the project root.
+#
+#
+# bundle_pyruntime
+#
+# Only meaningful when deployment_mode = "pyruntime".  Selects between online
+# and offline installer modes for the PythonRuntime virtual environment.
+#
+# false (default) — ONLINE mode
+#   uv.exe is embedded in the bin/ directory of the installation.  During the
+#   installation wizard, setup_pyruntime.ps1 uses uv to download and create
+#   the PythonRuntime virtual environment on the end-user's machine.  The
+#   resulting setup.exe is significantly smaller, but requires an internet
+#   connection at install time.
+#
+# true            — OFFLINE mode
+#   A complete PythonRuntime virtual environment is pre-built at
+#   artifacts/pyruntime/ during the build itself (using uv).  Its path is then
+#   passed to Inno Setup via the /DPythonRuntimeDir preprocessor define, and
+#   the entire environment is embedded inside setup.exe.
+#   No internet access is needed on the end-user's machine at install time,
+#   at the cost of a significantly larger setup.exe.
+#
+#   Prerequisites for offline mode:
+#     - A .python-version file must exist at the project root (single line,
+#       e.g. "3.13") specifying which Python version to install.
+#     - uv must be available on PATH at build time.
+#     - The wheel build step must complete before _build_pyruntime() runs,
+#       which is guaranteed when using `build windows all`.
+#
+# Default: false
+#
 # bundle_pyruntime = false
+#
+#
+[format]
+#
+# markdown_targets
+#
+# A list of files and directories (relative to project root) to format with mdformat.
+# Direct file paths (e.g. "README.md") and directories (e.g. "docs/site") can be
+# specified. Directories are scanned recursively for *.md files.
+#
+# If omitted or set to None, automatic discovery applies (README.md and all
+# MkDocs documentation directories under docs/).
+# If set to an explicit empty list ([]), markdown formatting is skipped.
+#
+# Example:
+#   markdown_targets = ["README.md", "docs/site"]
+#
+# Default: unconfigured (auto-discovery)
+#
+# scaldys-project formats only README.md to avoid touching notes or draft files.
+markdown_targets = ["README.md"]

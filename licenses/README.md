@@ -18,17 +18,11 @@ directory of this repository as LICENSE.
 - https://github.com/platformdirs/platformdirs
 - License file: [platformdirs.md](platformdirs.md)
 
-## pre-commit
+## mdformat
 
 - MIT license
-- https://github.com/pre-commit/pre-commit
-- License file: [pre_commit.md](pre_commit.md)
-
-## prettier
-
-- MIT license
-- https://github.com/prettier/prettier
-- License file: [prettier.md](prettier.md)
+- https://github.com/executablebooks/mdformat
+- License file: [mdformat.md](mdformat.md)
 
 ## pyright
 

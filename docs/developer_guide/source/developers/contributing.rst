@@ -33,10 +33,9 @@ Clone and install
     git clone https://github.com/scaldys/scaldys-template.git
     cd scaldys-template
     uv sync --group dev
-    uv run pre-commit install
 
 ``uv sync`` creates ``.venv/``, installs the project in editable mode, and
-installs all dev-group dependencies (pytest, ruff, pyright, Sphinx, etc.).
+installs all dev-group dependencies (pytest, ruff, pyright, Sphinx, mdformat, etc.).
 
 The ``[tool.uv.sources]`` section in ``pyproject.toml`` points
 ``scaldys-project`` at the local checkout::
@@ -115,22 +114,16 @@ intentional there.
 ``pyright`` is configured to use the ``.venv`` virtual environment
 (``venvPath = "."``; ``venv = ".venv"``).
 
-Markdown files are formatted with `Prettier <https://prettier.io/>`_ via
-pre-commit.  To run it manually::
+Markdown files are formatted with `mdformat <https://mdformat.readthedocs.io/>`_.
+To check formatting without modifying files::
 
-    uv run pre-commit run prettier --all-files
+    uv run mdformat --check README.md
 
+To format Markdown files in place::
 
-Pre-commit Hooks
-================
+    uv run mdformat README.md
 
-The project ships a pre-commit configuration.  Install the hooks once after
-cloning (already included in the Clone and install step above)::
-
-    uv run pre-commit install
-
-The hooks run ruff, pyright, and prettier automatically on every commit,
-catching issues before they reach CI.
+See :ref:`markdown_formatting_guide` for details.
 
 
 Building the Documentation Locally

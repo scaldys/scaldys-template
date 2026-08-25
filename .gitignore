@@ -59,6 +59,7 @@ docs/**/_build/
 .ropeproject/
 app_data/
 node_modules/
+wip/
 src/scaldys/logs/*.jsonl
 ideas.md
 package.json

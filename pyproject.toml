@@ -1,6 +1,6 @@
 [project]
 name = "scaldys-template"
-version = "0.20.0"
+version = "0.20.1"
 authors = [
   { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
@@ -52,9 +52,9 @@ scaldys_template = ["py.typed", "tk/assets/fa/*.svg"]
 
 [dependency-groups]
 dev = [
-    "scaldys-project[cython,windows,docs]>=0.20.0",
-    "pre-commit>=4.5.0",
+    "scaldys-project[cython,windows,docs]>=0.31.1",
     "lxml-stubs>=0.5.1",
+    "mdformat>=1.0.0",
     "pyright>=1.1.411",
     "pytest>=9.0.3",
     "pytest-asyncio>=0.25.0",
@@ -76,19 +76,19 @@ markers = [
     "svg: Tests that require tksvg or native Tk 8.7+ SVG support",
 ]
 
-[tool.uv.sources]
-scaldys-project = { path = "../../scaldys-project", editable = true }
+#[tool.uv.sources]
+#scaldys-project = { path = "../../scaldys-project", editable = true }
 
 [tool.ruff]
 line-length = 100
 target-version = "py313"
-extend-exclude = [".uv-cache", ".pre-commit-cache", "artifacts"]
+extend-exclude = [".uv-cache", "artifacts"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
 
 [tool.pyright]
-exclude = [".venv", "build", "dist", ".uv-cache", ".pre-commit-cache", "artifacts"]
+exclude = [".venv", "build", "dist", ".uv-cache", "artifacts"]
 pythonVersion = "3.13"
 venvPath = "."
 venv = ".venv"

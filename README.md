@@ -107,13 +107,15 @@ tests/
    git init
    ```
 
-2. **Customize the template:**
+1. **Customize the template:**
+
    - Replace all occurrences of `scaldys_template` / `Scaldys-Template`
      (case-sensitive) with your project name
    - Update file and directory names containing "scaldys_template"
    - Modify package metadata in `pyproject.toml`
 
-3. **Set up your repository:**
+1. **Set up your repository:**
+
    - Create a new repository on GitHub/GitLab
    - Follow their instructions to push your local repository
    - Set up required GitHub environments for trusted publishing
@@ -259,11 +261,11 @@ This template includes a dedicated Windows build system managed by the
 **Deployment modes** — controlled by `deployment_mode` in
 `scaldys-project.toml`:
 
-| Mode                    | What it builds                                                    | When to use                           |
+| Mode | What it builds | When to use |
 | ----------------------- | ----------------------------------------------------------------- | ------------------------------------- |
-| `pyinstaller` (default) | PyInstaller exe + Inno Setup installer                            | Most applications                     |
-| `pyruntime`             | Binary wheel + Inno Setup installer with a managed Python runtime | Apps that coexist with Quarto/Jupyter |
-| `wheel_only`            | Binary wheel only, no installer                                   | Apps distributed via pip/uv           |
+| `pyinstaller` (default) | PyInstaller exe + Inno Setup installer | Most applications |
+| `pyruntime` | Binary wheel + Inno Setup installer with a managed Python runtime | Apps that coexist with Quarto/Jupyter |
+| `wheel_only` | Binary wheel only, no installer | Apps distributed via pip/uv |
 
 **Key features:**
 
@@ -350,11 +352,11 @@ uv run sphinx-build docs/user_guide/source docs/_build
 
 #### Test markers
 
-| Marker        | What it covers                                                    | Typical run time          |
+| Marker | What it covers | Typical run time |
 | ------------- | ----------------------------------------------------------------- | ------------------------- |
-| `unit`        | Isolated tests — no real filesystem writes, CLI mocked            | < 1 s                     |
-| `integration` | Full CLI invocations via `CliRunner`, real file I/O in `tmp_path` | ~10 s                     |
-| `slow`        | Tests that run the real async pipeline with simulated latency     | included in `integration` |
+| `unit` | Isolated tests — no real filesystem writes, CLI mocked | < 1 s |
+| `integration` | Full CLI invocations via `CliRunner`, real file I/O in `tmp_path` | ~10 s |
+| `slow` | Tests that run the real async pipeline with simulated latency | included in `integration` |
 
 ### Publishing to PyPI
 
@@ -362,14 +364,21 @@ This template supports trusted publishing to PyPI using GitHub Actions:
 
 1. Read the Packaging Python Projects guide:
    https://packaging.python.org/en/latest/tutorials/packaging-projects/
-2. For trusted publishing details, see uv's trusted publishing examples:
+
+1. For trusted publishing details, see uv's trusted publishing examples:
    https://github.com/astral-sh/trusted-publishing-examples
-3. For testing purposes, use TestPyPI: modify the `run` step in
+
+1. For testing purposes, use TestPyPI: modify the `run` step in
    `.github/workflows/release.yml` to use TestPyPI
-4. Configure trusted publishing:
+
+1. Configure trusted publishing:
+
    - Log in to PyPI (https://pypi.org/) or TestPyPI (https://test.pypi.org/)
+
    - Go to "Your projects" → "Publishing" → "Trusted Publisher Management"
+
    - Click "Add a new pending publisher" and configure:
+
      - Project name: Your package name
      - Owner: Your GitHub username
      - Repository: Your repository name

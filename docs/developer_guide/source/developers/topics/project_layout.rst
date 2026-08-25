@@ -31,11 +31,8 @@ Repository root
     ├── tests/                  # Pytest test suite
     ├── .gitignore
     ├── .gitlab-ci.yml          # CI/CD GitLab configuration
-    ├── .pre-commit-config.yaml # Pre-commit hooks (Prettier for Markdown)
-    ├── .prettierrc             # Prettier config for Markdown formatting
     ├── .python-version         # Python version constraint (>=3.13,<3.14)
-    ├── scaldys-project.toml            # scaldys-project pipeline configuration
-    ├── package.json            # Node.js dependency for prettier
+    ├── scaldys-project.toml    # scaldys-project pipeline configuration
     ├── pyproject.toml          # Project metadata, dependencies, tool config
     └── README.md               # Project overview and quick-start
 
@@ -175,11 +172,3 @@ Configuration files
 
 ``.python-version``
     Pins the Python version for ``uv``; currently ``>=3.13,<3.14``.
-
-``.pre-commit-config.yaml``
-    Git hook configuration.  Runs Prettier on staged Markdown files before
-    every commit.  See :ref:`markdown_formatting_guide`.
-
-``.prettierrc``
-    Prettier options: ``printWidth: 80``, ``proseWrap: "always"``,
-    ``endOfLine: "auto"``.  See :ref:`markdown_formatting_guide`.

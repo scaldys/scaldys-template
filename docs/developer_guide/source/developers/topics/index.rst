@@ -37,8 +37,8 @@ Guide summaries
     build output is written.
 
 :ref:`markdown_formatting_guide`
-    Why ``.prettierrc`` and ``.pre-commit-config.yaml`` exist, how Prettier is
-    managed without Node.js, and how the same check runs in GitHub Actions CI.
+    Why mdformat is used for Markdown, how target files are scoped, and how
+    the same check runs in GitHub Actions CI.
 
 :ref:`logging_guide`
     How the JSON Lines structured logging system works: the handler chain,
