@@ -16,23 +16,25 @@ classifiers = [
 ]
 license-files = ["LICEN[CS]E*"]
 dependencies = [
+    #    "PySide6>=6.8.0",
     "art>=6.5",
-    "click>=8.4.1",
-    "lxml>=6.1.1",
-    "matplotlib>=3.9",
-    "numpy>=2.0",
-    "pillow>=12.2.0",
-    "platformdirs>=4.9.6",
-    "pydantic>=2.0",
-#    "PySide6>=6.8.0",
-    "rich>=13.0",
-    "tksvg>=0.7.4; sys_platform == 'win32'",
-    "ttkbootstrap>=1.20.3",
+    "click>=8.4.2",
+    "lxml>=6.1.2",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "pillow>=12.3.0",
+    "platformdirs>=4.11.4",
+    "pydantic>=2.13.4",
+    "rich>=15.0.0",
+    "tksvg>=0.7.4 ; sys_platform == 'win32'",
+    "ttkbootstrap>=2.2.2",
     "typer>=0.27.1",
 ]
 
 [project.optional-dependencies]
-svg = ["tksvg>=0.7.4"]
+svg = [
+    "tksvg>=0.7.4",
+]
 
 [project.scripts]
 scaldys-template = "scaldys_template.__main__:main"
@@ -52,18 +54,18 @@ scaldys_template = ["py.typed", "tk/assets/fa/*.svg"]
 
 [dependency-groups]
 dev = [
-    "scaldys-project[cython,windows,docs]>=0.31.1",
     "lxml-stubs>=0.5.1",
     "mdformat>=1.0.0",
     "pyright>=1.1.411",
-    "pytest>=9.0.3",
-    "pytest-asyncio>=0.25.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
-    "pytest-mock>=3.14.0",
-    "ruff>=0.15.12",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.16.4",
+    "scaldys-project[cython,docs,windows]>=0.31.1",
     "sphinx>=9.1.0",
-    "sphinx-rtd-theme>=3.1.0",
     "sphinx-lint>=1.0.2",
+    "sphinx-rtd-theme>=3.1.0",
 ]
 
 [tool.pytest.ini_options]
