@@ -247,16 +247,16 @@ class UiExamplesFrame(tb.Frame):
         )
 
         tb.Progressbar(container, orient=HORIZONTAL, value=50).pack(fill=X, pady=5, expand=YES)
-        tb.Progressbar(container, orient=HORIZONTAL, value=75, bootstyle=(SUCCESS, STRIPED)).pack(
-            fill=X, pady=5, expand=YES
-        )
+        tb.Progressbar(
+            container, orient=HORIZONTAL, value=75, bootstyle=f"{SUCCESS}-{STRIPED}"
+        ).pack(fill=X, pady=5, expand=YES)
 
         # On some Linux and Windows CI environments, ttkbootstrap's Meter can fail
         # to resolve theme or system colors, leading to a TypeError or PIL ValueError.
         tb.Meter(
             container,
-            metersize=150,
-            amountused=45,
+            meter_size=150,
+            amount_used=45,
             subtext="meter widget",
             bootstyle=INFO,
             interactive=True,
@@ -266,7 +266,7 @@ class UiExamplesFrame(tb.Frame):
         sb1.set(0.1, 0.9)
         sb1.pack(fill=X, pady=5, expand=YES)
 
-        sb2 = tb.Scrollbar(container, orient=HORIZONTAL, bootstyle=(DANGER, ROUND))
+        sb2 = tb.Scrollbar(container, orient=HORIZONTAL, bootstyle=f"{DANGER}-{ROUND}")
         sb2.set(0.1, 0.9)
         sb2.pack(fill=X, pady=5, expand=YES)
 
@@ -290,24 +290,24 @@ class UiExamplesFrame(tb.Frame):
             fill=X, pady=5
         )
 
-        cb = tb.Checkbutton(group, text="solid toolbutton", bootstyle=(SUCCESS, TOOLBUTTON))
+        cb = tb.Checkbutton(group, text="solid toolbutton", bootstyle=f"{SUCCESS}-{TOOLBUTTON}")
         cb.invoke()
         cb.pack(fill=X, pady=5)
 
-        tb.Button(group, text="outline button", bootstyle=(INFO, OUTLINE)).pack(fill=X, pady=5)
+        tb.Button(group, text="outline button", bootstyle=f"{INFO}-{OUTLINE}").pack(fill=X, pady=5)
         tb.Menubutton(
-            group, text="outline menubutton", bootstyle=(WARNING, OUTLINE), menu=theme_menu
+            group, text="outline menubutton", bootstyle=f"{WARNING}-{OUTLINE}", menu=theme_menu
         ).pack(fill=X, pady=5)
         tb.Checkbutton(
-            group, text="outline toolbutton", bootstyle=(SUCCESS, OUTLINE, TOOLBUTTON)
+            group, text="outline toolbutton", bootstyle=f"{SUCCESS}-{OUTLINE}-{TOOLBUTTON}"
         ).pack(fill=X, pady=5)
         tb.Button(group, text="link button", bootstyle=LINK).pack(fill=X, pady=5)
 
-        cb1 = tb.Checkbutton(group, text="rounded toggle", bootstyle=(SUCCESS, ROUND, TOGGLE))
+        cb1 = tb.Checkbutton(group, text="rounded toggle", bootstyle=f"{SUCCESS}-{ROUND}-{TOGGLE}")
         cb1.invoke()
         cb1.pack(fill=X, pady=5)
 
-        cb2 = tb.Checkbutton(group, text="squared toggle", bootstyle=(SQUARE, TOGGLE))
+        cb2 = tb.Checkbutton(group, text="squared toggle", bootstyle=f"{SQUARE}-{TOGGLE}")
         cb2.invoke()
         cb2.pack(fill=X, pady=5)
 

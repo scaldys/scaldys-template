@@ -92,14 +92,14 @@ class MenuBar(tb.Frame):
         )
         file_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
-        file_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
+        file_menu = tb.Menu(menubar, tearoff=False, relief=tk.SOLID, borderwidth=0, autostyle=True)
         file_menu.add_command(label="Open…", accelerator="Ctrl+O", command=self._cmd_open)
         file_menu.add_command(label="Save", accelerator="Ctrl+S", command=self._cmd_save)
         file_menu.add_command(label="Save As…", command=self._cmd_save_as)
         file_menu.add_separator()
 
         self._recent_menu_nt = tb.Menu(
-            file_menu, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True
+            file_menu, tearoff=False, relief=tk.SOLID, borderwidth=0, autostyle=True
         )
         self._populate_recent_menu(self._recent_menu_nt)
         file_menu.add_cascade(label="Recent Files", menu=self._recent_menu_nt)
@@ -114,7 +114,9 @@ class MenuBar(tb.Frame):
         )
         analyzer_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
-        analyzer_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
+        analyzer_menu = tb.Menu(
+            menubar, tearoff=False, relief=tk.SOLID, borderwidth=0, autostyle=True
+        )
         analyzer_menu.add_command(label="Run analysis", accelerator="F5", command=self._cmd_run)
         analyzer_menu.add_command(label="Reset to defaults", command=self._cmd_reset)
         analyzer_btn["menu"] = analyzer_menu
@@ -125,7 +127,7 @@ class MenuBar(tb.Frame):
         )
         help_btn.pack(side="left", ipadx=5, ipady=5, padx=(1, 0))
 
-        help_menu = tb.Menu(menubar, tearoff=0, relief=tk.SOLID, borderwidth=0, autostyle=True)
+        help_menu = tb.Menu(menubar, tearoff=False, relief=tk.SOLID, borderwidth=0, autostyle=True)
         help_menu.add_command(label="About", command=self._cmd_about)
         help_btn["menu"] = help_menu
 
@@ -494,7 +496,7 @@ class SideBar(tb.Frame):
         bottom.pack(side="bottom", fill="x")
 
         self._toggle_label_btn = tb.Button(
-            top, image=self._img_hamburger, takefocus=0, command=self._toggle_labels
+            top, image=self._img_hamburger, takefocus=False, command=self._toggle_labels
         )
         self._toggle_label_btn.pack(side="top", **pad)
 
@@ -502,7 +504,7 @@ class SideBar(tb.Frame):
             top,
             image=self._img_analyzer,
             compound="left",
-            takefocus=0,
+            takefocus=False,
             command=self._on_show_analyzer,
         )
         self._analyzer_btn.pack(side="top", **pad)
@@ -511,7 +513,7 @@ class SideBar(tb.Frame):
             top,
             image=self._img_file,
             compound="left",
-            takefocus=0,
+            takefocus=False,
             command=self._on_show_editor,
         )
         self._editor_btn.pack(side="top", **pad)
@@ -520,7 +522,7 @@ class SideBar(tb.Frame):
             top,
             image=self._img_ui_examples,
             compound="left",
-            takefocus=0,
+            takefocus=False,
             command=self._on_show_ui_examples,
         )
         self._ui_examples_btn.pack(side="top", **pad)
@@ -529,7 +531,7 @@ class SideBar(tb.Frame):
             top,
             image=self._img_navigation,
             compound="left",
-            takefocus=0,
+            takefocus=False,
             command=self._on_show_navigation,
         )
         self._navigation_btn.pack(side="top", **pad)
@@ -538,7 +540,7 @@ class SideBar(tb.Frame):
             bottom,
             image=self._img_settings,
             compound="left",
-            takefocus=0,
+            takefocus=False,
             command=lambda: showinfo(message="Settings — wire up your command here"),
         )
         self._settings_btn.pack(side="bottom", **pad)
@@ -629,7 +631,7 @@ class Application(tb.Window):
 
     def __init__(self) -> None:
         set_dpi_awareness()
-        super().__init__(themename="darkly")
+        super().__init__(themename="bootstrap-dark")
 
         self.title(APP_NAME)
         self.minsize(1100, 650)
@@ -673,7 +675,7 @@ class Application(tb.Window):
 
         # Fallback to hardcoded defaults if the theme failed to load (e.g. in some CI environments)
         primary = colors.get("primary") or "#375a7f"
-        fg = colors.get("fg") if theme.type == "dark" else colors.get("bg")
+        fg = colors.get("fg") if theme.mode == "dark" else colors.get("bg")
         fg = fg or "#ffffff"
         dark = colors.get("dark") or "#303030"
 

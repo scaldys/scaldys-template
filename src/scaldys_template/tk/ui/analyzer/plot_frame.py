@@ -52,7 +52,7 @@ def _theme_colors() -> tuple[str, str, str, str]:
     style = tb.Style()
     theme = style.theme
     assert theme is not None
-    if theme.type == "dark":
+    if theme.mode == "dark":
         fig_bg = "#1e1e2e"
         axes_bg = "#2a2a3e"
         fg = "#e0e0e0"
