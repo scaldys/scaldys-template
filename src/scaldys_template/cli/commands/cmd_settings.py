@@ -1,4 +1,3 @@
-
 import logging
 from typing import Annotated
 
@@ -68,4 +67,3 @@ def log(level: ARG_TYPE_LOG_LEVEL) -> None:
         raise typer.Exit(code=1) from None
     settings.save()
     console.print(f"Log level set to [cyan]{level}[/cyan]")
-

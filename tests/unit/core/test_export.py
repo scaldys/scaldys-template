@@ -1,4 +1,3 @@
-
 """
 Unit tests for scaldys.core.export (export_data).
 

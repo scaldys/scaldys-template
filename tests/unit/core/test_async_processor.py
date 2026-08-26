@@ -1,4 +1,3 @@
-
 """
 Unit tests for scaldys.core.async_processor.
 

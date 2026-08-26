@@ -1,4 +1,3 @@
-
 """Signal analyzer parameter model.
 
 Defines the ``SignalParameters`` Pydantic model that drives both the GUI and the

@@ -1,4 +1,3 @@
-
 """Persistence helpers for ``SignalParameters``.
 
 Saves / loads a ``SignalParameters`` instance as a JSON file.  The default

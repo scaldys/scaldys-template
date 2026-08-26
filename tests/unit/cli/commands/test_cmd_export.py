@@ -1,4 +1,3 @@
-
 """
 Unit tests for scaldys.cli.commands.cmd_export (export command).
 

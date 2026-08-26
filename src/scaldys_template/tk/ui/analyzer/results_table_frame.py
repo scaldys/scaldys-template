@@ -206,9 +206,7 @@ class ResultsTableFrame(ttk.LabelFrame):
         tree = self._fd_tree
         tree.delete(*tree.get_children())
 
-        for freq, mag, phase in zip(
-            fft.frequencies, fft.magnitude_db, fft.phase_deg, strict=True
-        ):
+        for freq, mag, phase in zip(fft.frequencies, fft.magnitude_db, fft.phase_deg, strict=True):
             tree.insert(
                 "",
                 "end",

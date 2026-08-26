@@ -1,4 +1,3 @@
-
 """
 Unit tests for scaldys.cli.settings (AppSettings).
 

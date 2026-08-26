@@ -1,4 +1,3 @@
-
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules, copy_metadata
 
 # Automatically collect all submodules, dist-info metadata and data files for the package.

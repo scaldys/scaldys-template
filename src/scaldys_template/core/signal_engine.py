@@ -1,4 +1,3 @@
-
 """Signal generation, FFT computation, and metrics.
 
 All functions are pure (no I/O, no GUI dependency) and operate on NumPy

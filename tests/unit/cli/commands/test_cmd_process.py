@@ -1,4 +1,3 @@
-
 """
 Unit tests for scaldys.cli.commands.cmd_process (process command).
 

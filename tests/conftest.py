@@ -1,4 +1,3 @@
-
 """
 Root-level pytest configuration and shared fixtures.
 

@@ -1,4 +1,3 @@
-
 __all__ = [
     "APP_NAME",
     "ORGANIZATION_NAME",

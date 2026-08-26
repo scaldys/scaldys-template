@@ -1,4 +1,3 @@
-
 """
 Unit tests for scaldys.common.app_location.
 
