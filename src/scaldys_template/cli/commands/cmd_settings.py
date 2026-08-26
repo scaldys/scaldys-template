@@ -65,7 +65,7 @@ def log(level: ARG_TYPE_LOG_LEVEL) -> None:
             f"[bold red]Error:[/bold red] '[cyan]{level}[/cyan]' is not a valid log level.\n"
             f"Valid choices are: [cyan]{valid}[/cyan]"
         )
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from None
     settings.save()
     console.print(f"Log level set to [cyan]{level}[/cyan]")
 
