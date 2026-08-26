@@ -82,7 +82,7 @@ def has_svg_support() -> bool:
         root.destroy()
         _SVG_SUPPORT_CACHE = True
         return True
-    except (tkinter.TclError, Exception):
+    except (tkinter.TclError, RuntimeError, ImportError):
         _SVG_SUPPORT_CACHE = False
         return False
 

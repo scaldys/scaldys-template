@@ -44,7 +44,7 @@ def _load_app_icon(size: int) -> Any:
             if path.exists():
                 img = Image.open(path).convert("RGBA").resize((size, size), resample)
                 return ImageTk.PhotoImage(img)
-    except Exception:
+    except (ImportError, OSError, tk.TclError, AttributeError):
         pass
     return None
 
@@ -154,10 +154,10 @@ class AboutDialog(tk.Toplevel):
     def _read_description() -> str:
         """Return the package Summary from importlib.metadata, or empty string."""
         try:
-            from importlib.metadata import metadata
+            from importlib.metadata import PackageNotFoundError, metadata
 
             return metadata(PACKAGE_NAME).get("Summary", "")
-        except Exception:
+        except PackageNotFoundError:
             return ""
 
     def _center(self) -> None:

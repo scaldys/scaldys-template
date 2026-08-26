@@ -13,7 +13,7 @@ import tkinter
 try:
     root = tkinter.Tk()
     root.destroy()
-except (tkinter.TclError, Exception):
+except (tkinter.TclError, RuntimeError):
     pytest.skip("Tkinter display not available", allow_module_level=True)
 
 import ttkbootstrap as tb

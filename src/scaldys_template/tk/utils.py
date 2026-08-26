@@ -1,7 +1,7 @@
 """Windows-specific GUI utilities.
 
 All public functions degrade gracefully on non-Windows platforms — wrap
-platform-specific calls in ``try/except Exception`` so the module is safe to
+platform-specific calls in ``try/except (AttributeError, OSError)`` so the module is safe to
 import anywhere.
 """
 
@@ -22,7 +22,7 @@ def set_dpi_awareness() -> None:
         from ctypes import windll  # type: ignore[attr-defined]
 
         windll.shcore.SetProcessDpiAwareness(1)
-    except Exception:
+    except (AttributeError, OSError):
         pass
 
 
@@ -43,5 +43,5 @@ def dark_title_bar(window: "tk.Wm") -> None:
         hwnd = ct.windll.user32.GetParent(window.winfo_id())  # type: ignore[attr-defined]
         value = ct.c_int(2)
         set_window_attribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ct.byref(value), ct.sizeof(value))
-    except Exception:
+    except (AttributeError, OSError):
         pass

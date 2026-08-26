@@ -18,7 +18,7 @@ from lxml import etree
 _tksvg_import_error: Exception | None = None
 try:
     import tksvg  # type: ignore[import-not-found]
-except Exception as e:
+except (ImportError, RuntimeError) as e:
     tksvg = None
     _tksvg_import_error = e
 

@@ -97,7 +97,7 @@ class UiExamplesFrame(tb.Frame):
     def _initialize(self) -> None:
         try:
             self._create_theme_selector()
-        except Exception:
+        except (tk.TclError, AttributeError, RuntimeError):
             pass
 
         tb.Separator(self).pack(fill=X, pady=10, padx=10)
@@ -122,7 +122,7 @@ class UiExamplesFrame(tb.Frame):
         for builder, parent in builders:
             try:
                 builder(parent)
-            except Exception:
+            except (tk.TclError, AttributeError, RuntimeError, ValueError):
                 continue
 
     # ------------------------------------------------------------------
