@@ -1,5 +1,6 @@
 """Unit tests for parameter_store save/load round-trip."""
 
+import json
 from pathlib import Path
 
 import pytest
@@ -39,10 +40,10 @@ class TestSaveLoad:
         save_parameters(SignalParameters(), path)
         assert path.exists()
 
-    def test_load_invalid_json_raises_os_or_validation_error(self, tmp_path: Path):
+    def test_load_invalid_json_raises_json_decode_error(self, tmp_path: Path):
         bad_file = tmp_path / "bad.json"
         bad_file.write_text("not json at all", encoding="utf-8")
-        with pytest.raises(Exception):
+        with pytest.raises(json.JSONDecodeError):
             load_parameters(bad_file)
 
     def test_load_invalid_params_raises_validation_error(self, tmp_path: Path):
@@ -57,8 +58,6 @@ class TestSaveLoad:
             load_parameters(tmp_path / "nonexistent.json")
 
     def test_saved_file_is_readable_json(self, tmp_path: Path):
-        import json
-
         path = tmp_path / "params.json"
         save_parameters(SignalParameters(), path)
         data = json.loads(path.read_text(encoding="utf-8"))
