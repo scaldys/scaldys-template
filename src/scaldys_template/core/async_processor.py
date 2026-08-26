@@ -167,7 +167,7 @@ async def _run_pipeline(
         # result instead of cancelling all sibling tasks.
         raw_results = await asyncio.gather(*wrapped, return_exceptions=True)
 
-        for item_id, outcome in zip(batch, raw_results):
+        for item_id, outcome in zip(batch, raw_results, strict=True):
             if isinstance(outcome, ProcessingResult):
                 result = outcome
             elif isinstance(outcome, asyncio.TimeoutError):

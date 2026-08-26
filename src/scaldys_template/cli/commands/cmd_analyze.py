@@ -183,7 +183,10 @@ def analyze(
         writer = csv.writer(f)
         writer.writerow(["frequency_hz", "magnitude_db", "phase_deg"])
         for freq, mag, phase in zip(
-            fft_result.frequencies, fft_result.magnitude_db, fft_result.phase_deg
+            fft_result.frequencies,
+            fft_result.magnitude_db,
+            fft_result.phase_deg,
+            strict=True,
         ):
             writer.writerow([f"{freq:.4f}", f"{mag:.4f}", f"{phase:.4f}"])
     console.print(f"  Freq domain  → [cyan]{fd_path}[/cyan]")

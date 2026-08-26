@@ -135,7 +135,7 @@ class ResultsTableFrame(ttk.LabelFrame):
         vsb.config(command=tree.yview)
         hsb.config(command=tree.xview)
 
-        for col, heading, width in zip(columns, headings, widths):
+        for col, heading, width in zip(columns, headings, widths, strict=True):
             tree.heading(col, text=heading)
             tree.column(col, width=width, anchor=CENTER, minwidth=60)
 
@@ -206,7 +206,9 @@ class ResultsTableFrame(ttk.LabelFrame):
         tree = self._fd_tree
         tree.delete(*tree.get_children())
 
-        for freq, mag, phase in zip(fft.frequencies, fft.magnitude_db, fft.phase_deg):
+        for freq, mag, phase in zip(
+            fft.frequencies, fft.magnitude_db, fft.phase_deg, strict=True
+        ):
             tree.insert(
                 "",
                 "end",
@@ -252,7 +254,9 @@ class ResultsTableFrame(ttk.LabelFrame):
                 writer.writerow(["# Frequency Domain"])
                 writer.writerow(["frequency_hz", "magnitude_db", "phase_deg"])
                 fft = self._fft_result
-                for freq, mag, phase in zip(fft.frequencies, fft.magnitude_db, fft.phase_deg):
+                for freq, mag, phase in zip(
+                    fft.frequencies, fft.magnitude_db, fft.phase_deg, strict=True
+                ):
                     writer.writerow([f"{freq:.4f}", f"{mag:.4f}", f"{phase:.4f}"])
 
             logger.info("Results exported to %s", path)
