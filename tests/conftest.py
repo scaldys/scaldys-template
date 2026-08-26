@@ -154,7 +154,7 @@ def isolated_app_location(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> di
 @pytest.fixture(scope="session")
 def temporary_test_directory(tmpdir_factory) -> str:
     """Session-scoped temporary directory (legacy; prefer pytest's tmp_path)."""
-    timestamp = f"{datetime.datetime.now():%Y-%m-%d_%H-%M-%S}"
+    timestamp = f"{datetime.datetime.now(datetime.UTC):%Y-%m-%d_%H-%M-%S}"
     return str(tmpdir_factory.mktemp(f"testrun-{timestamp}", numbered=False))
 
 

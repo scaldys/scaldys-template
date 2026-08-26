@@ -49,6 +49,7 @@ import threading
 from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from typing import Self
 
 from scaldys_template.__about__ import PACKAGE_NAME
 
@@ -169,12 +170,15 @@ class DatabaseConnection:
     # Context manager
     # ------------------------------------------------------------------
 
-    def __enter__(self) -> DatabaseConnection:
+    def __enter__(self) -> Self:
         self.connect()
         return self
 
     def __exit__(
-        self, exc_type: type | None, exc_val: BaseException | None, exc_tb: object
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: object,
     ) -> bool:
         self.disconnect()
         return False  # do not suppress exceptions

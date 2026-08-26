@@ -91,7 +91,6 @@ class TestExportCommand:
         config.write_text("v: 1\n", encoding="utf-8")
 
         runner.invoke(app, ["export", str(config), "--num_values", "7"])
-        _, kwargs = mock_export.call_args
         # export_data is called positionally; check 3rd positional arg
         args = mock_export.call_args.args
         assert args[2] == 7
