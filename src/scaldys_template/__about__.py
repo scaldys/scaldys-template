@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 
 __all__ = [
     "APP_NAME",
-    "PACKAGE_NAME",
     "ORGANIZATION_NAME",
+    "PACKAGE_NAME",
     "VERSION",
 ]
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 APP_NAME = "Scaldys-Template"
 PACKAGE_NAME = "scaldys_template"

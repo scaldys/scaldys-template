@@ -21,11 +21,12 @@ import logging
 import queue
 import threading
 import tkinter as tk
+from collections.abc import Callable
 from tkinter import messagebox
-from typing import Any, Callable, Literal
+from typing import Any, Literal
 
 import ttkbootstrap as tb
-from ttkbootstrap.constants import BOTH, LEFT, X, YES  # BOTH, BOTTOM, LEFT, RIGHT, TOP, X, YES
+from ttkbootstrap.constants import BOTH, LEFT, YES, X  # BOTH, BOTTOM, LEFT, RIGHT, TOP, X, YES
 
 from scaldys_template.__about__ import PACKAGE_NAME
 from scaldys_template.core.signal_engine import (

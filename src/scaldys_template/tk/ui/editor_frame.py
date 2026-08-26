@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import tkinter as tk
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import ttkbootstrap as tb
 from ttkbootstrap.constants import BOTH, YES

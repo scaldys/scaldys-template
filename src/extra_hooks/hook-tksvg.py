@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
 # tksvg needs to be on the disk because it uses os.chdir(os.path.dirname(__file__))

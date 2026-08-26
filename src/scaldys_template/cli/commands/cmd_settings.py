@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 
 import logging
+from typing import Annotated
 
 import typer
 from pydantic import ValidationError
 from rich.console import Console
 from rich.panel import Panel
-from typing_extensions import Annotated
 
 from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME
 from scaldys_template.cli.settings import AppSettings
@@ -70,4 +69,3 @@ def log(level: ARG_TYPE_LOG_LEVEL) -> None:
     settings.save()
     console.print(f"Log level set to [cyan]{level}[/cyan]")
 
-    return None

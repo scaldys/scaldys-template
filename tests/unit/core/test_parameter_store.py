@@ -1,12 +1,12 @@
 """Unit tests for parameter_store save/load round-trip."""
 
-import pytest
 from pathlib import Path
 
+import pytest
 from pydantic import ValidationError
 
 from scaldys_template.core.parameter_store import load_parameters, save_parameters
-from scaldys_template.core.signal_model import SignalParameters, SignalType, NoiseType
+from scaldys_template.core.signal_model import NoiseType, SignalParameters, SignalType
 
 
 @pytest.mark.unit

@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 # Skip these tests if tkinter is not available (e.g. headless CI)
 pytest.importorskip("tkinter")

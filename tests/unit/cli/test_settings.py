@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit tests for scaldys.cli.settings (AppSettings).
@@ -19,7 +18,6 @@ import pytest
 from pydantic import ValidationError
 
 from scaldys_template.cli.settings import AppSettings
-
 
 # ---------------------------------------------------------------------------
 # Default state

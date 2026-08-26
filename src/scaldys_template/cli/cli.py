@@ -1,17 +1,18 @@
-# -*- coding: utf-8 -*-
 # cython: language_level=3
 
 import typer
-from typer.core import TyperGroup
 from art import text2art
 from rich.console import Console
+from typer.core import TyperGroup
 
-import scaldys_template.cli.commands.cmd_analyze as cmd_analyze
-import scaldys_template.cli.commands.cmd_export as cmd_export
-import scaldys_template.cli.commands.cmd_gui as cmd_gui
-import scaldys_template.cli.commands.cmd_process as cmd_process
-import scaldys_template.cli.commands.cmd_settings as cmd_settings
 from scaldys_template.__about__ import APP_NAME, VERSION
+from scaldys_template.cli.commands import (
+    cmd_analyze,
+    cmd_export,
+    cmd_gui,
+    cmd_process,
+    cmd_settings,
+)
 from scaldys_template.cli.commands.arg_types import ARG_TYPE_LOG_LEVEL, ARG_TYPE_VERBOSE
 from scaldys_template.cli.settings import AppSettings
 from scaldys_template.common.logging import setup_logging

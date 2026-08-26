@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit tests for scaldys.core.database.
@@ -110,10 +109,9 @@ class TestDatabaseConnectionContextManager:
     def test_exit_called_on_exception(self, config: DatabaseConfig):
         """__exit__ must run (and disconnect) even when an exception is raised."""
         conn_ref: list[DatabaseConnection] = []
-        with pytest.raises(ValueError):
-            with DatabaseConnection(config) as c:
-                conn_ref.append(c)
-                raise ValueError("body error")
+        with pytest.raises(ValueError), DatabaseConnection(config) as c:
+            conn_ref.append(c)
+            raise ValueError("body error")
         assert conn_ref[0]._connected is False
 
 

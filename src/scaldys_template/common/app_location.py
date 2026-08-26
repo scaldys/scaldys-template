@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 
 import logging
 import os
-import sys
 import platform
-
+import sys
 from pathlib import Path
 
 import platformdirs
 
-from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME
+from scaldys_template.__about__ import APP_NAME, ORGANIZATION_NAME, PACKAGE_NAME
 
 __all__ = ["AppLocation"]
 

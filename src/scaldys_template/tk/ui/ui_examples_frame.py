@@ -8,7 +8,8 @@ not relevant to your project and replace them with your own content.
 from __future__ import annotations
 
 import tkinter as tk
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import ttkbootstrap as tb
 from ttkbootstrap.constants import (
@@ -35,8 +36,8 @@ from ttkbootstrap.constants import (
     TOOLBUTTON,
     TOP,
     WARNING,
-    X,
     YES,
+    X,
 )
 
 # ---------------------------------------------------------------------------

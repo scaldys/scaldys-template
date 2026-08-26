@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit tests for scaldys.common.app_location.
@@ -21,11 +20,10 @@ import pytest
 
 from scaldys_template.common.app_location import (
     AppLocation,
+    get_os_app_data_path,
     is_frozen,
     is_running_from_source,
-    get_os_app_data_path,
 )
-
 
 # ---------------------------------------------------------------------------
 # Constants

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Integration tests for the `scaldys export` command.
@@ -26,7 +25,6 @@ import pytest
 from typer.testing import CliRunner
 
 from scaldys_template.cli.cli import app
-
 
 runner = CliRunner()
 

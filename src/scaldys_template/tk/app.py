@@ -9,31 +9,32 @@ Entry point::
 import json
 import logging
 import os
-from pathlib import Path
-from typing import Any, Callable
-
 import tkinter as tk
+from collections.abc import Callable
+from pathlib import Path
 from tkinter import filedialog, messagebox
 from tkinter.messagebox import showinfo
+from typing import Any
+
 import ttkbootstrap as tb
 from platformdirs import user_data_dir
 from pydantic import ValidationError
 
-from scaldys_template.__about__ import APP_NAME
 import scaldys_template.tk.fontawesome_icons as faw
+from scaldys_template.__about__ import APP_NAME
 from scaldys_template.common.app_location import AppLocation
 from scaldys_template.core.parameter_store import load_parameters, save_parameters
 from scaldys_template.core.signal_model import SignalParameters
 from scaldys_template.tk.styles import Styles
 from scaldys_template.tk.ui import (
-    navigation_frame,
     EditorFrame,
-    UiExamplesFrame,
     NavigationFrame,
     NavigationPanel,
+    UiExamplesFrame,
+    navigation_frame,
 )
-from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.ui.about_dialog import AboutDialog
+from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.utils import set_dpi_awareness
 
 logger = logging.getLogger(__name__)
@@ -957,8 +958,7 @@ class Application(tb.Window):
         except ValidationError as exc:
             first = exc.errors()[0]
             msg = first.get("msg", str(exc))
-            if msg.startswith("Value error, "):
-                msg = msg[len("Value error, ") :]
+            msg = msg.removeprefix("Value error, ")
             self.editor_frame.show_error(msg)
             return
         # Re-populate both views with canonical params (normalizes formatting in editor)

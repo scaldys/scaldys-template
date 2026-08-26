@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit tests for scaldys.core.export (export_data).
@@ -16,6 +15,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+
 import pytest
 
 from scaldys_template.core.export import export_data

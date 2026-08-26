@@ -12,18 +12,19 @@ input widgets inside a scrollable ttkbootstrap ``LabelFrame``.  It provides:
 from __future__ import annotations
 
 import tkinter as tk
+from collections.abc import Callable
 from tkinter import ttk
-from typing import Any, Callable
+from typing import Any
 
 import ttkbootstrap as tb
+from pydantic import ValidationError
 from ttkbootstrap.constants import (
     BOTH,
     DANGER,
+    YES,
     W,
     X,
-    YES,
 )  # BOTH, DANGER, END, LEFT, RIGHT, W, X, YES
-from pydantic import ValidationError
 
 from scaldys_template.core.signal_model import (
     NoiseType,
@@ -342,8 +343,7 @@ class SignalParametersFrame(ttk.LabelFrame):
             first = exc.errors()[0]
             msg = first.get("msg", str(exc))
             # Strip Pydantic's "Value error, " prefix when present
-            if msg.startswith("Value error, "):
-                msg = msg[len("Value error, ") :]
+            msg = msg.removeprefix("Value error, ")
             self._status_var.set(msg)
             # Attempt to highlight the field
             loc = first.get("loc", ())

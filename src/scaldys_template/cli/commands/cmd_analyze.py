@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # cython: language_level=3
 
 """
@@ -24,10 +23,10 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
 
 from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, VERSION
 from scaldys_template.common.app_location import AppLocation
@@ -304,4 +303,4 @@ def _print_summary(params: SignalParameters, metrics: Any, output_dir: Path) -> 
 
 
 # make Any available at module level for the type annotations above
-from typing import Any  # noqa: E402
+from typing import Any

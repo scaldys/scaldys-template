@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
 # cython: language_level=3
 
 import logging
 from pathlib import Path
+from typing import Annotated
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from typing_extensions import Annotated
 
 from scaldys_template.__about__ import APP_NAME, PACKAGE_NAME, VERSION
-from scaldys_template.core.export import export_data
 from scaldys_template.common.app_location import AppLocation
+from scaldys_template.core.export import export_data
 
 __all__ = ["export"]
 
@@ -69,7 +68,7 @@ def export(
         if not force:
             logger.error(
                 f"The output directory already exists, use the '--force' option to overwrite"
-                f" : {str(output_dir.resolve())}."
+                f" : {output_dir.resolve()!s}."
             )
             err_console.print(
                 Panel(
@@ -84,7 +83,7 @@ def export(
         else:
             logger.info(
                 f"The output directory already exists. Files with the same name will be"
-                f" overwritten (option '--force' used) : {str(output_dir.resolve())}."
+                f" overwritten (option '--force' used) : {output_dir.resolve()!s}."
             )
             console.print(
                 f"[yellow]Output directory exists — overwriting (--force)[/yellow]:"

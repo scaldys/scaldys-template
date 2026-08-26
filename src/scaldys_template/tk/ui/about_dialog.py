@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 """About dialog for the application."""
 
+import tkinter as tk
 import webbrowser
 from pathlib import Path
 from typing import Any
 
-import tkinter as tk
 import ttkbootstrap as tb
 
-from scaldys_template.__about__ import APP_NAME, ORGANIZATION_NAME, PACKAGE_NAME, VERSION
 import scaldys_template.tk.fontawesome_icons as faw
+from scaldys_template.__about__ import APP_NAME, ORGANIZATION_NAME, PACKAGE_NAME, VERSION
 
 _TEMPLATE_URL = "https://github.com/scaldys/scaldys-template"
 _PROJECT_URL = "https://github.com/scaldys/scaldys-project"
@@ -21,6 +20,7 @@ def _load_app_icon(size: int) -> Any:
     """Try to load the application .ico as a PhotoImage; return ``None`` on failure."""
     try:
         import sys
+
         from PIL import Image, ImageTk  # type: ignore[import-untyped]
 
         candidates: list[Path] = []

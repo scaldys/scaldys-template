@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # cython: language_level=3
 
 """
@@ -47,13 +46,13 @@ from __future__ import annotations
 
 import logging
 import threading
+from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Generator
 
 from scaldys_template.__about__ import PACKAGE_NAME
 
-__all__ = ["DatabaseConfig", "DatabaseConnection", "ConnectionPool", "transaction"]
+__all__ = ["ConnectionPool", "DatabaseConfig", "DatabaseConnection", "transaction"]
 
 logger = logging.getLogger(PACKAGE_NAME)
 
@@ -240,7 +239,7 @@ class DatabaseConnection:
 
 
 @contextmanager
-def transaction(conn: DatabaseConnection) -> Generator[DatabaseConnection, None, None]:
+def transaction(conn: DatabaseConnection) -> Generator[DatabaseConnection]:
     """
     Context manager that wraps a block of execute() calls in a transaction.
 
@@ -330,7 +329,7 @@ class ConnectionPool:
         self._semaphore.release()
 
     @contextmanager
-    def acquire(self) -> Generator[DatabaseConnection, None, None]:
+    def acquire(self) -> Generator[DatabaseConnection]:
         """
         Context manager: check out a connection, yield it, then check it in.
 

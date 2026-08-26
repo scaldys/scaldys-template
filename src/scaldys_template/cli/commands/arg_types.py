@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
+
+
+from typing import Annotated
 
 import typer
 
-from typing_extensions import Annotated
-from typing import Optional
-
-__all__ = ["ARG_TYPE_VERBOSE", "ARG_TYPE_LOG_LEVEL"]
+__all__ = ["ARG_TYPE_LOG_LEVEL", "ARG_TYPE_VERBOSE"]
 
 
 # Type definitions for fixed and optional arguments, common to multiple commands
@@ -20,7 +19,7 @@ ARG_TYPE_VERBOSE = Annotated[
 
 
 ARG_TYPE_LOG_LEVEL = Annotated[
-    Optional[str],
+    str | None,
     typer.Option(
         "--log", "-l", help="Set the log level (off, debug, info, warning, error, critical)"
     ),

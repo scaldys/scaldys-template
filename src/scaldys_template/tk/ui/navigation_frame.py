@@ -6,10 +6,11 @@ The Navigation view consists of a NavigationPanel on the left and a main content
 from __future__ import annotations
 
 import tkinter as tk
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import ttkbootstrap as tb
-from ttkbootstrap.constants import BOTH, LEFT, TOP, X, YES
+from ttkbootstrap.constants import BOTH, LEFT, TOP, YES, X
 
 from scaldys_template.tk.styles import Styles
 

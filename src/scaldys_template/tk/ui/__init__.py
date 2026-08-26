@@ -8,7 +8,7 @@ the internal module layout::
 
 from scaldys_template.tk.ui.analyzer.analyzer_frame import AnalyzerFrame
 from scaldys_template.tk.ui.editor_frame import EditorFrame
-from scaldys_template.tk.ui.ui_examples_frame import UiExamplesFrame
 from scaldys_template.tk.ui.navigation_frame import NavigationFrame, NavigationPanel
+from scaldys_template.tk.ui.ui_examples_frame import UiExamplesFrame
 
-__all__ = ["AnalyzerFrame", "EditorFrame", "UiExamplesFrame", "NavigationFrame", "NavigationPanel"]
+__all__ = ["AnalyzerFrame", "EditorFrame", "NavigationFrame", "NavigationPanel", "UiExamplesFrame"]

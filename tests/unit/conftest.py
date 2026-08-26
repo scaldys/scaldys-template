@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit-test-specific fixtures.
@@ -16,7 +15,6 @@ from pathlib import Path
 import pytest
 
 from scaldys_template.__about__ import PACKAGE_NAME
-
 
 # ---------------------------------------------------------------------------
 # Logger isolation

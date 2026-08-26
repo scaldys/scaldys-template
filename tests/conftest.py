@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Root-level pytest configuration and shared fixtures.
@@ -31,7 +30,6 @@ from pathlib import Path
 import pytest
 
 from scaldys_template.common.app_location import AppLocation
-
 
 # ---------------------------------------------------------------------------
 # Mark registration
@@ -157,8 +155,8 @@ def isolated_app_location(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> di
 @pytest.fixture(scope="session")
 def temporary_test_directory(tmpdir_factory) -> str:
     """Session-scoped temporary directory (legacy; prefer pytest's tmp_path)."""
-    timestamp = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
-    return str(tmpdir_factory.mktemp("testrun-{0}".format(timestamp), numbered=False))
+    timestamp = f"{datetime.datetime.now():%Y-%m-%d_%H-%M-%S}"
+    return str(tmpdir_factory.mktemp(f"testrun-{timestamp}", numbered=False))
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Signal analyzer parameter model.
 
@@ -14,11 +13,11 @@ from enum import StrEnum
 from pydantic import BaseModel, field_validator, model_validator
 
 __all__ = [
-    "SignalType",
-    "NoiseType",
-    "WindowType",
-    "SignalParameters",
     "MAX_SAMPLES",
+    "NoiseType",
+    "SignalParameters",
+    "SignalType",
+    "WindowType",
 ]
 
 # ---------------------------------------------------------------------------
@@ -133,7 +132,7 @@ class SignalParameters(BaseModel):
     # ------------------------------------------------------------------
 
     @model_validator(mode="after")
-    def check_cross_constraints(self) -> "SignalParameters":
+    def check_cross_constraints(self) -> SignalParameters:
         # Nyquist criterion
         if self.sampling_rate < 2.0 * self.frequency:
             raise ValueError(

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Persistence helpers for ``SignalParameters``.
 
@@ -20,8 +19,8 @@ from scaldys_template.core.signal_model import SignalParameters
 
 __all__ = [
     "default_parameters_path",
-    "save_parameters",
     "load_parameters",
+    "save_parameters",
 ]
 
 logger = logging.getLogger(PACKAGE_NAME)

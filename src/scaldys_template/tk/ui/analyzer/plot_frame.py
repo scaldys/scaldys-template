@@ -19,14 +19,14 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Any
 
+import matplotlib
 import ttkbootstrap as tb
 from ttkbootstrap.constants import BOTH, YES
-import matplotlib
 
 matplotlib.use("TkAgg")  # must be set before importing pyplot
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 from scaldys_template.__about__ import PACKAGE_NAME

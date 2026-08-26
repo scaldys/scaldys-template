@@ -1,7 +1,8 @@
-import pytest
-from typing import Generator
+from collections.abc import Generator
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 # Skip these tests if ttkbootstrap or tkinter is not available
 pytest.importorskip("ttkbootstrap")
@@ -16,8 +17,9 @@ except (tkinter.TclError, Exception):
     pytest.skip("Tkinter display not available", allow_module_level=True)
 
 import ttkbootstrap as tb
-from scaldys_template.tk.app import Application
+
 from scaldys_template.common.app_location import AppLocation
+from scaldys_template.tk.app import Application
 
 
 @pytest.mark.unit
@@ -26,7 +28,7 @@ class TestNavigationView:
     @pytest.fixture
     def app(
         self, isolated_app_location: dict[int, Path], monkeypatch: pytest.MonkeyPatch
-    ) -> Generator[Application, None, None]:
+    ) -> Generator[Application]:
         # Application calls user_data_dir(APP_NAME)
         monkeypatch.setattr(
             "scaldys_template.tk.app.user_data_dir",

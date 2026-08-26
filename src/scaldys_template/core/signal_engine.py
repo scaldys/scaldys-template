@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Signal generation, FFT computation, and metrics.
 
@@ -29,12 +28,12 @@ from scaldys_template.core.signal_model import (
 )
 
 __all__ = [
-    "SignalData",
     "FFTResult",
+    "SignalData",
     "SignalMetrics",
-    "generate_signal",
     "compute_fft",
     "compute_metrics",
+    "generate_signal",
 ]
 
 logger = logging.getLogger(PACKAGE_NAME)

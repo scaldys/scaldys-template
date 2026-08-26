@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit tests for scaldys.cli.commands.cmd_process (process command).
@@ -18,8 +17,8 @@ import pytest
 from typer.testing import CliRunner
 
 from scaldys_template.cli.cli import app
-from scaldys_template.core.async_processor import ProcessingResult
 from scaldys_template.cli.commands.cmd_process import _print_summary
+from scaldys_template.core.async_processor import ProcessingResult
 
 runner = CliRunner()
 

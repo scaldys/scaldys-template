@@ -1,7 +1,8 @@
-import pytest
-from typing import Generator
+from collections.abc import Generator
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 # Skip these tests if ttkbootstrap or tkinter is not available (e.g. headless CI without Xvfb)
 pytest.importorskip("ttkbootstrap")
@@ -15,8 +16,8 @@ try:
 except (tkinter.TclError, Exception):
     pytest.skip("Tkinter display not available", allow_module_level=True)
 
-from scaldys_template.tk.app import Application
 from scaldys_template.common.app_location import AppLocation
+from scaldys_template.tk.app import Application
 
 
 @pytest.mark.unit
@@ -25,7 +26,7 @@ class TestToolBar:
     @pytest.fixture
     def app(
         self, isolated_app_location: dict[int, Path], monkeypatch: pytest.MonkeyPatch
-    ) -> Generator[Application, None, None]:
+    ) -> Generator[Application]:
         monkeypatch.setattr(
             "scaldys_template.tk.app.user_data_dir",
             lambda name: str(isolated_app_location[AppLocation.AppDataDir]),

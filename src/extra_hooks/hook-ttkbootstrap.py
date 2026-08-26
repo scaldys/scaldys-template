@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
 # ttkbootstrap contains localized strings and theme data.

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # cython: language_level=3
 
 """
@@ -30,8 +29,8 @@ from __future__ import annotations
 import asyncio
 import logging
 import random
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 from scaldys_template.__about__ import PACKAGE_NAME
 

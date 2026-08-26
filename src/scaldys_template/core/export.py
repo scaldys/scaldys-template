@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 import json
 import logging
-
 from pathlib import Path
 
 from scaldys_template.__about__ import PACKAGE_NAME

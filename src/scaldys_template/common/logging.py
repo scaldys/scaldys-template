@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 
 import atexit
 import datetime as dt
 import json
 import logging
 import pathlib
-
 from logging.config import dictConfig
 from logging.handlers import QueueHandler, RotatingFileHandler
 from typing import override
@@ -78,10 +76,10 @@ def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
     # getattr() transforms log_level string to the corresponding integer value
     if level == "off":
         if verbose:
-            numeric_level = getattr(logging, "INFO")
+            numeric_level = logging.INFO
         else:
             # turn off the logging messages to standard output by specifying a log level above critical
-            numeric_level = getattr(logging, "CRITICAL") + 1
+            numeric_level = logging.CRITICAL + 1
     else:
         numeric_level = getattr(logging, level.upper())
 
@@ -220,7 +218,7 @@ class JsonFormatter(logging.Formatter):
     def _prepare_log_dict(self, record: logging.LogRecord) -> dict[str, str | None]:
         always_fields = {
             "message": record.getMessage(),
-            "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).isoformat(),
+            "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.UTC).isoformat(),
         }
         if record.exc_info is not None:
             always_fields["exc_info"] = self.formatException(record.exc_info)

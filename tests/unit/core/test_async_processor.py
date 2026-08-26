@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Unit tests for scaldys.core.async_processor.
@@ -22,7 +21,6 @@ import pytest
 
 import scaldys_template.core.async_processor as _mod
 from scaldys_template.core.async_processor import ProcessingResult, process_items
-
 
 # ---------------------------------------------------------------------------
 # ProcessingResult

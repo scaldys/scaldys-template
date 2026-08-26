@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # cython: language_level=3
 
 """
@@ -132,5 +131,5 @@ def gui(
     else:
         kwargs["start_new_session"] = True
 
-    subprocess.Popen(cmd, **kwargs)  # noqa: S603
+    subprocess.Popen(cmd, **kwargs)
     logger.info("Launched %s GUI", APP_NAME)
