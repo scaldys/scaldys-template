@@ -7,6 +7,7 @@ not relevant to your project and replace them with your own content.
 
 from __future__ import annotations
 
+import contextlib
 import tkinter as tk
 from collections.abc import Callable
 from typing import Any
@@ -95,10 +96,8 @@ class UiExamplesFrame(tb.Frame):
     # ------------------------------------------------------------------
 
     def _initialize(self) -> None:
-        try:
+        with contextlib.suppress(tk.TclError, AttributeError, RuntimeError):
             self._create_theme_selector()
-        except (tk.TclError, AttributeError, RuntimeError):
-            pass
 
         tb.Separator(self).pack(fill=X, pady=10, padx=10)
 

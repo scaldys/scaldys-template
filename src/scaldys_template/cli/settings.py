@@ -1,5 +1,6 @@
 
 import configparser
+import contextlib
 import logging
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -75,10 +76,8 @@ class AppSettings:
         config = configparser.ConfigParser()
         config.read(str(self._settings_file_path))
         raw: dict[str, Any] = {}
-        try:
+        with contextlib.suppress(KeyError):
             raw = dict(config["DEFAULT"])
-        except KeyError:
-            pass
 
         try:
             self._model = _SettingsModel(**raw)

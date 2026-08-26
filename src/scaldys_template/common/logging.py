@@ -1,5 +1,6 @@
 
 import atexit
+import contextlib
 import datetime as dt
 import json
 import logging
@@ -251,10 +252,8 @@ class WindowsSafeRotatingFileHandler(RotatingFileHandler):
 
     @override
     def doRollover(self) -> None:
-        try:
+        with contextlib.suppress(PermissionError):
             super().doRollover()
-        except PermissionError:
-            pass
 
 
 class NonErrorFilter(logging.Filter):

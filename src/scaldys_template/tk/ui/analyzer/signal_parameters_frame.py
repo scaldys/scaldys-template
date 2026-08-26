@@ -11,6 +11,7 @@ input widgets inside a scrollable ttkbootstrap ``LabelFrame``.  It provides:
 
 from __future__ import annotations
 
+import contextlib
 import tkinter as tk
 from collections.abc import Callable
 from tkinter import ttk
@@ -292,10 +293,8 @@ class SignalParametersFrame(ttk.LabelFrame):
     def _clear_status(self) -> None:
         self._status_var.set("")
         for field in self._widgets:
-            try:
+            with contextlib.suppress(tk.TclError):
                 self._widgets[field].configure(bootstyle="")
-            except tk.TclError:
-                pass
 
     # ------------------------------------------------------------------
     # Public API
