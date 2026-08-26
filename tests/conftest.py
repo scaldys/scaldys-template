@@ -89,9 +89,8 @@ def has_svg_support() -> bool:
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
     """Skip tests marked with 'svg' if SVG support is missing."""
-    if any(mark.name == "svg" for mark in item.iter_markers()):
-        if not has_svg_support():
-            pytest.skip("SVG support (tksvg or Tk 8.7+) is not available")
+    if any(mark.name == "svg" for mark in item.iter_markers()) and not has_svg_support():
+        pytest.skip("SVG support (tksvg or Tk 8.7+) is not available")
 
 
 # ---------------------------------------------------------------------------
