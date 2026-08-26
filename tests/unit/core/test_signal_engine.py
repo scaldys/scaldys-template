@@ -15,12 +15,12 @@ from scaldys_template.core.signal_model import NoiseType, SignalParameters, Sign
 
 def _params(**kwargs: Any) -> SignalParameters:
     """Helper: create parameters with sane defaults overridden by *kwargs*."""
-    defaults: dict[str, Any] = dict(
-        frequency=100.0,
-        sampling_rate=8000.0,
-        duration=0.1,
-        fft_size=512,
-    )
+    defaults: dict[str, Any] = {
+        "frequency": 100.0,
+        "sampling_rate": 8000.0,
+        "duration": 0.1,
+        "fft_size": 512,
+    }
     defaults.update(kwargs)
     return SignalParameters(**defaults)
 
