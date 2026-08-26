@@ -76,11 +76,8 @@ def setup_logging(level: str | None = "info", verbose: bool = False) -> None:
     logger = logging.getLogger(PACKAGE_NAME)
     # getattr() transforms log_level string to the corresponding integer value
     if level == "off":
-        if verbose:
-            numeric_level = logging.INFO
-        else:
-            # turn off the logging messages to standard output by specifying a log level above critical
-            numeric_level = logging.CRITICAL + 1
+        # turn off the logging messages to standard output by specifying a log level above critical
+        numeric_level = logging.INFO if verbose else logging.CRITICAL + 1
     else:
         numeric_level = getattr(logging, level.upper())
 
