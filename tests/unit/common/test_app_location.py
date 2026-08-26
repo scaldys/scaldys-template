@@ -89,7 +89,7 @@ class TestGetDirectory:
             AppLocation.get_directory(AppLocation.AppDataDir),
             AppLocation.get_directory(AppLocation.LogDir),
         ]
-        assert len(set(str(p) for p in paths)) == 3
+        assert len({str(p) for p in paths}) == 3
 
 
 # ---------------------------------------------------------------------------
