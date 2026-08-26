@@ -90,8 +90,10 @@ class TestExportData:
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "data.json").mkdir()  # dir with the same name as the output file
 
-        with caplog.at_level(logging.ERROR, logger="scaldys_template"):
-            with pytest.raises(OSError):
-                export_data(config_file, output_dir, num_values=2)
+        with (
+            caplog.at_level(logging.ERROR, logger="scaldys_template"),
+            pytest.raises(OSError),
+        ):
+            export_data(config_file, output_dir, num_values=2)
 
         assert any("Failed to export" in r.message for r in caplog.records)

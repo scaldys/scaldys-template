@@ -152,30 +152,36 @@ class TestTransaction:
     def test_normal_flow_logs_commit(
         self, config: DatabaseConfig, caplog: pytest.LogCaptureFixture
     ):
-        with caplog.at_level(logging.DEBUG, logger="scaldys_template"):
-            with DatabaseConnection(config) as c:
-                with transaction(c):
-                    c.execute("SELECT 1")
+        with (
+            caplog.at_level(logging.DEBUG, logger="scaldys_template"),
+            DatabaseConnection(config) as c,
+            transaction(c),
+        ):
+            c.execute("SELECT 1")
         messages = [r.message.upper() for r in caplog.records]
         assert any("COMMIT" in m for m in messages)
 
     def test_exception_logs_rollback(
         self, config: DatabaseConfig, caplog: pytest.LogCaptureFixture
     ):
-        with caplog.at_level(logging.WARNING, logger="scaldys_template"):
-            with pytest.raises(RuntimeError):
-                with DatabaseConnection(config) as c:
-                    with transaction(c):
-                        raise RuntimeError("force rollback")
+        with (
+            caplog.at_level(logging.WARNING, logger="scaldys_template"),
+            pytest.raises(RuntimeError),
+            DatabaseConnection(config) as c,
+            transaction(c),
+        ):
+            raise RuntimeError("force rollback")
         messages = [r.message.upper() for r in caplog.records]
         assert any("ROLLBACK" in m for m in messages)
 
     def test_exception_is_reraised(self, config: DatabaseConfig):
         """The transaction context manager must NOT swallow exceptions."""
-        with pytest.raises(ValueError, match="should propagate"):
-            with DatabaseConnection(config) as c:
-                with transaction(c):
-                    raise ValueError("should propagate")
+        with (
+            pytest.raises(ValueError, match="should propagate"),
+            DatabaseConnection(config) as c,
+            transaction(c),
+        ):
+            raise ValueError("should propagate")
 
 
 # ---------------------------------------------------------------------------
