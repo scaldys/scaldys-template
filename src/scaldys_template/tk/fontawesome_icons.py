@@ -100,6 +100,65 @@ def icon_to_image(
     return svg_to_image(xml_data, fill, scale_to_width, scale_to_height, scale, master=master)
 
 
+def _prepare_svg_data(source: str | bytes, fill: str | None) -> bytes:
+    source_bytes = source.encode("utf-8") if isinstance(source, str) else source
+    root = etree.fromstring(source_bytes)
+
+    if fill is not None:
+        root.attrib["fill"] = fill
+
+    buf = io.BytesIO()
+    etree.ElementTree(root).write(buf)
+    return buf.getvalue()
+
+
+def _svg_to_image_tksvg(
+    data: bytes,
+    scale_to_width: int | None,
+    scale_to_height: int | None,
+    scale: float,
+    master: tkinter.Misc | None,
+) -> PhotoImage:
+    assert tksvg is not None
+    kwargs: dict[str, object] = {"data": data}
+    if master:
+        kwargs["master"] = master
+    if scale_to_width:
+        kwargs["scaletowidth"] = scale_to_width
+    if scale_to_height:
+        kwargs["scaletoheight"] = scale_to_height
+    if scale != 1:
+        kwargs["scale"] = scale
+    return tksvg.SvgImage(**kwargs)
+
+
+def _svg_to_image_native(
+    data: bytes,
+    scale_to_width: int | None,
+    scale_to_height: int | None,
+    scale: float,
+    master: tkinter.Misc | None,
+) -> PhotoImage:
+    format_parts = ["svg"]
+    if scale != 1:
+        format_parts.append(f"-scale {scale}")
+
+    if scale_to_width or scale_to_height:
+        w = scale_to_width or 0
+        h = scale_to_height or 0
+        format_parts.append(f"-scaleto {w} {h}")
+
+    try:
+        return PhotoImage(master=master, data=data, format=" ".join(format_parts))
+    except tkinter.TclError as e:
+        if "svg" in str(e).lower() or "format" in str(e).lower():
+            msg = "SVG support is not available. Please install 'tksvg' or upgrade to Tk 8.7+."
+            if _tksvg_import_error:
+                msg += f" (tksvg import failed: {_tksvg_import_error})"
+            raise ImportError(msg) from e
+        raise
+
+
 def svg_to_image(
     source: str | bytes,
     fill: str | None = None,
@@ -129,43 +188,9 @@ def svg_to_image(
     -------
     tkinter.PhotoImage
     """
-    source_bytes = source.encode("utf-8") if isinstance(source, str) else source
-    root = etree.fromstring(source_bytes)
-
-    if fill is not None:
-        root.attrib["fill"] = fill
-
-    buf = io.BytesIO()
-    etree.ElementTree(root).write(buf)
+    data = _prepare_svg_data(source, fill)
 
     if tksvg:
-        kwargs: dict[str, object] = {"data": buf.getvalue()}
-        if master:
-            kwargs["master"] = master
-        if scale_to_width:
-            kwargs["scaletowidth"] = scale_to_width
-        if scale_to_height:
-            kwargs["scaletoheight"] = scale_to_height
-        if scale != 1:
-            kwargs["scale"] = scale
-        return tksvg.SvgImage(**kwargs)
+        return _svg_to_image_tksvg(data, scale_to_width, scale_to_height, scale, master)
 
-    # Fallback to native SVG support (Tk 8.7+)
-    format_parts = ["svg"]
-    if scale != 1:
-        format_parts.append(f"-scale {scale}")
-
-    if scale_to_width or scale_to_height:
-        w = scale_to_width or 0
-        h = scale_to_height or 0
-        format_parts.append(f"-scaleto {w} {h}")
-
-    try:
-        return PhotoImage(master=master, data=buf.getvalue(), format=" ".join(format_parts))
-    except tkinter.TclError as e:
-        if "svg" in str(e).lower() or "format" in str(e).lower():
-            msg = "SVG support is not available. Please install 'tksvg' or upgrade to Tk 8.7+."
-            if _tksvg_import_error:
-                msg += f" (tksvg import failed: {_tksvg_import_error})"
-            raise ImportError(msg) from e
-        raise
+    return _svg_to_image_native(data, scale_to_width, scale_to_height, scale, master)
