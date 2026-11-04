@@ -25,6 +25,28 @@
     !
 
 
+[0.31.0] - 2026-11-03
+=====================
+
+**Added**
+
+  - Documentation deployment: added GitHub Actions (``.github/workflows/docs.yml``)
+    and GitLab CI/CD (``.gitlab/ci/pages.yml``) workflows to build and publish the
+    User Guide to GitHub Pages and GitLab Pages on release tags and manual triggers.
+
+**Changed**
+
+  - PyInstaller hooks: relocated hook scripts from ``src/extra_hooks/`` to
+    ``packaging/hooks/`` to isolate build/packaging recipes from runtime package
+    source code.
+
+**Docs**
+
+  - Updated ``docs/developer_guide/source/developers/topics/project_layout.rst``,
+    ``docs/developer_guide/source/developers/topics/customisation.rst``, and
+    ``docs/developer_guide/source/developers/architecture.rst`` to reflect the
+    relocated ``packaging/hooks/`` structure.
+
 [0.30.0] - 2026-08-25
 =====================
 

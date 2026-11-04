@@ -1,3 +1,3 @@
 @echo off
 call "%~dp0..\.venv\Scripts\activate.bat"
-scaldys-build build windows all
+scaldys-project build windows all

@@ -26,7 +26,10 @@ Repository root
     │   └── user_guide/         # User-facing documentation (Sphinx)
     ├── examples/               # Usage examples (Markdown)
     ├── licenses/               # Third-party dependency licence files
-    ├── packaging/windows/      # Inno Setup scripts for the Windows installer
+    ├── packaging/              # Packaging scripts, hooks, and Windows installer files
+    │   ├── build_it.bat        # Convenience Windows build script
+    │   ├── hooks/              # PyInstaller hooks (hook-scaldys_template.py, etc.)
+    │   └── windows/            # Inno Setup scripts for the Windows installer
     ├── src/                    # All Python source code
     ├── tests/                  # Pytest test suite
     ├── .gitignore
@@ -44,7 +47,6 @@ Source tree (``src/``)
 
     src/
     ├── scaldys_template.py          # Convenience alias: `python src/scaldys_template.py`
-    ├── extra_hooks/                 # PyInstaller hooks (hook-scaldys_template.py, etc.)
     └── scaldys_template/
         ├── __about__.py        # APP_NAME, PACKAGE_NAME, ORGANIZATION_NAME, VERSION
         ├── __init__.py         # Re-exports: from scaldys_template.cli import *; from scaldys_template.common import *
@@ -74,7 +76,26 @@ Source tree (``src/``)
 makes ``python src/scaldys_template.py`` work without installing the package.  It is
 not part of the installed distribution.
 
-The ``src/extra_hooks/`` directory contains PyInstaller hooks for libraries
+
+Packaging tree (``packaging/``)
+===============================
+
+.. code-block:: text
+
+    packaging/
+    ├── build_it.bat                 # Convenience build script
+    ├── hooks/                       # PyInstaller hooks
+    │   ├── hook-scaldys_template.py
+    │   ├── hook-tksvg.py
+    │   └── hook-ttkbootstrap.py
+    └── windows/                     # Inno Setup & Windows installer assets
+        ├── scaldys-template.ico
+        ├── scaldys-template.iss
+        ├── scaldys-template_commandline.bat
+        ├── scaldys-template_powershell.ps1
+        └── setup_pyruntime.ps1
+
+The ``packaging/hooks/`` directory contains PyInstaller hooks for libraries
 that do not ship their own (like ``tksvg`` and ``ttkbootstrap``).  It also
 includes ``hook-scaldys_template.py``, which ensures all package data files
 inside ``scaldys_template/`` are automatically collected into the frozen
