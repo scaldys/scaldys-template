@@ -1,6 +1,6 @@
 [project]
 name = "scaldys-template"
-version = "0.30.0"
+version = "0.31.0"
 authors = [
   { name="scaldys-template", email="scaldys@scaldys.net" },
 ]
